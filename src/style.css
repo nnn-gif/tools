@@ -1,0 +1,20 @@
+@import "tailwindcss";
+@import "highlight.js/styles/github-dark.css";
+@import "github-markdown-css/github-markdown.css";
+
+@theme {
+  --color-background: 0 0% 100%;
+  --color-foreground: 222.2 84% 4.9%;
+  --color-muted: 210 40% 96.1%;
+  --color-primary: 221.2 83.2% 53.3%;
+  --color-primary-foreground: 210 40% 98%;
+  --color-secondary: 210 40% 96.1%;
+  --color-secondary-foreground: 222.2 47.4% 11.2%;
+  --color-border: 214.3 31.8% 91.4%;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground h-screen overflow-hidden;
+  }
+}

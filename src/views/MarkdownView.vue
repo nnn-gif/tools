@@ -49,6 +49,9 @@ const handleFileUpload = (e: Event) => {
   <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
     <!-- Toolbar -->
     <div class="flex items-center justify-between gap-4">
+       <div class="font-bold text-lg text-foreground">
+         Markdown Editor
+       </div>
        <div class="flex items-center gap-2">
          <Button variant="outline" class="relative overflow-hidden">
             <Upload class="mr-2 h-4 w-4" />

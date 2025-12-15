@@ -15,7 +15,8 @@ import {
   PanelLeftOpen
 } from 'lucide-vue-next'
 
-const isCollapsed = ref(localStorage.getItem('sidebarCollapsed') === 'true')
+const storedState = localStorage.getItem('sidebarCollapsed')
+const isCollapsed = ref(storedState === null ? true : storedState === 'true')
 
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value

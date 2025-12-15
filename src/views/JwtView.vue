@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { jwtDecode } from 'jwt-decode'
-import { KeyRound, ShieldAlert } from 'lucide-vue-next'
+import { ShieldAlert } from 'lucide-vue-next'
+import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 
 const token = ref('')
 const header = ref('')
@@ -9,24 +12,24 @@ const payload = ref('')
 const error = ref('')
 
 const decodeToken = () => {
-  error.value = ''
-  if (!token.value) {
-    header.value = ''
-    payload.value = ''
-    return
-  }
+    error.value = ''
+    if (!token.value) {
+        header.value = ''
+        payload.value = ''
+        return
+    }
 
-  try {
-    const decodedHeader = jwtDecode(token.value, { header: true })
-    const decodedPayload = jwtDecode(token.value)
+    try {
+        const decodedHeader = jwtDecode(token.value, { header: true })
+        const decodedPayload = jwtDecode(token.value)
 
-    header.value = JSON.stringify(decodedHeader, null, 2)
-    payload.value = JSON.stringify(decodedPayload, null, 2)
-  } catch (e: any) {
-    error.value = 'Invalid JWT: ' + e.message
-    header.value = ''
-    payload.value = ''
-  }
+        header.value = JSON.stringify(decodedHeader, null, 2)
+        payload.value = JSON.stringify(decodedPayload, null, 2)
+    } catch (e: any) {
+        error.value = 'Invalid JWT: ' + e.message
+        header.value = ''
+        payload.value = ''
+    }
 }
 
 watch(token, decodeToken)
@@ -38,60 +41,52 @@ const fillSample = () => {
 </script>
 
 <template>
-  <div class="flex flex-col h-full bg-background">
-    <!-- Header -->
-    <div class="flex items-center justify-between px-6 py-3 border-b border-border">
-      <h2 class="text-lg font-semibold flex items-center gap-2">
-        <KeyRound class="h-5 w-5" />
-        JWT Debugger
-      </h2>
-      <button 
-        @click="fillSample"
-        class="text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer"
-      >
-        Load Sample
-      </button>
-    </div>
-
-    <!-- Error Message -->
-    <div v-if="error" class="bg-red-500/10 text-red-600 dark:text-red-400 px-6 py-2 text-sm flex items-center gap-2">
-      <ShieldAlert class="h-4 w-4" />
-      {{ error }}
-    </div>
-
-    <!-- Main Content -->
-    <div class="flex-1 flex flex-col md:flex-row overflow-hidden">
-        <!-- Input Column -->
-        <div class="md:w-1/3 flex flex-col border-b md:border-b-0 md:border-r border-border h-1/2 md:h-full min-w-0">
-            <div class="bg-muted/30 px-4 py-2 text-xs font-semibold text-muted-foreground border-b border-border">
-                Encoded Token
-            </div>
-            <textarea
-                v-model="token"
-                class="flex-1 resize-none p-4 font-mono text-sm focus:outline-none bg-background text-foreground"
-                placeholder="Paste JWT here..."
-                spellcheck="false"
-            ></textarea>
+    <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
+        <div class="flex items-center justify-between">
+            <h2 class="text-3xl font-bold tracking-tight">JWT Debugger</h2>
+            <Button variant="ghost" @click="fillSample">Load Sample</Button>
         </div>
 
-        <!-- Output Column -->
-        <div class="flex-1 flex flex-col h-1/2 md:h-full min-w-0 overflow-y-auto">
-             <!-- Header Section -->
-             <div class="flex-1 flex flex-col border-b border-border min-h-0">
-                <div class="bg-muted/30 px-4 py-2 text-xs font-semibold text-muted-foreground border-b border-border">
-                    Header
-                </div>
-                <pre class="flex-1 p-4 font-mono text-xs overflow-auto bg-background text-foreground">{{ header }}</pre>
-             </div>
+        <div v-if="error" class="p-4 text-sm text-destructive bg-destructive/10 rounded-md flex items-center gap-2">
+            <ShieldAlert class="h-4 w-4" />
+            {{ error }}
+        </div>
 
-             <!-- Payload Section -->
-             <div class="flex-[2] flex flex-col min-h-0">
-                <div class="bg-muted/30 px-4 py-2 text-xs font-semibold text-muted-foreground border-b border-border">
-                    Payload
-                </div>
-                <pre class="flex-1 p-4 font-mono text-xs overflow-auto bg-background text-foreground">{{ payload }}</pre>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 min-h-0">
+             <!-- Input Column -->
+             <Card class="flex flex-col min-h-0">
+                <CardHeader>
+                    <CardTitle class="text-sm font-medium">Encoded Token</CardTitle>
+                </CardHeader>
+                <CardContent class="flex-1 min-h-0">
+                     <Textarea 
+                        v-model="token"
+                        class="h-full resize-none font-mono"
+                        placeholder="Paste JWT here..."
+                    />
+                </CardContent>
+             </Card>
+
+             <!-- Output Column -->
+             <div class="flex flex-col gap-4 min-h-0">
+                 <Card class="flex flex-col min-h-0 flex-1">
+                    <CardHeader class="py-2">
+                        <CardTitle class="text-sm font-medium">Header</CardTitle>
+                    </CardHeader>
+                    <CardContent class="flex-1 min-h-0 overflow-auto">
+                        <pre class="font-mono text-xs">{{ header }}</pre>
+                    </CardContent>
+                 </Card>
+                 <Card class="flex flex-col min-h-0 flex-[2]">
+                    <CardHeader class="py-2">
+                        <CardTitle class="text-sm font-medium">Payload</CardTitle>
+                    </CardHeader>
+                    <CardContent class="flex-1 min-h-0 overflow-auto">
+                         <pre class="font-mono text-xs">{{ payload }}</pre>
+                    </CardContent>
+                 </Card>
              </div>
         </div>
     </div>
-  </div>
 </template>
+

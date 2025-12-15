@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { LoremIpsum } from 'lorem-ipsum'
-import { Type, Copy, RefreshCw } from 'lucide-vue-next'
+import { Copy, RefreshCw } from 'lucide-vue-next'
+import { Button } from '@/components/ui/button'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 
 const count = ref(3)
-const units = ref<'paragraphs' | 'sentences' | 'words'>('paragraphs')
+const units = ref('paragraphs')
 const generatedText = ref('')
 
 const lorem = new LoremIpsum({
@@ -37,67 +43,60 @@ generate()
 </script>
 
 <template>
-  <div class="flex flex-col h-full bg-background">
-    <!-- Header -->
-    <div class="flex items-center justify-between px-6 py-3 border-b border-border">
-      <h2 class="text-lg font-semibold flex items-center gap-2">
-        <Type class="h-5 w-5" />
-        Lorem Ipsum Generator
-      </h2>
+  <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
+    <div class="flex items-center justify-between">
+            <h2 class="text-3xl font-bold tracking-tight">Lorem Ipsum Generator</h2>
     </div>
 
-    <!-- Main Content -->
-    <div class="p-6 max-w-3xl mx-auto w-full h-full flex flex-col">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1 min-h-0">
         <!-- Controls -->
-        <div class="bg-card border border-border rounded-lg p-4 mb-6 shadow-sm">
-            <div class="flex flex-col md:flex-row gap-4 items-end">
-                <div class="flex flex-col gap-1.5 flex-1">
-                    <label class="text-sm font-medium text-muted-foreground">Count</label>
-                    <input 
-                        v-model.number="count" 
-                        type="number" 
-                        min="1" 
-                        max="100" 
-                        class="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    />
-                </div>
-                <div class="flex flex-col gap-1.5 flex-1">
-                    <label class="text-sm font-medium text-muted-foreground">Units</label>
-                    <select 
-                        v-model="units" 
-                        class="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                        <option value="paragraphs">Paragraphs</option>
-                        <option value="sentences">Sentences</option>
-                        <option value="words">Words</option>
-                    </select>
-                </div>
-                <button 
-                    @click="generate" 
-                    class="h-10 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer"
-                >
+        <Card class="h-full">
+            <CardHeader>
+                <CardTitle>Settings</CardTitle>
+            </CardHeader>
+            <CardContent class="grid gap-6">
+                 <div class="grid gap-2">
+                    <Label>Count</Label>
+                    <Input type="number" v-model.number="count" min="1" max="100" />
+                 </div>
+                 <div class="grid gap-2">
+                    <Label>Units</Label>
+                    <Select v-model="units">
+                        <SelectTrigger>
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="paragraphs">Paragraphs</SelectItem>
+                            <SelectItem value="sentences">Sentences</SelectItem>
+                            <SelectItem value="words">Words</SelectItem>
+                        </SelectContent>
+                    </Select>
+                 </div>
+                 <Button @click="generate" class="w-full">
                     <RefreshCw class="mr-2 h-4 w-4" />
                     Generate
-                </button>
-                <button 
-                    @click="copyToClipboard" 
-                    class="h-10 px-4 py-2 bg-secondary text-secondary-foreground hover:bg-secondary/80 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer"
-                    :disabled="!generatedText"
-                >
-                    <Copy class="mr-2 h-4 w-4" />
-                    Copy
-                </button>
-            </div>
-        </div>
+                 </Button>
+            </CardContent>
+        </Card>
 
         <!-- Output -->
-        <div class="flex-1 min-h-0 border border-border rounded-lg bg-muted/10 relative overflow-hidden flex flex-col">
-            <textarea 
-                v-model="generatedText" 
-                readonly
-                class="flex-1 w-full h-full p-4 bg-transparent resize-none focus:outline-none text-foreground leading-relaxed"
-            ></textarea>
-        </div>
+        <Card class="md:col-span-2 h-full flex flex-col min-h-0">
+            <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle>Generated Text</CardTitle>
+                <Button variant="outline" size="sm" @click="copyToClipboard" :disabled="!generatedText">
+                    <Copy class="mr-2 h-4 w-4" />
+                    Copy
+                </Button>
+            </CardHeader>
+            <CardContent class="flex-1 min-h-0 pt-4">
+                <Textarea 
+                    v-model="generatedText" 
+                    readonly
+                    class="h-full resize-none bg-muted/50"
+                />
+            </CardContent>
+        </Card>
     </div>
   </div>
 </template>
+

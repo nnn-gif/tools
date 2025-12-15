@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { Image as ImageIcon, Upload, Download } from 'lucide-vue-next'
+import { Upload, Download } from 'lucide-vue-next'
+import { Button } from '@/components/ui/button'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Slider } from '@/components/ui/slider'
+import { Label } from '@/components/ui/label'
 
 const file = ref<File | null>(null)
 const previewUrl = ref('')
 const compressedUrl = ref('')
-const quality = ref(0.8)
-const scale = ref(100)
+const quality = ref([0.8]) // Slider uses array
+const scale = ref([100])
 const originalSize = ref(0)
 const compressedSize = ref(0)
 const isProcessing = ref(false)
@@ -40,8 +44,12 @@ const processImage = () => {
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
 
-    const width = img.width * (scale.value / 100)
-    const height = img.height * (scale.value / 100)
+    // Slider returns array, take first value
+    const s = scale.value?.[0] ?? 100
+    const q = quality.value?.[0] ?? 0.8
+
+    const width = img.width * (s / 100)
+    const height = img.height * (s / 100)
 
     canvas.width = width
     canvas.height = height
@@ -58,7 +66,7 @@ const processImage = () => {
         isProcessing.value = false
       },
       file.value?.type || 'image/jpeg',
-      quality.value
+      q
     )
   }
 }
@@ -80,19 +88,13 @@ const compressionRatio = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col h-full bg-background">
-    <!-- Header -->
-    <div class="flex items-center justify-between px-6 py-3 border-b border-border">
-      <h2 class="text-lg font-semibold flex items-center gap-2">
-        <ImageIcon class="h-5 w-5" />
-        Image Compressor
-      </h2>
+  <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
+    <div class="flex items-center justify-between">
+      <h2 class="text-3xl font-bold tracking-tight">Image Compressor</h2>
     </div>
 
-    <!-- Main Content -->
-    <div class="p-6 h-full overflow-y-auto">
-      <div v-if="!file" class="h-full flex flex-col items-center justify-center border-2 border-dashed border-border rounded-lg bg-muted/5">
-        <div class="flex flex-col items-center gap-4 text-center">
+    <div v-if="!file" class="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-border rounded-lg bg-card text-card-foreground p-8">
+        <div class="flex flex-col items-center gap-4 text-center max-w-sm">
           <div class="h-16 w-16 rounded-full bg-muted flex items-center justify-center">
              <Upload class="h-8 w-8 text-muted-foreground" />
           </div>
@@ -100,112 +102,85 @@ const compressionRatio = computed(() => {
             <h3 class="font-semibold text-lg">Upload an image</h3>
             <p class="text-sm text-muted-foreground">Drag and drop or click to upload</p>
           </div>
-          <label class="cursor-pointer">
-            <input type="file" accept="image/*" class="hidden" @change="handleFileUpload">
-            <span class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90">
-              Select File
-            </span>
-          </label>
+          <Button class="w-full relative">
+            Select File
+             <input type="file" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" @change="handleFileUpload">
+          </Button>
         </div>
-      </div>
+    </div>
 
-      <div v-else class="flex flex-col lg:flex-row gap-6 h-full">
-        <!-- Controls Column -->
-        <div class="w-full lg:w-80 flex flex-col gap-6 shrink-0">
-          <div class="rounded-lg border border-border bg-card p-4 shadow-sm">
-            <h3 class="font-semibold mb-4">Settings</h3>
-            
-            <div class="space-y-6">
-              <div class="space-y-2">
-                <div class="flex justify-between">
-                  <label class="text-sm font-medium">Quality</label>
-                  <span class="text-sm text-muted-foreground">{{ Math.round(quality * 100) }}%</span>
+    <div v-else class="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 min-h-0">
+        <!-- Controls -->
+        <Card class="flex flex-col h-full lg:col-span-1">
+            <CardHeader>
+                <CardTitle>Settings</CardTitle>
+            </CardHeader>
+            <CardContent class="grid gap-8">
+                 <div class="grid gap-4">
+                    <div class="flex items-center justify-between">
+                        <Label>Quality</Label>
+                        <span class="text-sm text-muted-foreground">{{ Math.round((quality?.[0] ?? 0.8) * 100) }}%</span>
+                    </div>
+                    <Slider v-model="quality" :min="0.1" :max="1" :step="0.1" @update:modelValue="processImage" />
+                 </div>
+
+                 <div class="grid gap-4">
+                    <div class="flex items-center justify-between">
+                        <Label>Scale (Resize)</Label>
+                        <span class="text-sm text-muted-foreground">{{ scale?.[0] ?? 100 }}%</span>
+                    </div>
+                     <Slider v-model="scale" :min="10" :max="100" :step="10" @update:modelValue="processImage" />
+                 </div>
+
+                 <div class="rounded-lg bg-muted p-4 space-y-3 mt-4">
+                    <div class="flex justify-between text-sm">
+                       <span class="text-muted-foreground">Original</span>
+                       <span class="font-mono">{{ formatSize(originalSize) }}</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                       <span class="text-muted-foreground">Compressed</span>
+                       <span class="font-mono font-bold text-green-600">{{ formatSize(compressedSize) }}</span>
+                    </div>
+                    <div class="flex justify-between text-sm border-t border-border/50 pt-2">
+                       <span class="text-muted-foreground">Savings</span>
+                       <span class="font-mono font-bold">{{ compressionRatio }}%</span>
+                    </div>
+                 </div>
+
+                 <div class="flex flex-col gap-2">
+                    <Button @click="downloadCompressed" :disabled="isProcessing" class="w-full">
+                        <Download class="mr-2 h-4 w-4" /> Download
+                    </Button>
+                    <Button variant="outline" class="w-full relative">
+                        New Image
+                        <input type="file" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" @change="handleFileUpload">
+                    </Button>
+                 </div>
+            </CardContent>
+        </Card>
+
+        <!-- Preview -->
+        <div class="lg:col-span-2 grid grid-cols-2 gap-4 h-full min-h-0">
+             <Card class="flex flex-col overflow-hidden">
+                <CardHeader class="py-2">
+                    <CardTitle class="text-sm text-center text-muted-foreground uppercase">Original</CardTitle>
+                </CardHeader>
+                <div class="flex-1 bg-muted/20 relative m-2 border rounded-md overflow-hidden bg-checkerboard">
+                    <img :src="previewUrl" class="absolute inset-0 w-full h-full object-contain p-2">
                 </div>
-                <input 
-                  type="range" 
-                  v-model.number="quality" 
-                  min="0.1" 
-                  max="1" 
-                  step="0.1" 
-                  @input="processImage"
-                  class="w-full"
-                >
-              </div>
-
-              <div class="space-y-2">
-                <div class="flex justify-between">
-                  <label class="text-sm font-medium">Scale (Resize)</label>
-                  <span class="text-sm text-muted-foreground">{{ scale }}%</span>
+             </Card>
+             <Card class="flex flex-col overflow-hidden">
+                <CardHeader class="py-2">
+                    <CardTitle class="text-sm text-center text-muted-foreground uppercase">Compressed</CardTitle>
+                </CardHeader>
+                <div class="flex-1 bg-muted/20 relative m-2 border rounded-md overflow-hidden bg-checkerboard">
+                    <div v-if="isProcessing" class="absolute inset-0 z-10 flex items-center justify-center bg-background/50 backdrop-blur-sm">
+                        <span class="text-sm font-medium animate-pulse">Processing...</span>
+                    </div>
+                    <img :src="compressedUrl" class="absolute inset-0 w-full h-full object-contain p-2">
                 </div>
-                <input 
-                  type="range" 
-                  v-model.number="scale" 
-                  min="10" 
-                  max="100" 
-                  step="10" 
-                  @input="processImage"
-                  class="w-full"
-                >
-              </div>
-            </div>
-          </div>
-
-          <div class="rounded-lg border border-border bg-card p-4 shadow-sm space-y-4">
-            <div class="flex justify-between items-center pb-4 border-b border-border">
-              <span class="text-sm text-muted-foreground">Original</span>
-              <span class="font-mono text-sm">{{ formatSize(originalSize) }}</span>
-            </div>
-            <div class="flex justify-between items-center pb-4 border-b border-border">
-              <span class="text-sm text-muted-foreground">Compressed</span>
-              <span class="font-mono text-sm font-bold text-green-600 dark:text-green-400">{{ formatSize(compressedSize) }}</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-sm text-muted-foreground">Savings</span>
-              <span class="font-mono text-sm font-bold">{{ compressionRatio }}%</span>
-            </div>
-
-            <button 
-              @click="downloadCompressed"
-              class="w-full mt-4 flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 cursor-pointer"
-              :disabled="isProcessing"
-            >
-              <Download class="h-4 w-4" />
-              Download
-            </button>
-             <label class="block w-full mt-2 cursor-pointer">
-                <input type="file" accept="image/*" class="hidden" @change="handleFileUpload">
-                <span class="w-full flex items-center justify-center gap-2 rounded-md bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground hover:bg-secondary/80">
-                  <Upload class="h-4 w-4" />
-                  New Image
-                </span>
-            </label>
-          </div>
+             </Card>
         </div>
-
-        <!-- Preview Column -->
-        <div class="flex-1 min-h-0 bg-muted/10 border border-border rounded-lg flex items-center justify-center p-4 overflow-hidden relative">
-           <div class="absolute inset-0 flex items-center justify-center pointer-events-none" v-if="isProcessing">
-             <div class="bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg text-sm font-medium animate-pulse">
-               Processing...
-             </div>
-           </div>
-           
-           <div class="grid grid-cols-2 gap-4 w-full h-full max-w-4xl" v-if="previewUrl && compressedUrl">
-              <div class="flex flex-col gap-2 min-h-0">
-                  <span class="text-xs text-center font-medium text-muted-foreground uppercase">Original</span>
-                  <div class="flex-1 relative border border-border rounded-lg overflow-hidden bg-checkerboard">
-                      <img :src="previewUrl" class="absolute inset-0 w-full h-full object-contain">
-                  </div>
-              </div>
-              <div class="flex flex-col gap-2 min-h-0">
-                  <span class="text-xs text-center font-medium text-muted-foreground uppercase">Compressed</span>
-                  <div class="flex-1 relative border border-border rounded-lg overflow-hidden bg-checkerboard">
-                      <img :src="compressedUrl" class="absolute inset-0 w-full h-full object-contain">
-                  </div>
-              </div>
-           </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -219,14 +194,8 @@ const compressionRatio = computed(() => {
     linear-gradient(-45deg, transparent 75%, #808080 75%);
   background-size: 20px 20px;
   background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-  background-color: #f0f0f0;
-}
-.dark .bg-checkerboard {
-  background-color: #1a1a1a;
-  background-image:
-    linear-gradient(45deg, #333 25%, transparent 25%),
-    linear-gradient(-45deg, #333 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #333 75%),
-    linear-gradient(-45deg, transparent 75%, #333 75%);
+  background-color: transparent;
+  opacity: 0.1;
 }
 </style>
+

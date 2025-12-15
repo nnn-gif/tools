@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
+import { useDark, useToggle } from '@vueuse/core'
 import { 
   FileCode, 
   FileJson, 
@@ -12,16 +13,22 @@ import {
   Type,
   Image as ImageIcon,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  Sun,
+  Moon
 } from 'lucide-vue-next'
+import { Button } from '@/components/ui/button'
 
 const storedState = localStorage.getItem('sidebarCollapsed')
 const isCollapsed = ref(storedState === null ? true : storedState === 'true')
 
 const toggleSidebar = () => {
-  isCollapsed.value = !isCollapsed.value
-  localStorage.setItem('sidebarCollapsed', String(isCollapsed.value))
+    isCollapsed.value = !isCollapsed.value
+    localStorage.setItem('sidebarCollapsed', String(isCollapsed.value))
 }
+
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
 </script>
 
 <template>
@@ -46,13 +53,15 @@ const toggleSidebar = () => {
              <Binary class="h-5 w-5" />
         </div>
 
-        <button 
+        <Button 
           v-if="!isCollapsed"
+          variant="ghost" 
+          size="icon" 
           @click="toggleSidebar" 
-          class="text-muted-foreground hover:text-foreground cursor-pointer flex-shrink-0"
+          class="flex-shrink-0"
         >
           <PanelLeftClose class="h-5 w-5" />
-        </button>
+        </Button>
       </div>
 
       <nav class="flex-1 overflow-y-auto p-4 space-y-6 overflow-x-hidden">
@@ -136,15 +145,25 @@ const toggleSidebar = () => {
         </div>
       </nav>
 
-       <!-- Toggle button (when collapsed -> open) -->
-       <div class="p-4 border-t border-border flex justify-center" v-if="isCollapsed">
-         <button 
+      <!-- Footer Actions: Theme Toggle & Sidebar Toggle -->
+      <div class="p-4 border-t border-border flex flex-col gap-2">
+        <Button variant="ghost" size="icon" @click="toggleDark()" class="w-full" :title="isDark ? 'Light Mode' : 'Dark Mode'">
+            <Moon v-if="isDark" class="h-5 w-5" />
+            <Sun v-else class="h-5 w-5" />
+            <span v-if="!isCollapsed" class="ml-2 text-sm">Theme</span>
+        </Button>
+        
+        <Button 
+           v-if="isCollapsed"
+           variant="ghost" 
+           size="icon" 
            @click="toggleSidebar" 
-           class="text-muted-foreground hover:text-foreground cursor-pointer"
+           class="w-full"
          >
            <PanelLeftOpen class="h-5 w-5" />
-         </button>
-       </div>
+         </Button>
+      </div>
+
     </aside>
 
     <!-- Main Content -->

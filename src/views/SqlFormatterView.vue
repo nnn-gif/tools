@@ -1,82 +1,93 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { format } from 'sql-formatter'
-import { Database } from 'lucide-vue-next'
+import { Copy, RefreshCw } from 'lucide-vue-next'
+import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Label } from '@/components/ui/label'
 
-const inputSql = ref('')
-const formattedSql = ref('')
+const inputSql = ref('SELECT * FROM users WHERE id = 1')
+const outputSql = ref('')
+const dialect = ref('sql')
 const error = ref('')
 
 const formatSql = () => {
-  error.value = ''
-  if (!inputSql.value) {
-    formattedSql.value = ''
-    return
-  }
-
-  try {
-    formattedSql.value = format(inputSql.value, {
-      language: 'sql',
-      tabWidth: 2,
-      keywordCase: 'upper',
-    })
-  } catch (e: any) {
-    error.value = 'Formatting Error: ' + e.message
-  }
+    try {
+        error.value = ''
+        outputSql.value = format(inputSql.value, { language: dialect.value as any })
+    } catch (e: any) {
+        error.value = e.message
+    }
 }
 
-const fillSample = () => {
-    inputSql.value = "select id, name, email from users where active = 1 and (role = 'admin' or role = 'superadmin') order by created_at desc"
-    formatSql()
+const copyToClipboard = async () => {
+    if (!outputSql.value) return
+    await navigator.clipboard.writeText(outputSql.value)
 }
+
+// Initial format
+formatSql()
 </script>
 
 <template>
-  <div class="flex flex-col h-full bg-background">
-    <!-- Header -->
-    <div class="flex items-center justify-between px-6 py-3 border-b border-border">
-      <h2 class="text-lg font-semibold flex items-center gap-2">
-        <Database class="h-5 w-5" />
-        SQL Formatter
-      </h2>
-      <button 
-        @click="fillSample"
-        class="text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer"
-      >
-        Load Sample
-      </button>
-    </div>
-
-    <!-- Error Message -->
-    <div v-if="error" class="bg-red-500/10 text-red-600 dark:text-red-400 px-6 py-2 text-sm">
-      {{ error }}
-    </div>
-
-    <!-- Main Content -->
-    <div class="flex-1 flex overflow-hidden">
-        <!-- Input Column -->
-        <div class="flex-1 flex flex-col border-r border-border min-w-0">
-            <div class="bg-muted/30 px-4 py-2 text-xs font-semibold text-muted-foreground border-b border-border flex justify-between items-center">
-                <span>Input SQL</span>
-                <button @click="formatSql" class="bg-primary text-primary-foreground px-3 py-1 rounded text-xs hover:bg-primary/90 cursor-pointer">
-                    Format ->
-                </button>
-            </div>
-            <textarea
-                v-model="inputSql"
-                class="flex-1 resize-none p-4 font-mono text-sm focus:outline-none bg-background text-foreground"
-                placeholder="SELECT * FROM table..."
-                spellcheck="false"
-            ></textarea>
+    <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
+        <div class="flex items-center justify-between">
+            <h2 class="text-3xl font-bold tracking-tight">SQL Formatter</h2>
         </div>
 
-        <!-- Output Column -->
-        <div class="flex-1 flex flex-col min-w-0">
-             <div class="bg-muted/30 px-4 py-2 text-xs font-semibold text-muted-foreground border-b border-border">
-                Formatted SQL
-            </div>
-            <pre class="flex-1 p-4 font-mono text-sm overflow-auto bg-background text-foreground whitespace-pre-wrap">{{ formattedSql }}</pre>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1 min-h-0">
+            <!-- Input Column -->
+            <Card class="flex flex-col min-h-0">
+                <CardHeader>
+                    <CardTitle>Input SQL</CardTitle>
+                </CardHeader>
+                <CardContent class="flex-1 flex flex-col gap-4 min-h-0">
+                    <div class="flex gap-4">
+                        <div class="flex-1 space-y-2">
+                             <Label>Dialect</Label>
+                             <Select v-model="dialect">
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select dialect" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="sql">Standard SQL</SelectItem>
+                                    <SelectItem value="mysql">MySQL</SelectItem>
+                                    <SelectItem value="postgresql">PostgreSQL</SelectItem>
+                                    <SelectItem value="sqlite">SQLite</SelectItem>
+                                </SelectContent>
+                             </Select>
+                        </div>
+                        <div class="flex items-end">
+                            <Button @click="formatSql">
+                                <RefreshCw class="mr-2 h-4 w-4" /> Format
+                            </Button>
+                        </div>
+                    </div>
+                    <Textarea 
+                        v-model="inputSql"
+                        class="flex-1 font-mono resize-none"
+                        placeholder="Paste your SQL here..."
+                    />
+                </CardContent>
+            </Card>
+
+            <!-- Output Column -->
+            <Card class="flex flex-col min-h-0 bg-muted/50">
+                 <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle>Formatted Output</CardTitle>
+                    <Button variant="ghost" size="icon" @click="copyToClipboard" :disabled="!outputSql">
+                        <Copy class="h-4 w-4" />
+                    </Button>
+                </CardHeader>
+                <CardContent class="flex-1 flex flex-col min-h-0 pt-6">
+                    <div v-if="error" class="p-4 text-sm text-destructive bg-destructive/10 rounded-md">
+                        {{ error }}
+                    </div>
+                    <pre v-else class="flex-1 overflow-auto p-4 rounded-md border bg-background font-mono text-sm">{{ outputSql }}</pre>
+                </CardContent>
+            </Card>
         </div>
     </div>
-  </div>
 </template>

@@ -1,0 +1,4 @@
+commitlint.config.js
+tailwind.config.js
+dist/
+.husky/

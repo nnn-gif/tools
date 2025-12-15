@@ -10,78 +10,78 @@ const modifiedText = ref('')
 const diffResult = ref<any[]>([])
 
 const computeDiff = () => {
-    if (!originalText.value && !modifiedText.value) {
-        diffResult.value = []
-        return
-    }
-    const diffs = Diff.diffLines(originalText.value, modifiedText.value)
-    diffResult.value = diffs
+  if (!originalText.value && !modifiedText.value) {
+    diffResult.value = []
+    return
+  }
+  const diffs = Diff.diffLines(originalText.value, modifiedText.value)
+  diffResult.value = diffs
 }
 
 watch([originalText, modifiedText], computeDiff)
 
 const fillSample = () => {
-    originalText.value = `Hello World\nThis is a test file.\nIt has some lines.`
-    modifiedText.value = `Hello World!\nThis is a test file.\nIt has changed lines.`
+  originalText.value = `Hello World\nThis is a test file.\nIt has some lines.`
+  modifiedText.value = `Hello World!\nThis is a test file.\nIt has changed lines.`
 }
 </script>
 
 <template>
-    <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
-        <div class="flex items-center justify-between">
-            <h2 class="text-3xl font-bold tracking-tight">Diff Checker</h2>
-            <Button variant="ghost" @click="fillSample">Load Sample</Button>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1 min-h-0">
-            <!-- Inputs Column -->
-            <div class="flex flex-col gap-4 min-h-0">
-                <Card class="flex-1 flex flex-col min-h-0">
-                    <CardHeader class="py-2">
-                        <CardTitle class="text-sm font-medium">Original Text</CardTitle>
-                    </CardHeader>
-                    <CardContent class="flex-1 min-h-0">
-                        <Textarea 
-                            v-model="originalText"
-                            class="h-full resize-none font-mono"
-                            placeholder="Paste original text here..."
-                        />
-                    </CardContent>
-                </Card>
-                <Card class="flex-1 flex flex-col min-h-0">
-                    <CardHeader class="py-2">
-                        <CardTitle class="text-sm font-medium">Modified Text</CardTitle>
-                    </CardHeader>
-                    <CardContent class="flex-1 min-h-0">
-                        <Textarea 
-                            v-model="modifiedText"
-                            class="h-full resize-none font-mono"
-                            placeholder="Paste modified text here..."
-                        />
-                    </CardContent>
-                </Card>
-            </div>
-
-            <!-- Result Column -->
-            <Card class="flex flex-col min-h-0 bg-muted/50">
-                <CardHeader class="py-2">
-                    <CardTitle class="text-sm font-medium">Difference</CardTitle>
-                </CardHeader>
-                <CardContent class="flex-1 min-h-0 overflow-auto">
-                    <div class="font-mono text-sm whitespace-pre-wrap p-2">
-                        <span 
-                            v-for="(part, index) in diffResult" 
-                            :key="index"
-                            :class="{
-                                'bg-green-500/20 text-green-700 dark:text-green-300': part.added,
-                                'bg-red-500/20 text-red-700 dark:text-red-300': part.removed,
-                                'text-muted-foreground': !part.added && !part.removed
-                            }"
-                        >{{ part.value }}</span>
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
+  <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
+    <div class="flex items-center justify-between">
+      <h2 class="text-3xl font-bold tracking-tight">Diff Checker</h2>
+      <Button variant="ghost" @click="fillSample">Load Sample</Button>
     </div>
-</template>
 
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1 min-h-0">
+      <!-- Inputs Column -->
+      <div class="flex flex-col gap-4 min-h-0">
+        <Card class="flex-1 flex flex-col min-h-0">
+          <CardHeader class="py-2">
+            <CardTitle class="text-sm font-medium">Original Text</CardTitle>
+          </CardHeader>
+          <CardContent class="flex-1 min-h-0">
+            <Textarea
+              v-model="originalText"
+              class="h-full resize-none font-mono"
+              placeholder="Paste original text here..."
+            />
+          </CardContent>
+        </Card>
+        <Card class="flex-1 flex flex-col min-h-0">
+          <CardHeader class="py-2">
+            <CardTitle class="text-sm font-medium">Modified Text</CardTitle>
+          </CardHeader>
+          <CardContent class="flex-1 min-h-0">
+            <Textarea
+              v-model="modifiedText"
+              class="h-full resize-none font-mono"
+              placeholder="Paste modified text here..."
+            />
+          </CardContent>
+        </Card>
+      </div>
+
+      <!-- Result Column -->
+      <Card class="flex flex-col min-h-0 bg-muted/50">
+        <CardHeader class="py-2">
+          <CardTitle class="text-sm font-medium">Difference</CardTitle>
+        </CardHeader>
+        <CardContent class="flex-1 min-h-0 overflow-auto">
+          <div class="font-mono text-sm whitespace-pre-wrap p-2">
+            <span
+              v-for="(part, index) in diffResult"
+              :key="index"
+              :class="{
+                'bg-green-500/20 text-green-700 dark:text-green-300': part.added,
+                'bg-red-500/20 text-red-700 dark:text-red-300': part.removed,
+                'text-muted-foreground': !part.added && !part.removed
+              }"
+              >{{ part.value }}</span
+            >
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  </div>
+</template>

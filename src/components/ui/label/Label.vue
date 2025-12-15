@@ -5,7 +5,7 @@ import { cva } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const labelVariants = cva(
-  'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+  'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
 )
 
 const props = defineProps<LabelProps & { class?: HTMLAttributes['class'] }>()
@@ -18,10 +18,7 @@ const delegatedProps = computed(() => {
 </script>
 
 <template>
-  <Label
-    v-bind="delegatedProps"
-    :class="cn(labelVariants(), props.class)"
-  >
+  <Label v-bind="delegatedProps" :class="cn(labelVariants(), props.class)">
     <slot />
   </Label>
 </template>

@@ -5,7 +5,6 @@ import Editor from '../components/Editor.vue'
 import Preview from '../components/Preview.vue'
 import ExportMenu from '../components/ExportMenu.vue'
 
-
 const markdownText = ref<string>(`# Welcome to Markdown Tools
 
 Start typing in the editor on the left to see the live preview on the right.
@@ -31,8 +30,9 @@ const handleFileUpload = (e: Event) => {
   const file = target.files?.[0]
   if (!file) return
 
-  if (file.size > 1024 * 1024) { // 1MB limit
-    alert("File is too large. Max 1MB.")
+  if (file.size > 1024 * 1024) {
+    // 1MB limit
+    alert('File is too large. Max 1MB.')
     return
   }
 
@@ -49,22 +49,20 @@ const handleFileUpload = (e: Event) => {
   <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
     <!-- Toolbar -->
     <div class="flex items-center justify-between gap-4">
-       <div class="font-bold text-lg text-foreground">
-         Markdown Editor
-       </div>
-       <div class="flex items-center gap-2">
-         <Button variant="outline" class="relative overflow-hidden">
-            <Upload class="mr-2 h-4 w-4" />
-            Upload MD
-            <input 
-              type="file" 
-              accept=".md,.txt" 
-              class="absolute inset-0 opacity-0 cursor-pointer"
-              @change="handleFileUpload" 
-            />
-         </Button>
-         <ExportMenu :markdown="markdownText" />
-       </div>
+      <div class="font-bold text-lg text-foreground">Markdown Editor</div>
+      <div class="flex items-center gap-2">
+        <Button variant="outline" class="relative overflow-hidden">
+          <Upload class="mr-2 h-4 w-4" />
+          Upload MD
+          <input
+            type="file"
+            accept=".md,.txt"
+            class="absolute inset-0 opacity-0 cursor-pointer"
+            @change="handleFileUpload"
+          />
+        </Button>
+        <ExportMenu :markdown="markdownText" />
+      </div>
     </div>
 
     <!-- Main Workspace -->

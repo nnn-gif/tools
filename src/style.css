@@ -78,3 +78,25 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Override github-markdown-css variables to use Shadcn theme colors */
+.markdown-body {
+  background-color: transparent !important;
+
+  /* Text Colors */
+  --fgColor-default: hsl(var(--foreground));
+  --fgColor-muted: hsl(var(--muted-foreground));
+  --fgColor-accent: hsl(var(--primary));
+
+  /* Background Colors */
+  --bgColor-default: transparent;
+  --bgColor-muted: hsl(var(--muted));
+  --bgColor-neutral-muted: hsl(var(--muted));
+
+  /* Border Colors */
+  --borderColor-default: hsl(var(--border));
+  --borderColor-muted: hsl(var(--border));
+
+  /* Ensure these are applied */
+  color: var(--fgColor-default);
+}

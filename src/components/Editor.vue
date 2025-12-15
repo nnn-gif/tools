@@ -1,21 +1,24 @@
+```
 <script setup lang="ts">
+import { Textarea } from '@/components/ui/textarea'
+
 defineProps<{
   modelValue: string
 }>()
 
-const emit = defineEmits<{
+defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>()
 </script>
 
 <template>
-  <div class="relative h-full w-full">
-    <textarea
-      class="h-full w-full resize-none bg-background p-4 font-mono text-sm leading-relaxed text-foreground focus:outline-none"
-      placeholder="Type some markdown..."
-      :value="modelValue"
-      @input="emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
-      spellcheck="false"
+  <div class="h-full flex flex-col">
+    <Textarea
+      :model-value="modelValue"
+      @update:model-value="$emit('update:modelValue', $event as string)"
+      class="flex-1 resize-none font-mono p-4 text-base focus-visible:ring-0 border-0 rounded-none bg-background text-foreground"
+      placeholder="Type markdown here..."
     />
   </div>
 </template>
+```

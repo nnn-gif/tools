@@ -47,20 +47,11 @@ const toggleDark = useToggle(isDark)
           class="flex items-center gap-2 font-bold text-lg overflow-hidden whitespace-nowrap"
           v-if="!isCollapsed"
         >
-          <div
-            class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground flex-shrink-0"
-          >
-            <Binary class="h-5 w-5" />
-          </div>
+          <img src="/logo.png" alt="Formatho" class="h-8 w-8 rounded-lg flex-shrink-0" />
           Formatho
         </div>
         <!-- Logo for collapsed state -->
-        <div
-          v-else
-          class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground flex-shrink-0"
-        >
-          <Binary class="h-5 w-5" />
-        </div>
+        <img v-else src="/logo.png" alt="Formatho" class="h-8 w-8 rounded-lg flex-shrink-0" />
 
         <Button
           v-if="!isCollapsed"

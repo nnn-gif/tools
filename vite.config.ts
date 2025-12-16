@@ -7,8 +7,8 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
+      '@': path.resolve(__dirname, './src')
+    }
   },
-  base: process.env.NODE_ENV === 'production' ? '/tools/' : '/',
+  base: '/'
 })

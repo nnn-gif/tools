@@ -51,7 +51,7 @@ const toggleDark = useToggle(isDark)
           >
             <Binary class="h-5 w-5" />
           </div>
-          DevTools
+          Formatho
         </div>
         <!-- Logo for collapsed state -->
         <div

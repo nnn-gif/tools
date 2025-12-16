@@ -11,6 +11,7 @@ import {
   Database,
   Fingerprint,
   Type,
+  FileType,
   Image as ImageIcon,
   PanelLeftClose,
   PanelLeftOpen,
@@ -243,6 +244,41 @@ const toggleDark = useToggle(isDark)
                 :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100'"
                 class="transition-all duration-200"
                 >Image Tools</span
+              >
+            </RouterLink>
+          </div>
+        </div>
+
+        <div>
+          <h3
+            class="mb-2 px-2 text-xs font-semibold uppercase text-muted-foreground h-4 transition-opacity duration-200"
+            :class="isCollapsed ? 'opacity-0' : 'opacity-100'"
+          >
+            Linters
+          </h3>
+          <div class="space-y-1">
+            <RouterLink
+              to="/json-lint"
+              class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground [&.router-link-active]:bg-secondary [&.router-link-active]:text-foreground transition-all overflow-hidden whitespace-nowrap"
+              :title="isCollapsed ? 'JSON Linter' : ''"
+            >
+              <FileJson class="h-5 w-5 flex-shrink-0" />
+              <span
+                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100'"
+                class="transition-all duration-200"
+                >JSON Linter</span
+              >
+            </RouterLink>
+            <RouterLink
+              to="/yaml-lint"
+              class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground [&.router-link-active]:bg-secondary [&.router-link-active]:text-foreground transition-all overflow-hidden whitespace-nowrap"
+              :title="isCollapsed ? 'YAML Linter' : ''"
+            >
+              <FileType class="h-5 w-5 flex-shrink-0" />
+              <span
+                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100'"
+                class="transition-all duration-200"
+                >YAML Linter</span
               >
             </RouterLink>
           </div>

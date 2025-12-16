@@ -58,6 +58,16 @@ const router = createRouter({
           path: 'image',
           name: 'image',
           component: () => import('../views/ImageCompressorView.vue')
+        },
+        {
+          path: 'json-lint',
+          name: 'json-lint',
+          component: () => import('../views/JsonLintView.vue')
+        },
+        {
+          path: 'yaml-lint',
+          name: 'yaml-lint',
+          component: () => import('../views/YamlLintView.vue')
         }
       ]
     }

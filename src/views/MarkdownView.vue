@@ -52,8 +52,7 @@ Have an idea for a tool that would make your workflow better? We'd love to hear 
 
 **Submit your suggestions:**
 - Open an issue on our [GitHub repository](https://github.com/nnn-gif/tools)
-- Email us at: hello@formatho.com
-- Tweet us: [@formatho](https://twitter.com/formatho)
+- Tweet us: [@heyformatho](https://twitter.com/heyformatho)
 
 We're constantly adding new tools based on community feedback!
 

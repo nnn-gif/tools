@@ -5,24 +5,61 @@ import Editor from '../components/Editor.vue'
 import Preview from '../components/Preview.vue'
 import ExportMenu from '../components/ExportMenu.vue'
 
-const markdownText = ref<string>(`# Welcome to Markdown Tools
+const markdownText = ref<string>(`# Welcome to Formatho
 
-Start typing in the editor on the left to see the live preview on the right.
+Your privacy-first developer toolkit for everyday tasks.
 
-## Features
-- **Live Preview**: See changes instantly
-- **Export**: Download as PDF or DOCX
-- **Clean UI**: Distraction-free writing environment
+## About Formatho
 
-## Code Example
-\`\`\`javascript
-console.log("Hello, World!");
-\`\`\`
+Formatho is a collection of essential developer tools designed to make your workflow faster and more efficient. All tools run **100% client-side** in your browser - your data never leaves your device.
 
-## Lists
-- Item 1
-- Item 2
-  - Subitem A
+## 🔒 Your Data is Safe
+
+- **No Server Processing**: All operations happen locally in your browser
+- **Zero Data Collection**: We don't store, track, or transmit your data
+- **Complete Privacy**: Your sensitive information stays with you
+- **Offline Capable**: Most tools work without an internet connection
+
+## 🛠️ Available Tools
+
+### Document Tools
+- **Markdown Editor** - Write and preview markdown with live rendering
+
+### Converters
+- **JSON ↔ YAML** - Convert between JSON and YAML formats
+- **JSON ↔ CSV** - Transform JSON to CSV and vice versa
+
+### Utilities
+- **Diff Checker** - Compare text and highlight differences
+- **Base64 Encoder/Decoder** - Encode and decode Base64 strings
+- **JWT Debugger** - Decode and inspect JSON Web Tokens
+- **SQL Formatter** - Format and beautify SQL queries
+
+### Generators
+- **UUID Generator** - Generate unique identifiers in bulk
+- **Lorem Ipsum** - Create placeholder text for designs
+
+### Linters
+- **JSON Linter** - Validate and format JSON with syntax checking
+- **YAML Linter** - Validate and format YAML with syntax checking
+
+### Media Tools
+- **Image Compressor** - Resize and compress images client-side
+
+## 💡 Request New Tools
+
+Have an idea for a tool that would make your workflow better? We'd love to hear from you!
+
+**Submit your suggestions:**
+- Open an issue on our [GitHub repository](https://github.com/nnn-gif/tools)
+- Email us at: hello@formatho.com
+- Tweet us: [@formatho](https://twitter.com/formatho)
+
+We're constantly adding new tools based on community feedback!
+
+---
+
+**Start using any tool from the sidebar** →
 `)
 
 const handleFileUpload = (e: Event) => {

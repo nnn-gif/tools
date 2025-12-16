@@ -51,7 +51,7 @@ const handleFileUpload = (e: Event) => {
     <div class="flex items-center justify-between gap-4">
       <div class="font-bold text-lg text-foreground">Markdown Editor</div>
       <div class="flex items-center gap-2">
-        <Button variant="outline" class="relative overflow-hidden">
+        <Button variant="secondary" size="sm" class="relative overflow-hidden">
           <Upload class="mr-2 h-4 w-4" />
           Upload MD
           <input

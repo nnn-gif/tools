@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { FileText, FileType } from 'lucide-vue-next'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
 import { saveAs } from 'file-saver'
+import { Button } from '@/components/ui/button'
 
 const props = defineProps<{
   markdown: string
@@ -88,21 +89,13 @@ const handleExportDOCX = async () => {
 
 <template>
   <div class="flex gap-2">
-    <button
-      @click="handleExportPDF"
-      :disabled="isExporting"
-      class="flex items-center gap-2 rounded-md bg-secondary px-3 py-1.5 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 disabled:opacity-50 cursor-pointer"
-    >
-      <FileType class="h-4 w-4" />
+    <Button @click="handleExportPDF" :disabled="isExporting" variant="secondary" size="sm">
+      <FileType class="mr-2 h-4 w-4" />
       {{ isExporting ? '...' : 'PDF' }}
-    </button>
-    <button
-      @click="handleExportDOCX"
-      :disabled="isExporting"
-      class="flex items-center gap-2 rounded-md bg-secondary px-3 py-1.5 text-sm font-medium text-secondary-foreground hover:bg-secondary/80 disabled:opacity-50 cursor-pointer"
-    >
-      <FileText class="h-4 w-4" />
+    </Button>
+    <Button @click="handleExportDOCX" :disabled="isExporting" variant="secondary" size="sm">
+      <FileText class="mr-2 h-4 w-4" />
       {{ isExporting ? '...' : 'DOCX' }}
-    </button>
+    </Button>
   </div>
 </template>

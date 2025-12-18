@@ -56,6 +56,8 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+      - name: Generate sitemap
+        run: npm run generate-sitemap
       - name: Build with Vite
         run: npm run build
       - name: Upload artifact

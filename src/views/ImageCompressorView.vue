@@ -90,7 +90,7 @@ const compressionRatio = computed(() => {
 <template>
   <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
     <div class="flex items-center justify-between">
-      <h2 class="text-3xl font-bold tracking-tight">Image Compressor</h2>
+      <h1 class="text-3xl font-bold tracking-tight">Image Compressor</h1>
     </div>
 
     <div

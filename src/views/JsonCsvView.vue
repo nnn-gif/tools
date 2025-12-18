@@ -66,7 +66,7 @@ const fillSample = () => {
 <template>
   <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
     <div class="flex items-center justify-between">
-      <h2 class="text-3xl font-bold tracking-tight">JSON &lt;-&gt; CSV Converter</h2>
+      <h1 class="text-3xl font-bold tracking-tight">JSON &lt;-&gt; CSV Converter</h1>
       <Button variant="ghost" @click="fillSample">Load Sample</Button>
     </div>
 

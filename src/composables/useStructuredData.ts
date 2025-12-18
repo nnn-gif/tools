@@ -84,7 +84,7 @@ function getWebSiteSchema() {
   }
 }
 
-function getBreadcrumbSchema(path: string) {
+function getBreadcrumbSchema(path: string, routeMeta?: RouteMeta) {
   const pathSegments = path.split('/').filter(Boolean)
   const breadcrumbs = [
     {
@@ -98,10 +98,17 @@ function getBreadcrumbSchema(path: string) {
   let currentPath = ''
   pathSegments.forEach((segment, index) => {
     currentPath += `/${segment}`
+    // Use route meta title if available (for last segment), otherwise format the segment
+    const isLastSegment = index === pathSegments.length - 1
+    const name =
+      isLastSegment && routeMeta?.title
+        ? routeMeta.title.replace(` - ${siteName}`, '').trim()
+        : segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ')
+
     breadcrumbs.push({
       '@type': 'ListItem',
       position: index + 2,
-      name: segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' '),
+      name,
       item: `${domain}${currentPath}`
     })
   })
@@ -173,8 +180,8 @@ export function useStructuredData() {
     () => {
       const meta = route.meta as unknown as RouteMeta | undefined
 
-      // Breadcrumb schema for all routes (always update)
-      injectJSONLD('schema-breadcrumb', getBreadcrumbSchema(route.path))
+      // Breadcrumb schema for all routes (always update with route meta for better names)
+      injectJSONLD('schema-breadcrumb', getBreadcrumbSchema(route.path, meta))
 
       // SoftwareApplication schema for tool pages
       if (meta && meta.title && meta.description && route.path !== '/') {

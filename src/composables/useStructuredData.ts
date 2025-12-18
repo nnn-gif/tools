@@ -151,6 +151,13 @@ function getSoftwareApplicationSchema(meta: RouteMeta, path: string) {
 export function useStructuredData() {
   const route = useRoute()
 
+  // Inject breadcrumb IMMEDIATELY based on current URL (before router is ready)
+  // This is critical for SEO crawlers that might not wait for JavaScript execution
+  if (typeof window !== 'undefined' && document.head) {
+    const initialPath = window.location.pathname
+    injectJSONLD('schema-breadcrumb', getBreadcrumbSchema(initialPath))
+  }
+
   // Wait for DOM to be ready before injecting
   const injectSchemas = () => {
     // Only inject if not already present (static schemas in index.html handle homepage)
@@ -170,6 +177,9 @@ export function useStructuredData() {
     const observer = new MutationObserver(() => {
       if (document.head) {
         injectSchemas()
+        // Also inject breadcrumb if head becomes available
+        const initialPath = window.location.pathname
+        injectJSONLD('schema-breadcrumb', getBreadcrumbSchema(initialPath))
         observer.disconnect()
       }
     })
@@ -199,14 +209,4 @@ export function useStructuredData() {
     },
     { immediate: true }
   )
-
-  // Also inject breadcrumb immediately on mount using window.location as fallback
-  // This ensures breadcrumb is available even before Vue Router initializes
-  // This is important for SEO crawlers that might not wait for JavaScript
-  if (typeof window !== 'undefined') {
-    const initialPath = window.location.pathname
-    // Always inject breadcrumb immediately based on current URL
-    // The watch will update it with proper meta when router is ready
-    injectJSONLD('schema-breadcrumb', getBreadcrumbSchema(initialPath))
-  }
 }

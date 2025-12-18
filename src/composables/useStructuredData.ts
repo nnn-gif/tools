@@ -180,13 +180,15 @@ export function useStructuredData() {
     () => route.path,
     () => {
       const meta = route.meta as unknown as RouteMeta | undefined
+      // Use route.path, fallback to window.location.pathname for initial load
+      const currentPath = route.path || window.location.pathname
 
       // Breadcrumb schema for all routes (always update with route meta for better names)
-      injectJSONLD('schema-breadcrumb', getBreadcrumbSchema(route.path, meta))
+      injectJSONLD('schema-breadcrumb', getBreadcrumbSchema(currentPath, meta))
 
       // SoftwareApplication schema for tool pages
-      if (meta && meta.title && meta.description && route.path !== '/') {
-        injectJSONLD('schema-software', getSoftwareApplicationSchema(meta, route.path))
+      if (meta && meta.title && meta.description && currentPath !== '/') {
+        injectJSONLD('schema-software', getSoftwareApplicationSchema(meta, currentPath))
       } else {
         // Remove software schema if not on a tool page
         const existing = document.getElementById('schema-software')
@@ -197,4 +199,14 @@ export function useStructuredData() {
     },
     { immediate: true }
   )
+
+  // Also inject breadcrumb immediately on mount using window.location as fallback
+  // This ensures breadcrumb is available even before Vue Router initializes
+  // This is important for SEO crawlers that might not wait for JavaScript
+  if (typeof window !== 'undefined') {
+    const initialPath = window.location.pathname
+    // Always inject breadcrumb immediately based on current URL
+    // The watch will update it with proper meta when router is ready
+    injectJSONLD('schema-breadcrumb', getBreadcrumbSchema(initialPath))
+  }
 }

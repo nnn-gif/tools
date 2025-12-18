@@ -116,6 +116,7 @@ function getBreadcrumbSchema(path: string, routeMeta?: RouteMeta) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
+    name: 'Breadcrumb Navigation',
     itemListElement: breadcrumbs
   }
 }

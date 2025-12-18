@@ -17,6 +17,24 @@ function injectJSONLD(id: string, jsonLd: object) {
     existing.remove()
   }
 
+  // Also remove any duplicate schemas without ID (from static HTML)
+  // This prevents duplicates when static and dynamic schemas exist
+  const allScripts = document.querySelectorAll('script[type="application/ld+json"]')
+  allScripts.forEach((script) => {
+    if (!script.id && script.textContent) {
+      try {
+        const parsed = JSON.parse(script.textContent)
+        const newParsed = jsonLd as { '@type'?: string }
+        // If same type and no ID, remove it (likely a duplicate)
+        if (parsed['@type'] === newParsed['@type'] && parsed['@type'] === 'BreadcrumbList') {
+          script.remove()
+        }
+      } catch {
+        // Ignore parse errors
+      }
+    }
+  })
+
   // Create new script tag
   const script = document.createElement('script')
   script.id = id

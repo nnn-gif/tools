@@ -21,7 +21,7 @@ function injectJSONLD(id: string, jsonLd: object) {
   const script = document.createElement('script')
   script.id = id
   script.type = 'application/ld+json'
-  script.textContent = JSON.stringify(jsonLd)
+  script.textContent = JSON.stringify(jsonLd, null, 0)
   document.head.appendChild(script)
 }
 
@@ -125,16 +125,37 @@ function getSoftwareApplicationSchema(meta: RouteMeta, path: string) {
 export function useStructuredData() {
   const route = useRoute()
 
-  // Inject base schemas (Organization and WebSite) once
-  injectJSONLD('schema-organization', getOrganizationSchema())
-  injectJSONLD('schema-website', getWebSiteSchema())
+  // Wait for DOM to be ready before injecting
+  const injectSchemas = () => {
+    // Only inject if not already present (static schemas in index.html handle homepage)
+    if (!document.getElementById('schema-organization')) {
+      injectJSONLD('schema-organization', getOrganizationSchema())
+    }
+    if (!document.getElementById('schema-website')) {
+      injectJSONLD('schema-website', getWebSiteSchema())
+    }
+  }
+
+  // Inject base schemas immediately
+  if (document.head) {
+    injectSchemas()
+  } else {
+    // Wait for head to be available
+    const observer = new MutationObserver(() => {
+      if (document.head) {
+        injectSchemas()
+        observer.disconnect()
+      }
+    })
+    observer.observe(document.documentElement, { childList: true })
+  }
 
   watch(
     () => route.path,
     () => {
       const meta = route.meta as unknown as RouteMeta | undefined
 
-      // Breadcrumb schema for all routes
+      // Breadcrumb schema for all routes (always update)
       injectJSONLD('schema-breadcrumb', getBreadcrumbSchema(route.path))
 
       // SoftwareApplication schema for tool pages

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecting...</title>
+  <script>
+    // GitHub Pages 404.html workaround for Vue SPA
+    // When accessing routes directly (e.g., /diff), GitHub Pages serves 404.html
+    // This redirects to index.html and preserves the original path for Vue Router
+    (function() {
+      var path = window.location.pathname;
+      var search = window.location.search;
+      var hash = window.location.hash;
+      
+      // Redirect to index.html
+      // Vue Router will read window.location.pathname when it initializes
+      // So we need to ensure the path is correct in the URL
+      if (path !== '/index.html' && path !== '/') {
+        // Redirect to index.html, then immediately fix the URL using replaceState
+        // This ensures Vue Router sees the correct path
+        window.location.replace('/index.html');
+        // After redirect, the URL will be /index.html, but we want Vue Router to see the original path
+        // So we'll use a query parameter approach or hash
+        // Actually, simpler: redirect with hash, Vue Router can handle it
+        // Or better: use sessionStorage and fix in main.ts
+        sessionStorage.setItem('_redirect_path', path + search + hash);
+      } else {
+        window.location.replace('/');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <p>Redirecting...</p>
+  <noscript>
+    <p>Please enable JavaScript to view this page.</p>
+    <p><a href="/">Go to homepage</a></p>
+  </noscript>
+</body>
+</html>

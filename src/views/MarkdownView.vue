@@ -22,29 +22,33 @@ Formatho is a collection of essential developer tools designed to make your work
 
 ## 🛠️ Available Tools
 
+<div class="tools-links">
+
 ### Document Tools
-- **Markdown Editor** - Write and preview markdown with live rendering
+- <a href="/">Markdown Editor</a> - Write and preview markdown with live rendering
 
 ### Converters
-- **JSON ↔ YAML** - Convert between JSON and YAML formats
-- **JSON ↔ CSV** - Transform JSON to CSV and vice versa
+- <a href="/json-yaml">JSON to YAML Converter</a> - Convert between JSON and YAML formats instantly
+- <a href="/json-csv">JSON to CSV Converter</a> - Transform JSON to CSV and vice versa
 
 ### Utilities
-- **Diff Checker** - Compare text and highlight differences
-- **Base64 Encoder/Decoder** - Encode and decode Base64 strings
-- **JWT Debugger** - Decode and inspect JSON Web Tokens
-- **SQL Formatter** - Format and beautify SQL queries
+- <a href="/diff">Text Diff Tool</a> - Compare text and highlight differences
+- <a href="/base64">Base64 Encoder & Decoder</a> - Encode and decode Base64 strings
+- <a href="/jwt">JWT Decoder</a> - Decode and inspect JSON Web Tokens
+- <a href="/sql">SQL Formatter</a> - Format and beautify SQL queries
 
 ### Generators
-- **UUID Generator** - Generate unique identifiers in bulk
-- **Lorem Ipsum** - Create placeholder text for designs
+- <a href="/uuid">UUID Generator</a> - Generate unique identifiers in bulk
+- <a href="/lorem">Lorem Ipsum Generator</a> - Create placeholder text for designs
 
 ### Linters
-- **JSON Linter** - Validate and format JSON with syntax checking
-- **YAML Linter** - Validate and format YAML with syntax checking
+- <a href="/json-lint">JSON Linter & Validator</a> - Validate and format JSON with syntax checking
+- <a href="/yaml-lint">YAML Linter & Validator</a> - Validate and format YAML with syntax checking
 
 ### Media Tools
-- **Image Compressor** - Resize and compress images client-side
+- <a href="/image">Image Compressor</a> - Resize and compress images client-side
+
+</div>
 
 ## 💡 Request New Tools
 

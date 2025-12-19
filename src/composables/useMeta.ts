@@ -84,6 +84,9 @@ export function useMeta() {
           ...meta,
           path: route.path
         })
+      } else {
+        // Fallback to default if route meta is missing
+        console.warn(`Route ${route.path} is missing title or description in meta`)
       }
     },
     { immediate: true }

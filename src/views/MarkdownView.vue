@@ -21,7 +21,10 @@ const markdownText = ref<string>(`# Formatho
 No sign-up.  
 No uploads.  
 No tracking.  
-✨ Just tools that work. ✨
+
+<span style="background-color: #2F5BEA; color: #ffffff; padding: 2px 7px; border-radius: 3px; font-weight: 500; letter-spacing: 0.01em;">
+✨ Just tools that work ✨ 
+</span>
 
 ---
 
@@ -168,8 +171,7 @@ Have a tool idea? Missing a formatter or converter?
 Formatho grows based on real developer and creator needs.
 
 ---
-
-← ← ← ← ← ← ←*Start using tools from the sidebar* ← ← ← ← ← ← ←
+← ← ← ← ← ← ← *Start using tools from the sidebar* ← ← ← ← ← ← ←
 `)
 
 const handleFileUpload = (e: Event) => {

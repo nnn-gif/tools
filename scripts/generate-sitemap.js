@@ -14,7 +14,8 @@ const routes = [
   { path: '/lorem', priority: '0.8', changefreq: 'monthly' },
   { path: '/image', priority: '0.8', changefreq: 'monthly' },
   { path: '/json-lint', priority: '0.8', changefreq: 'monthly' },
-  { path: '/yaml-lint', priority: '0.8', changefreq: 'monthly' }
+  { path: '/yaml-lint', priority: '0.8', changefreq: 'monthly' },
+  { path: '/bpmn', priority: '0.9', changefreq: 'monthly' }
 ]
 
 const domain = 'https://formatho.com'

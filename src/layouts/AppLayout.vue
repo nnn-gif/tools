@@ -16,7 +16,8 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Sun,
-  Moon
+  Moon,
+  Network
 } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 
@@ -83,6 +84,18 @@ const toggleDark = useToggle(isDark)
                 :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100'"
                 class="transition-all duration-200"
                 >Markdown Editor</span
+              >
+            </RouterLink>
+            <RouterLink
+              to="/bpmn"
+              class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground [&.router-link-active]:bg-secondary [&.router-link-active]:text-foreground transition-all group overflow-hidden whitespace-nowrap"
+              :title="isCollapsed ? 'BPMN Viewer' : ''"
+            >
+              <Network class="h-5 w-5 flex-shrink-0" />
+              <span
+                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100'"
+                class="transition-all duration-200"
+                >BPMN Viewer</span
               >
             </RouterLink>
           </div>

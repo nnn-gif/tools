@@ -16,6 +16,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
     "@vueuse/core": "^14.1.0",
+    "bpmn-js": "^18.9.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "diff": "^8.0.2",
@@ -25,6 +26,7 @@
     "highlight.js": "^11.11.1",
     "html2pdf.js": "^0.12.1",
     "js-yaml": "^4.1.1",
+    "jspdf": "^3.0.4",
     "jwt-decode": "^4.0.0",
     "lorem-ipsum": "^2.0.8",
     "lucide-vue-next": "^0.561.0",

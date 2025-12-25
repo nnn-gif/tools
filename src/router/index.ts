@@ -152,6 +152,18 @@ const router = createRouter({
             keywords:
               'yaml linter, yaml validator, yaml formatter, validate yaml, yaml checker, privacy-first'
           }
+        },
+        {
+          path: 'bpmn',
+          name: 'bpmn',
+          component: () => import('../views/BpmnView.vue'),
+          meta: {
+            title: 'BPMN Viewer & PDF Exporter',
+            description:
+              'Visualize BPMN 2.0 diagrams and export them as PDF. Free, privacy-first BPMN viewer that runs entirely in your browser.',
+            keywords:
+              'bpmn viewer, bpmn to pdf, bpmn diagram, business process model, bpmn export, privacy-first'
+          }
         }
       ]
     }

@@ -170,4 +170,30 @@ const router = createRouter({
   ]
 })
 
+router.afterEach((to) => {
+  // Update Title
+  const title = to.meta.title as string
+  if (title) {
+    document.title = `${title} | Formatho`
+  }
+
+  // Update Description
+  const description = to.meta.description as string
+  const metaDescription = document.querySelector('meta[name="description"]')
+  if (metaDescription && description) {
+    metaDescription.setAttribute('content', description)
+  }
+
+  // Update Canonical URL
+  let canonical = document.querySelector('link[rel="canonical"]')
+  if (!canonical) {
+    canonical = document.createElement('link')
+    canonical.setAttribute('rel', 'canonical')
+    document.head.appendChild(canonical)
+  }
+  const baseUrl = 'https://formatho.com'
+  const path = to.path.endsWith('/') ? to.path.slice(0, -1) : to.path
+  canonical.setAttribute('href', `${baseUrl}${path}`)
+})
+
 export default router

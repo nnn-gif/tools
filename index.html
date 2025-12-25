@@ -2,16 +2,6 @@
 <html lang="en">
 
 <head>
-  <!-- Redirect www to non-www (canonical domain) -->
-  <script>
-    (function() {
-      if (window.location.hostname.startsWith('www.')) {
-        var canonicalHost = window.location.hostname.replace(/^www\./, '');
-        var newUrl = window.location.protocol + '//' + canonicalHost + window.location.pathname + window.location.search + window.location.hash;
-        window.location.replace(newUrl);
-      }
-    })();
-  </script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZJ1GXW78TW"></script>
   <script>

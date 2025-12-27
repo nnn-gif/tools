@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 planning/
-ux_improvement_plan.md
+.env

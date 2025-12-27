@@ -191,7 +191,7 @@ router.afterEach((to) => {
     canonical.setAttribute('rel', 'canonical')
     document.head.appendChild(canonical)
   }
-  const baseUrl = 'https://formatho.com'
+  const baseUrl = 'https://formatho.com/tools'
   const path = to.path.endsWith('/') ? to.path.slice(0, -1) : to.path
   canonical.setAttribute('href', `${baseUrl}${path}`)
 })

@@ -64,14 +64,18 @@ services:
         define('WP_SITEURL', 'https://formatho.com/insights');
         define('WP_HOME', 'https://formatho.com/insights');
 
-         $proto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '';
-        if ($proto && strpos($proto, 'https') !== false) {
-            $_SERVER['HTTPS'] = 'on';
+         $$proto = $$_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '';
+        if ($$proto && strpos($$proto, 'https') !== false) {
+            $$_SERVER['HTTPS'] = 'on';
         }
 
-        $fwdHost = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? '';
-        if ($fwdHost) {
-            $_SERVER['HTTP_HOST'] = $fwdHost;
+        $$fwdHost = $$_SERVER['HTTP_X_FORWARDED_HOST'] ?? '';
+        if ($$fwdHost) {
+            $$_SERVER['HTTP_HOST'] = $$fwdHost;
+        }
+
+        if (isset($$_SERVER['REQUEST_URI'])) {
+            $$_SERVER['REQUEST_URI'] = '/insights' . $$_SERVER['REQUEST_URI'];
         }
     networks:
       - app-network

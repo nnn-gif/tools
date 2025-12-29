@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AppLayout from '../layouts/AppLayout.vue'
+import HomeView from '../views/HomeView.vue'
 import MarkdownView from '../views/MarkdownView.vue'
 
 const router = createRouter({
@@ -11,6 +12,18 @@ const router = createRouter({
       children: [
         {
           path: '',
+          name: 'home',
+          component: HomeView,
+          meta: {
+            title: 'Formatho - Privacy-First Developer Tools',
+            description:
+              'Fast, secure, privacy-first collection of online text formatting tools, developer utilities, and content productivity tools.',
+            keywords:
+              'developer tools, text formatter, json formatter, privacy-first tools, online utilities'
+          }
+        },
+        {
+          path: 'markdown',
           name: 'markdown',
           component: MarkdownView,
           meta: {

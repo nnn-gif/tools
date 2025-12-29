@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { RouterLink, RouterView } from 'vue-router'
+import { ref, computed } from 'vue'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { useDark, useToggle } from '@vueuse/core'
 import {
   FileCode,
@@ -21,6 +21,9 @@ import {
 } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 
+const route = useRoute()
+const isHomePage = computed(() => route.name === 'home')
+
 const storedState = localStorage.getItem('sidebarCollapsed')
 const isCollapsed = ref(storedState === null ? true : storedState === 'true')
 
@@ -37,6 +40,7 @@ const toggleDark = useToggle(isDark)
   <div class="flex h-screen w-screen bg-background text-foreground overflow-hidden">
     <!-- Sidebar -->
     <aside
+      v-if="!isHomePage"
       class="flex-shrink-0 border-r border-border bg-muted/10 transition-all duration-300 ease-in-out flex flex-col"
       :class="isCollapsed ? 'w-16' : 'w-64'"
     >
@@ -75,7 +79,7 @@ const toggleDark = useToggle(isDark)
           </h3>
           <div class="space-y-1">
             <RouterLink
-              to="/"
+              to="/markdown"
               class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground [&.router-link-active]:bg-secondary [&.router-link-active]:text-foreground transition-all group overflow-hidden whitespace-nowrap"
               :title="isCollapsed ? 'Markdown Editor' : ''"
             >

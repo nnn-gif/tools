@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
-import { useDark, useToggle } from '@vueuse/core'
 import {
   FileCode,
   FileJson,
@@ -15,8 +14,6 @@ import {
   Image as ImageIcon,
   PanelLeftClose,
   PanelLeftOpen,
-  Sun,
-  Moon,
   Network
 } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
@@ -31,9 +28,6 @@ const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value
   localStorage.setItem('sidebarCollapsed', String(isCollapsed.value))
 }
-
-const isDark = useDark()
-const toggleDark = useToggle(isDark)
 </script>
 
 <template>
@@ -293,20 +287,8 @@ const toggleDark = useToggle(isDark)
         </div>
       </nav>
 
-      <!-- Footer Actions: Theme Toggle & Sidebar Toggle -->
-      <div class="p-4 border-t border-border flex flex-col gap-2">
-        <Button
-          variant="ghost"
-          size="icon"
-          @click="toggleDark()"
-          class="w-full"
-          :title="isDark ? 'Light Mode' : 'Dark Mode'"
-        >
-          <Moon v-if="isDark" class="h-5 w-5" />
-          <Sun v-else class="h-5 w-5" />
-          <span v-if="!isCollapsed" class="ml-2 text-sm">Theme</span>
-        </Button>
-
+      <!-- Footer Actions: Sidebar Toggle -->
+      <div class="p-4 border-t border-border">
         <Button
           v-if="isCollapsed"
           variant="ghost"

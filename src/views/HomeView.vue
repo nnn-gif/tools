@@ -139,34 +139,44 @@ const tools = [
 <template>
   <div class="flex flex-col h-full overflow-y-auto bg-background">
     <!-- Hero Section -->
-    <section class="border-b border-border bg-muted/10">
-      <div class="container mx-auto px-6 py-16 md:py-24">
-        <div class="flex flex-col items-center text-center space-y-6">
-          <div class="flex items-center gap-3">
-            <img src="/logo.png" alt="Formatho" class="h-16 w-16 rounded-lg" />
-            <h1 class="text-4xl md:text-5xl font-bold tracking-tight">Formatho</h1>
+    <section
+      class="border-b border-border bg-gradient-to-b from-muted/20 via-muted/10 to-background"
+    >
+      <div class="container mx-auto px-6 py-20 md:py-28">
+        <div class="flex flex-col items-center text-center space-y-8 max-w-4xl mx-auto">
+          <div class="flex items-center gap-4">
+            <img
+              src="/logo.png"
+              alt="Formatho"
+              class="h-20 w-20 md:h-24 md:w-24 rounded-xl shadow-lg"
+            />
+            <h1
+              class="text-5xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent"
+            >
+              Formatho
+            </h1>
           </div>
-          <p class="text-xl md:text-2xl text-muted-foreground max-w-2xl">
+          <p class="text-2xl md:text-3xl font-semibold text-foreground max-w-3xl leading-tight">
             The Privacy-First Online Text & Developer Utility Toolkit
           </p>
-          <p class="text-base md:text-lg text-muted-foreground max-w-xl">
+          <p class="text-base md:text-lg text-muted-foreground max-w-2xl leading-relaxed">
             Fast, secure, privacy-first collection of online text formatting tools, developer
             utilities, and content productivity tools — built to solve everyday formatting,
             conversion, and debugging problems directly in your browser.
           </p>
-          <div class="flex flex-wrap gap-2 justify-center mt-4">
+          <div class="flex flex-wrap gap-3 justify-center mt-2">
             <span
-              class="px-3 py-1 text-sm rounded-md bg-primary/10 text-primary border border-primary/20"
+              class="px-4 py-2 text-sm font-medium rounded-lg bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 transition-colors"
             >
               No sign-up
             </span>
             <span
-              class="px-3 py-1 text-sm rounded-md bg-primary/10 text-primary border border-primary/20"
+              class="px-4 py-2 text-sm font-medium rounded-lg bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 transition-colors"
             >
               No uploads
             </span>
             <span
-              class="px-3 py-1 text-sm rounded-md bg-primary/10 text-primary border border-primary/20"
+              class="px-4 py-2 text-sm font-medium rounded-lg bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 transition-colors"
             >
               No tracking
             </span>
@@ -176,11 +186,17 @@ const tools = [
     </section>
 
     <!-- Tools Section -->
-    <section class="container mx-auto px-6 py-12">
-      <div class="space-y-12">
-        <div v-for="category in tools" :key="category.category" class="space-y-4">
-          <h2 class="text-2xl font-semibold tracking-tight">{{ category.category }}</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <section class="container mx-auto px-6 py-12 md:py-16">
+      <div class="space-y-16">
+        <div v-for="category in tools" :key="category.category" class="space-y-6">
+          <div class="flex items-center gap-3">
+            <h2 class="text-3xl font-bold tracking-tight">{{ category.category }}</h2>
+            <div class="flex-1 h-px bg-border"></div>
+            <span class="text-sm text-muted-foreground font-medium">
+              {{ category.items.length }} {{ category.items.length === 1 ? 'tool' : 'tools' }}
+            </span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <RouterLink
               v-for="tool in category.items"
               :key="tool.name"
@@ -188,18 +204,26 @@ const tools = [
               class="group"
             >
               <Card
-                class="h-full transition-all hover:shadow-md hover:border-primary/50 cursor-pointer"
+                class="h-full transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/50 hover:-translate-y-1 cursor-pointer border-2"
               >
                 <CardHeader>
-                  <div class="flex items-center gap-3 mb-2">
-                    <component :is="tool.icon" class="h-6 w-6 text-primary flex-shrink-0" />
-                    <CardTitle class="group-hover:text-primary transition-colors">
-                      {{ tool.name }}
-                    </CardTitle>
+                  <div class="flex items-start gap-4">
+                    <div
+                      class="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
+                    >
+                      <component :is="tool.icon" class="h-5 w-5 text-primary flex-shrink-0" />
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <CardTitle
+                        class="group-hover:text-primary transition-colors text-lg leading-tight"
+                      >
+                        {{ tool.name }}
+                      </CardTitle>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription>{{ tool.description }}</CardDescription>
+                  <CardDescription class="leading-relaxed">{{ tool.description }}</CardDescription>
                 </CardContent>
               </Card>
             </RouterLink>

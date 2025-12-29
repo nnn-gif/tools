@@ -28,7 +28,7 @@ watchEffect(async () => {
     htmlContent.value = String(file)
   } catch (err) {
     console.error('Markdown processing failed', err)
-    htmlContent.value = '<p class="text-red-500">Error rendering markdown</p>'
+    htmlContent.value = '<p class="text-destructive">Error rendering markdown</p>'
   }
 })
 </script>

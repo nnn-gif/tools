@@ -161,9 +161,7 @@ const compressionRatio = computed(() => {
             </div>
             <div class="flex justify-between text-sm">
               <span class="text-muted-foreground">Compressed</span>
-              <span class="font-mono font-bold text-green-600">{{
-                formatSize(compressedSize)
-              }}</span>
+              <span class="font-mono font-bold text-success">{{ formatSize(compressedSize) }}</span>
             </div>
             <div class="flex justify-between text-sm border-t border-border/50 pt-2">
               <span class="text-muted-foreground">Savings</span>

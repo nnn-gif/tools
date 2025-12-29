@@ -69,9 +69,9 @@ address:
             <div class="flex items-center gap-2">
               YAML Input
               <div v-if="yamlInput.trim()" class="flex items-center gap-1">
-                <CheckCircle v-if="isValid" class="h-4 w-4 text-green-500" />
-                <AlertCircle v-else class="h-4 w-4 text-red-500" />
-                <span :class="isValid ? 'text-green-500' : 'text-red-500'" class="text-xs">
+                <CheckCircle v-if="isValid" class="h-4 w-4 text-success" />
+                <AlertCircle v-else class="h-4 w-4 text-destructive" />
+                <span :class="isValid ? 'text-success' : 'text-destructive'" class="text-xs">
                   {{ isValid ? 'Valid' : 'Invalid' }}
                 </span>
               </div>

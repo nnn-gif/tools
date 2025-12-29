@@ -73,8 +73,8 @@ const fillSample = () => {
               v-for="(part, index) in diffResult"
               :key="index"
               :class="{
-                'bg-green-500/20 text-green-700 dark:text-green-300': part.added,
-                'bg-red-500/20 text-red-700 dark:text-red-300': part.removed,
+                'bg-success/20 text-success': part.added,
+                'bg-destructive/20 text-destructive': part.removed,
                 'text-muted-foreground': !part.added && !part.removed
               }"
               >{{ part.value }}</span

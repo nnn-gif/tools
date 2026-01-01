@@ -63,8 +63,6 @@ while (have_posts()) {
             }
             ?>
         </footer>
-    </article>
-
     <?php
     // Post navigation
     the_post_navigation(array(
@@ -76,7 +74,8 @@ while (have_posts()) {
     if (comments_open() || get_comments_number()) {
         comments_template();
     }
-}
+    ?>
+    </article>
 ?>
 
 <?php

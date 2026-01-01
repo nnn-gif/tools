@@ -1,5 +1,6 @@
 services:
   app:
+    build: .
     image: formatho:latest
     container_name: formatho_app
     restart: unless-stopped
@@ -77,6 +78,13 @@ services:
         if (isset($$_SERVER['REQUEST_URI'])) {
             $$_SERVER['REQUEST_URI'] = '/insights' . $$_SERVER['REQUEST_URI'];
         }
+    volumes:
+      # Persist WordPress content: themes, plugins, uploads, and customizations
+      - wordpress_data:/var/www/html/wp-content
+      # Mount custom theme
+      - ./formatho-theme:/var/www/html/wp-content/themes/formatho-theme
+      # Optionally persist wp-config.php if you make custom changes
+      # - wordpress_config:/var/www/html/wp-config.php
     networks:
       - app-network
 
@@ -86,3 +94,6 @@ networks:
 
 volumes:
   db_data:
+    driver: local
+  wordpress_data:
+    driver: local

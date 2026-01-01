@@ -24,13 +24,22 @@ jobs:
           docker build -t ${{ env.IMAGE_NAME }}:latest .
           docker save ${{ env.IMAGE_NAME }}:latest | gzip > ${{ env.IMAGE_NAME }}.tar.gz
 
+      - name: Clean up Theme Directory
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DO_HOST }}
+          username: ${{ secrets.DO_USERNAME }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          script: |
+            rm -rf /home/${{ secrets.DO_USERNAME }}/formatho/formatho-theme
+
       - name: Copy Files to Droplet
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USERNAME }}
           key: ${{ secrets.DO_SSH_KEY }}
-          source: "${{ env.IMAGE_NAME }}.tar.gz,docker-compose.yml,nginx-proxy.conf"
+          source: "${{ env.IMAGE_NAME }}.tar.gz,docker-compose.yml,nginx-proxy.conf,formatho-theme"
           target: "/home/${{ secrets.DO_USERNAME }}/formatho"
 
       - name: Deploy via SSH
@@ -43,5 +52,6 @@ jobs:
             cd /home/${{ secrets.DO_USERNAME }}/formatho
             gunzip -c ${{ env.IMAGE_NAME }}.tar.gz | docker load
             docker compose up -d
+            docker compose restart wordpress
             rm ${{ env.IMAGE_NAME }}.tar.gz
             docker image prune -f

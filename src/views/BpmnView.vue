@@ -1,35 +1,53 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { FileType, Pencil, Trash2 } from 'lucide-vue-next'
+import { Upload, FileType } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { Textarea } from '@/components/ui/textarea'
 
 // @ts-ignore - bpmn-js doesn't have official TypeScript types
 import BpmnViewer from 'bpmn-js/lib/Viewer'
 
-const bpmnInput = ref('')
+const file = ref<File | null>(null)
 const bpmnXml = ref('')
 const error = ref('')
 const isExporting = ref(false)
 const viewerContainer = ref<HTMLDivElement | null>(null)
 let viewer: any = null
 
-const handleVisualize = async () => {
-  if (!bpmnInput.value.trim()) {
-    error.value = 'Please enter XML content'
+const formatSize = (bytes: number) => {
+  if (bytes === 0) return '0 B'
+  const k = 1024
+  const sizes = ['B', 'KB', 'MB', 'GB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+}
+
+const handleFileUpload = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  const selected = target.files?.[0]
+  if (!selected) return
+
+  if (!selected.name.endsWith('.bpmn') && !selected.name.endsWith('.xml')) {
+    error.value = 'Please upload a valid BPMN file (.bpmn or .xml)'
     return
   }
 
+  file.value = selected
   error.value = ''
-  bpmnXml.value = bpmnInput.value
-  await renderBpmn(bpmnInput.value)
+
+  const reader = new FileReader()
+  reader.onload = async (e) => {
+    const content = e.target?.result as string
+    bpmnXml.value = content
+    await renderBpmn(content)
+  }
+  reader.onerror = () => {
+    error.value = 'Failed to read file'
+  }
+  reader.readAsText(selected)
 }
 
 const renderBpmn = async (xml: string) => {
-  // Wait for DOM update so viewerContainer is available
-  await new Promise((resolve) => setTimeout(resolve, 0))
-
   if (!viewerContainer.value) return
 
   try {
@@ -51,7 +69,7 @@ const renderBpmn = async (xml: string) => {
 
     error.value = ''
   } catch (err: any) {
-    error.value = `Failed to render BPMN: ${err.message || 'Invalid BPMN content'}`
+    error.value = `Failed to render BPMN: ${err.message || 'Invalid BPMN file'}`
     console.error('BPMN rendering error:', err)
   }
 }
@@ -64,8 +82,8 @@ const handleExportPDF = async () => {
     // Generate unique ID (timestamp-based)
     const uniqueId = Date.now().toString(36)
 
-    // Default filename since we don't have a file object
-    const baseFilename = 'bpmn-diagram'
+    // Extract base filename without extension
+    const baseFilename = file.value?.name.replace(/\.(bpmn|xml)$/, '') || 'bpmn-diagram'
 
     // Format: formatho.com-filename-id.pdf
     const pdfFilename = `formatho.com-${baseFilename}-${uniqueId}.pdf`
@@ -135,20 +153,17 @@ const handleExportPDF = async () => {
   }
 }
 
-const editMode = () => {
+const resetViewer = () => {
+  file.value = null
   bpmnXml.value = ''
+  error.value = ''
   if (viewer) {
     viewer.clear()
   }
 }
 
-const clearInput = () => {
-  bpmnInput.value = ''
-  editMode()
-}
-
 onMounted(() => {
-  // Viewer will be created when needed
+  // Viewer will be created when first diagram is loaded
 })
 
 onUnmounted(() => {
@@ -162,52 +177,68 @@ onUnmounted(() => {
   <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
     <div class="flex items-center justify-between">
       <h1 class="text-3xl font-bold tracking-tight">BPMN Viewer</h1>
-      <div v-if="bpmnXml" class="flex gap-2">
+      <div v-if="file" class="flex gap-2">
         <Button @click="handleExportPDF" :disabled="isExporting" variant="secondary" size="sm">
           <FileType class="mr-2 h-4 w-4" />
           {{ isExporting ? 'Exporting...' : 'Export PDF' }}
         </Button>
-        <Button @click="editMode" variant="outline" size="sm">
-          <Pencil class="mr-2 h-4 w-4" /> Edit
-        </Button>
-        <Button
-          @click="clearInput"
-          variant="ghost"
-          size="sm"
-          class="text-destructive hover:text-destructive"
-        >
-          <Trash2 class="mr-2 h-4 w-4" /> Clear
-        </Button>
+        <Button @click="resetViewer" variant="outline" size="sm"> New File </Button>
       </div>
     </div>
 
-    <!-- Input State -->
+    <!-- Upload State -->
     <div
-      v-if="!bpmnXml"
+      v-if="!file"
       class="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-border rounded-lg bg-card text-card-foreground p-8"
     >
-      <div class="flex flex-col items-center gap-4 w-full max-w-2xl h-full">
-        <div class="space-y-1 text-center">
-          <h3 class="font-semibold text-lg">Paste BPMN XML</h3>
+      <div class="flex flex-col items-center gap-4 text-center max-w-sm">
+        <div class="h-16 w-16 rounded-full bg-muted flex items-center justify-center">
+          <Upload class="h-8 w-8 text-muted-foreground" />
+        </div>
+        <div class="space-y-1">
+          <h3 class="font-semibold text-lg">Upload a BPMN file</h3>
           <p class="text-sm text-muted-foreground">
-            Paste your BPMN 2.0 XML content below to visualize and export as PDF
+            Upload a BPMN 2.0 XML file to visualize and export as PDF
           </p>
         </div>
-
-        <Textarea
-          v-model="bpmnInput"
-          placeholder="<?xml version='1.0' encoding='UTF-8'?>..."
-          class="font-mono text-xs flex-1 min-h-[400px] w-full resize-none p-4"
-        />
-
-        <Button class="w-full" @click="handleVisualize" :disabled="!bpmnInput">
-          Visualize Diagram
+        <Button class="w-full relative">
+          Select BPMN File
+          <input
+            type="file"
+            accept=".bpmn,.xml"
+            class="absolute inset-0 opacity-0 cursor-pointer"
+            @change="handleFileUpload"
+          />
         </Button>
       </div>
     </div>
 
     <!-- Viewer State -->
     <div v-else class="flex-1 flex flex-col gap-4 min-h-0">
+      <!-- File Info -->
+      <Card>
+        <CardContent class="py-3 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <FileType class="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <p class="font-medium text-sm">{{ file.name }}</p>
+              <p class="text-xs text-muted-foreground">{{ formatSize(file.size) }}</p>
+            </div>
+          </div>
+          <Button variant="ghost" size="sm" class="relative">
+            Change File
+            <input
+              type="file"
+              accept=".bpmn,.xml"
+              class="absolute inset-0 opacity-0 cursor-pointer"
+              @change="handleFileUpload"
+            />
+          </Button>
+        </CardContent>
+      </Card>
+
       <!-- Error Display -->
       <Card v-if="error" class="border-destructive">
         <CardContent class="py-3">
@@ -218,10 +249,10 @@ onUnmounted(() => {
       <!-- BPMN Viewer -->
       <Card class="flex-1 min-h-0 overflow-hidden">
         <CardHeader class="py-3">
-          <CardTitle class="text-sm">Diagram View</CardTitle>
+          <CardTitle class="text-sm">Diagram Preview</CardTitle>
         </CardHeader>
         <CardContent class="h-full p-0">
-          <div ref="viewerContainer" class="w-full h-full bg-background relative"></div>
+          <div ref="viewerContainer" class="w-full h-full bg-background"></div>
         </CardContent>
       </Card>
     </div>

@@ -18,7 +18,7 @@ const routes = [
   { path: '/bpmn', priority: '0.9', changefreq: 'monthly' }
 ]
 
-const domain = 'https://formatho.com'
+const domain = 'https://formatho.com/tools'
 const currentDate = new Date().toISOString().split('T')[0]
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

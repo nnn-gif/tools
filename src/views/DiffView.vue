@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import * as Diff from 'diff'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -20,9 +20,39 @@ const computeDiff = () => {
 
 watch([originalText, modifiedText], computeDiff)
 
+const processedLines = computed(() => {
+  const lines: { type: 'added' | 'removed' | 'unchanged'; value: string }[] = []
+
+  diffResult.value.forEach((part) => {
+    const split = part.value.split('\n')
+    // If the part ends with a newline, split() creates an empty string at the end.
+    // We remove it because the newline is the separator for the previous line.
+    if (part.value.endsWith('\n')) {
+      split.pop()
+    }
+
+    split.forEach((line: string) => {
+      lines.push({
+        type: part.added ? 'added' : part.removed ? 'removed' : 'unchanged',
+        value: line
+      })
+    })
+  })
+
+  return lines
+})
+
 const fillSample = () => {
-  originalText.value = `Hello World\nThis is a test file.\nIt has some lines.`
-  modifiedText.value = `Hello World!\nThis is a test file.\nIt has changed lines.`
+  originalText.value = `Hello World
+This is a test file.
+It has some lines.
+Some deleted lines.
+Unchanged footer.`
+  modifiedText.value = `Hello World!
+This is a test file.
+It has changed lines.
+New added lines.
+Unchanged footer.`
 }
 </script>
 
@@ -43,7 +73,7 @@ const fillSample = () => {
           <CardContent class="flex-1 min-h-0">
             <Textarea
               v-model="originalText"
-              class="h-full resize-none font-mono"
+              class="h-full resize-none font-mono text-sm leading-relaxed"
               placeholder="Paste original text here..."
             />
           </CardContent>
@@ -55,7 +85,7 @@ const fillSample = () => {
           <CardContent class="flex-1 min-h-0">
             <Textarea
               v-model="modifiedText"
-              class="h-full resize-none font-mono"
+              class="h-full resize-none font-mono text-sm leading-relaxed"
               placeholder="Paste modified text here..."
             />
           </CardContent>
@@ -63,22 +93,34 @@ const fillSample = () => {
       </div>
 
       <!-- Result Column -->
-      <Card class="flex flex-col min-h-0 bg-muted/50">
+      <Card class="flex flex-col min-h-0 bg-background/50">
         <CardHeader class="py-2">
           <CardTitle class="text-sm font-medium">Difference</CardTitle>
         </CardHeader>
-        <CardContent class="flex-1 min-h-0 overflow-auto">
-          <div class="font-mono text-sm whitespace-pre-wrap p-2">
-            <span
-              v-for="(part, index) in diffResult"
+        <CardContent class="flex-1 min-h-0 overflow-auto p-0">
+          <div class="font-mono text-sm w-full min-w-max">
+            <div
+              v-for="(line, index) in processedLines"
               :key="index"
+              class="flex w-full px-4 py-0.5 whitespace-pre"
               :class="{
-                'bg-success/20 text-success': part.added,
-                'bg-destructive/20 text-destructive': part.removed,
-                'text-muted-foreground': !part.added && !part.removed
+                'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300': line.type === 'added',
+                'bg-red-500/20 text-red-800 dark:text-red-300': line.type === 'removed',
+                'text-muted-foreground': line.type === 'unchanged'
               }"
-              >{{ part.value }}</span
             >
+              <span class="select-none w-6 inline-block opacity-50">{{
+                line.type === 'added' ? '+' : line.type === 'removed' ? '-' : ' '
+              }}</span>
+              <span>{{ line.value }}</span>
+            </div>
+            <!-- Show placeholder if empty -->
+            <div
+              v-if="processedLines.length === 0"
+              class="p-4 text-muted-foreground italic text-center"
+            >
+              Enter text to see differences
+            </div>
           </div>
         </CardContent>
       </Card>

@@ -167,9 +167,9 @@ const tools = [
         route: '/multi-chain-keys'
       },
       {
-        name: 'ETH Address from Key',
+        name: 'Address from Key',
         description:
-          'Derive an Ethereum address from a private key. Privacy-first, runs entirely in your browser.',
+          'Derive addresses for Ethereum, Bitcoin, Solana, and more from a raw private key.',
         icon: KeyRound,
         route: '/eth-address-from-key'
       }

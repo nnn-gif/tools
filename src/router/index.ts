@@ -228,13 +228,13 @@ const router = createRouter({
         {
           path: 'eth-address-from-key',
           name: 'eth-address-from-key',
-          component: () => import('../views/EthAddressFromPrivateKeyView.vue'),
+          component: () => import('../views/AddressFromPrivateKeyView.vue'),
           meta: {
-            title: 'ETH Address from Private Key',
+            title: 'Address from Private Key (Multi-Chain)',
             description:
-              'Derive an Ethereum address from a private key. Privacy-first, runs entirely in your browser.',
+              'Derive addresses for Ethereum, Bitcoin, Solana, and more from a private key. Runs entirely in browser.',
             keywords:
-              'ethereum address from private key, eth address generator, private key to address, evm tools'
+              'private key to address, eth address, btc address, solana address, multi chain tool'
           }
         }
       ]

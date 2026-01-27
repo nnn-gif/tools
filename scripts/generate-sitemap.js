@@ -21,7 +21,7 @@ const routes = [
   { path: '/keccak256', priority: '0.8', changefreq: 'monthly' },
   { path: '/address-checksum', priority: '0.8', changefreq: 'monthly' },
   { path: '/multi-chain-keys', priority: '0.8', changefreq: 'monthly' },
-  { path: '/eth-address-from-key', priority: '0.8', changefreq: 'monthly' }
+  { path: '/address-from-key', priority: '0.8', changefreq: 'monthly' }
 ]
 
 const domain = 'https://formatho.com/tools'

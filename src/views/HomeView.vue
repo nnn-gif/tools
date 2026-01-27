@@ -171,7 +171,7 @@ const tools = [
         description:
           'Derive addresses for Ethereum, Bitcoin, Solana, and more from a raw private key.',
         icon: KeyRound,
-        route: '/eth-address-from-key'
+        route: '/address-from-key'
       }
     ]
   }

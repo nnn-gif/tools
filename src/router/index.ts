@@ -226,8 +226,8 @@ const router = createRouter({
           }
         },
         {
-          path: 'eth-address-from-key',
-          name: 'eth-address-from-key',
+          path: 'address-from-key',
+          name: 'address-from-key',
           component: () => import('../views/AddressFromPrivateKeyView.vue'),
           meta: {
             title: 'Address from Private Key (Multi-Chain)',

@@ -75,7 +75,7 @@ services:
             $$_SERVER['HTTP_HOST'] = $$fwdHost;
         }
 
-        if (isset($$_SERVER['REQUEST_URI'])) {
+        if (isset($$_SERVER['REQUEST_URI']) && strpos($$_SERVER['REQUEST_URI'], '/insights') !== 0) {
             $$_SERVER['REQUEST_URI'] = '/insights' . $$_SERVER['REQUEST_URI'];
         }
     volumes:
@@ -83,6 +83,8 @@ services:
       - wordpress_data:/var/www/html/wp-content
       # Mount custom theme
       - ./formatho-theme:/var/www/html/wp-content/themes/formatho-theme
+      # Mount proper .htaccess for proxy header handling
+      - ./wordpress/.htaccess:/var/www/html/.htaccess
       # Optionally persist wp-config.php if you make custom changes
       # - wordpress_config:/var/www/html/wp-config.php
     networks:

@@ -47,8 +47,14 @@ body {
   background-color: var(--formatho-bg);
   color: var(--formatho-foreground);
   line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Global Image Reset */
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
 }
 
 /* ============================================
@@ -82,9 +88,11 @@ body {
   line-height: 0;
 }
 
+.site-branding img,
 .custom-logo {
   height: 48px;
-  width: 48px;
+  width: auto;
+  max-width: 100%;
   border-radius: 0.5rem;
   object-fit: contain;
 }

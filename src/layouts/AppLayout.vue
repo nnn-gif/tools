@@ -14,7 +14,10 @@ import {
   Image as ImageIcon,
   PanelLeftClose,
   PanelLeftOpen,
-  Network
+  Network,
+  Calculator,
+  Hash,
+  ShieldCheck
 } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 
@@ -281,6 +284,52 @@ const toggleSidebar = () => {
                 :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100'"
                 class="transition-all duration-200"
                 >YAML Linter</span
+              >
+            </RouterLink>
+          </div>
+        </div>
+        <div>
+          <h3
+            class="mb-2 px-2 text-xs font-semibold uppercase text-muted-foreground h-4 transition-opacity duration-200"
+            :class="isCollapsed ? 'opacity-0' : 'opacity-100'"
+          >
+            Blockchain
+          </h3>
+          <div class="space-y-1">
+            <RouterLink
+              to="/evm-converter"
+              class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground [&.router-link-active]:bg-secondary [&.router-link-active]:text-foreground transition-all overflow-hidden whitespace-nowrap"
+              :title="isCollapsed ? 'EVM Unit Converter' : ''"
+            >
+              <Calculator class="h-5 w-5 flex-shrink-0" />
+              <span
+                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100'"
+                class="transition-all duration-200"
+                >EVM Converter</span
+              >
+            </RouterLink>
+            <RouterLink
+              to="/keccak256"
+              class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground [&.router-link-active]:bg-secondary [&.router-link-active]:text-foreground transition-all overflow-hidden whitespace-nowrap"
+              :title="isCollapsed ? 'Keccak-256 Hasher' : ''"
+            >
+              <Hash class="h-5 w-5 flex-shrink-0" />
+              <span
+                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100'"
+                class="transition-all duration-200"
+                >Keccak Hasher</span
+              >
+            </RouterLink>
+            <RouterLink
+              to="/address-checksum"
+              class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground [&.router-link-active]:bg-secondary [&.router-link-active]:text-foreground transition-all overflow-hidden whitespace-nowrap"
+              :title="isCollapsed ? 'Address Checksum' : ''"
+            >
+              <ShieldCheck class="h-5 w-5 flex-shrink-0" />
+              <span
+                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100'"
+                class="transition-all duration-200"
+                >Address Checksum</span
               >
             </RouterLink>
           </div>

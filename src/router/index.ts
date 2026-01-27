@@ -177,6 +177,41 @@ const router = createRouter({
             keywords:
               'bpmn viewer, bpmn to pdf, bpmn diagram, business process model, bpmn export, privacy-first'
           }
+        },
+        {
+          path: 'evm-converter',
+          name: 'evm-converter',
+          component: () => import('../views/EvmUnitConverterView.vue'),
+          meta: {
+            title: 'EVM Unit Converter',
+            description:
+              'Convert between Wei, Gwei, and Ether instantly. Essential tool for Ethereum developers.',
+            keywords:
+              'ethereum unit converter, wei converter, gwei converter, ether converter, evm tools'
+          }
+        },
+        {
+          path: 'keccak256',
+          name: 'keccak256',
+          component: () => import('../views/KeccakHasherView.vue'),
+          meta: {
+            title: 'Keccak-256 Hasher',
+            description:
+              'Generate Keccak-256 hashes online. Secure, client-side hashing for Ethereum development.',
+            keywords: 'keccak256 hash, keccak256 online, ethereum hash, solidity keccak256'
+          }
+        },
+        {
+          path: 'address-checksum',
+          name: 'address-checksum',
+          component: () => import('../views/AddressChecksumView.vue'),
+          meta: {
+            title: 'Address Checksum (EIP-55)',
+            description:
+              'Validate and checksum Ethereum addresses (EIP-55). Ensure correct address formatting.',
+            keywords:
+              'ethereum address checksum, eip-55 checksum, address validator, connect wallet'
+          }
         }
       ]
     }

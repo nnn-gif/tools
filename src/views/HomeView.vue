@@ -11,7 +11,10 @@ import {
   Type,
   FileType,
   Image as ImageIcon,
-  Network
+  Network,
+  Calculator,
+  Hash,
+  ShieldCheck
 } from 'lucide-vue-next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -130,6 +133,32 @@ const tools = [
         description: 'Validate and lint YAML code instantly. Find syntax errors and format YAML.',
         icon: FileType,
         route: '/yaml-lint'
+      }
+    ]
+  },
+  {
+    category: 'Blockchain',
+    items: [
+      {
+        name: 'EVM Unit Converter',
+        description:
+          'Convert between Wei, Gwei, and Ether instantly. Essential tool for Ethereum developers.',
+        icon: Calculator,
+        route: '/evm-converter'
+      },
+      {
+        name: 'Keccak-256 Hasher',
+        description:
+          'Generate Keccak-256 hashes online. Secure, client-side hashing for Ethereum development.',
+        icon: Hash,
+        route: '/keccak256'
+      },
+      {
+        name: 'Address Checksum',
+        description:
+          'Validate and checksum Ethereum addresses (EIP-55). Ensure correct address formatting.',
+        icon: ShieldCheck,
+        route: '/address-checksum'
       }
     ]
   }

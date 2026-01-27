@@ -212,6 +212,18 @@ const router = createRouter({
             keywords:
               'ethereum address checksum, eip-55 checksum, address validator, connect wallet'
           }
+        },
+        {
+          path: 'multi-chain-keys',
+          name: 'multi-chain-keys',
+          component: () => import('../views/MultiChainKeyGeneratorView.vue'),
+          meta: {
+            title: 'Multi-Chain Key Generator',
+            description:
+              'Generate keys for Ethereum, Solana, Polkadot, and Cosmos from one mnemonic. Understand the algorithms.',
+            keywords:
+              'multi chain wallet, key generator, ethereum, solana, polkadot, cosmos, bip39, ed25519, secp256k1'
+          }
         }
       ]
     }

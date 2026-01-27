@@ -159,6 +159,12 @@ const tools = [
           'Validate and checksum Ethereum addresses (EIP-55). Ensure correct address formatting.',
         icon: ShieldCheck,
         route: '/address-checksum'
+      },
+      {
+        name: 'Multi-Chain Keys',
+        description: 'Generate keys for Ethereum, Solana, Polkadot, and Cosmos from one mnemonic.',
+        icon: KeyRound,
+        route: '/multi-chain-keys'
       }
     ]
   }

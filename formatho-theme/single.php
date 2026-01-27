@@ -76,7 +76,7 @@ while (have_posts()) {
     }
     ?>
     </article>
-?>
+    <?php } ?>
 
 <?php
 get_footer();

@@ -33,6 +33,7 @@ interface ChainResult {
   algo: string
   algoDesc: string
   color: string
+  pubKeyLabel?: string
 }
 
 const results = ref<ChainResult[]>([])
@@ -86,12 +87,15 @@ const generateKeys = async () => {
     // Use viem's HDKey to get raw private key explicitly for display
     const { HDKey } = await import('viem/accounts')
     const rootHdKey = HDKey.fromMasterSeed(seed)
+
     const ethChild = rootHdKey.derive(ethPath)
     let ethPrivKey = 'Unavailable'
     let ethPubKey = 'Unavailable'
-    if (ethChild.privateKey && ethChild.publicKey) {
+    if (ethChild.privateKey) {
       ethPrivKey = Buffer.from(ethChild.privateKey).toString('hex')
-      ethPubKey = Buffer.from(ethChild.publicKey).toString('hex')
+      // Get uncompressed public key (65 bytes, starts with 04) for clearer relationship to address
+      const pubKeyBytes = secp256k1.getPublicKey(ethChild.privateKey, false)
+      ethPubKey = Buffer.from(pubKeyBytes).toString('hex')
     }
 
     resultsList.push({
@@ -104,7 +108,8 @@ const generateKeys = async () => {
       algo: 'Secp256k1',
       algoDesc:
         'ECDSA (Elliptic Curve Digital Signature Algorithm) on secp256k1 curve. Used by Bitcoin, Ethereum, Cosmos.',
-      color: 'bg-blue-100 dark:bg-blue-900'
+      color: 'bg-blue-100 dark:bg-blue-900',
+      pubKeyLabel: 'Public Key (Uncompressed)'
     })
 
     // 2. Solana
@@ -122,7 +127,8 @@ const generateKeys = async () => {
       algo: 'Ed25519',
       algoDesc:
         'Edwards-curve Digital Signature Algorithm (EdDSA) using SHA-512 and Curve25519. Designed for high speed and security.',
-      color: 'bg-indigo-100 dark:bg-indigo-900'
+      color: 'bg-indigo-100 dark:bg-indigo-900',
+      pubKeyLabel: 'Public Key (Base58)'
     })
 
     // 3. Cosmos
@@ -141,7 +147,8 @@ const generateKeys = async () => {
         algo: 'Secp256k1',
         algoDesc:
           'Same curve as Ethereum (secp256k1) but using Bech32 address encoding and different derivation path.',
-        color: 'bg-purple-100 dark:bg-purple-900'
+        color: 'bg-purple-100 dark:bg-purple-900',
+        pubKeyLabel: 'Public Key (Compressed)'
       })
     }
 
@@ -157,7 +164,8 @@ const generateKeys = async () => {
       algo: 'Sr25519',
       algoDesc:
         'Schnorr signatures on Ristretto group (Schnorrkel). Variant of Ed25519 offering better derivation properties and HD support.',
-      color: 'bg-pink-100 dark:bg-pink-900'
+      color: 'bg-pink-100 dark:bg-pink-900',
+      pubKeyLabel: 'Public Key (Hex)'
     })
 
     resultsList.push({
@@ -170,7 +178,8 @@ const generateKeys = async () => {
       algo: 'Ed25519 (Extended)',
       algoDesc:
         'Uses BIP32-Ed25519 (Khovratovich/Law). Keys are extended (64-byte private + 32-byte chain code). Address generation requires complex hashing and attributes.',
-      color: 'bg-teal-100 dark:bg-teal-900'
+      color: 'bg-teal-100 dark:bg-teal-900',
+      pubKeyLabel: 'Public Key'
     })
 
     results.value = resultsList
@@ -286,7 +295,9 @@ const generateKeys = async () => {
               <div class="bg-white/50 dark:bg-black/20 p-1.5 rounded">{{ chain.path }}</div>
             </div>
             <div>
-              <div class="text-xs uppercase font-bold opacity-60 mb-1">Public Key</div>
+              <div class="text-xs uppercase font-bold opacity-60 mb-1">
+                {{ chain.pubKeyLabel || 'Public Key' }}
+              </div>
               <div class="bg-white/50 dark:bg-black/20 p-1.5 rounded truncate">
                 {{ chain.publicKey }}
               </div>

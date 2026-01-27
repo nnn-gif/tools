@@ -224,6 +224,18 @@ const router = createRouter({
             keywords:
               'multi chain wallet, key generator, ethereum, solana, polkadot, cosmos, bip39, ed25519, secp256k1'
           }
+        },
+        {
+          path: 'eth-address-from-key',
+          name: 'eth-address-from-key',
+          component: () => import('../views/EthAddressFromPrivateKeyView.vue'),
+          meta: {
+            title: 'ETH Address from Private Key',
+            description:
+              'Derive an Ethereum address from a private key. Privacy-first, runs entirely in your browser.',
+            keywords:
+              'ethereum address from private key, eth address generator, private key to address, evm tools'
+          }
         }
       ]
     }

@@ -15,7 +15,13 @@ const routes = [
   { path: '/image', priority: '0.8', changefreq: 'monthly' },
   { path: '/json-lint', priority: '0.8', changefreq: 'monthly' },
   { path: '/yaml-lint', priority: '0.8', changefreq: 'monthly' },
-  { path: '/bpmn', priority: '0.9', changefreq: 'monthly' }
+  { path: '/bpmn', priority: '0.9', changefreq: 'monthly' },
+  { path: '/markdown', priority: '0.9', changefreq: 'monthly' },
+  { path: '/evm-converter', priority: '0.8', changefreq: 'monthly' },
+  { path: '/keccak256', priority: '0.8', changefreq: 'monthly' },
+  { path: '/address-checksum', priority: '0.8', changefreq: 'monthly' },
+  { path: '/multi-chain-keys', priority: '0.8', changefreq: 'monthly' },
+  { path: '/eth-address-from-key', priority: '0.8', changefreq: 'monthly' }
 ]
 
 const domain = 'https://formatho.com/tools'

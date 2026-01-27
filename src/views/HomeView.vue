@@ -165,6 +165,13 @@ const tools = [
         description: 'Generate keys for Ethereum, Solana, Polkadot, and Cosmos from one mnemonic.',
         icon: KeyRound,
         route: '/multi-chain-keys'
+      },
+      {
+        name: 'ETH Address from Key',
+        description:
+          'Derive an Ethereum address from a private key. Privacy-first, runs entirely in your browser.',
+        icon: KeyRound,
+        route: '/eth-address-from-key'
       }
     ]
   }

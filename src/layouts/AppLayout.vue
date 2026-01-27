@@ -344,6 +344,18 @@ const toggleSidebar = () => {
                 >Multi-Chain Keys</span
               >
             </RouterLink>
+            <RouterLink
+              to="/eth-address-from-key"
+              class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground [&.router-link-active]:bg-secondary [&.router-link-active]:text-foreground transition-all overflow-hidden whitespace-nowrap"
+              :title="isCollapsed ? 'Address from Key' : ''"
+            >
+              <KeyRound class="h-5 w-5 flex-shrink-0" />
+              <span
+                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100'"
+                class="transition-all duration-200"
+                >Address from Key</span
+              >
+            </RouterLink>
           </div>
         </div>
       </nav>

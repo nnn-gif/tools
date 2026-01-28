@@ -263,14 +263,28 @@ router.afterEach((to) => {
     canonical.setAttribute('rel', 'canonical')
     document.head.appendChild(canonical)
   }
+
+  // Base URL is strictly /tools
   const baseUrl = 'https://formatho.com/tools'
-  // Ensure path starts with / but doesn't double slash if base has one (it doesn't here)
-  // Remove trailing slash only if path is longer than 1 char (root)
+
+  // Get clean path relative to base
+  // to.path usually starts with / (e.g. /diff)
   let cleanPath = to.path
+
+  // Ensure we don't end with slash unless it's root
   if (cleanPath.endsWith('/') && cleanPath.length > 1) {
     cleanPath = cleanPath.slice(0, -1)
   }
-  canonical.setAttribute('href', `${baseUrl}${cleanPath}`)
+
+  // Final URL construction
+  const finalUrl = `${baseUrl}${cleanPath}`
+  canonical.setAttribute('href', finalUrl)
+
+  // Also update Open Graph URL if present
+  const ogUrl = document.querySelector('meta[property="og:url"]')
+  if (ogUrl) {
+    ogUrl.setAttribute('content', finalUrl)
+  }
 })
 
 export default router

@@ -264,8 +264,13 @@ router.afterEach((to) => {
     document.head.appendChild(canonical)
   }
   const baseUrl = 'https://formatho.com/tools'
-  const path = to.path.endsWith('/') ? to.path.slice(0, -1) : to.path
-  canonical.setAttribute('href', `${baseUrl}${path}`)
+  // Ensure path starts with / but doesn't double slash if base has one (it doesn't here)
+  // Remove trailing slash only if path is longer than 1 char (root)
+  let cleanPath = to.path
+  if (cleanPath.endsWith('/') && cleanPath.length > 1) {
+    cleanPath = cleanPath.slice(0, -1)
+  }
+  canonical.setAttribute('href', `${baseUrl}${cleanPath}`)
 })
 
 export default router

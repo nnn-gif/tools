@@ -12,6 +12,8 @@ declare global {
   }
 }
 const self = globalThis as any
+import { Buffer } from 'buffer'
+self.Buffer = Buffer
 
 // Solc Loading Logic
 self.onmessage = async function (e: MessageEvent) {

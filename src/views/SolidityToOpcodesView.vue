@@ -157,7 +157,36 @@ const processOutput = (output: any) => {
     const contractName = Object.keys(contractFile)[0] as string
     const contract = contractFile[contractName]
     if (contract && contract.evm && contract.evm.bytecode) {
-      opcodes.value = contract.evm.bytecode.opcodes
+      // Format opcodes: replace spaces with newlines for better readability
+      const rawOpcodes = contract.evm.bytecode.opcodes || ''
+      // Typically solc returns opcodes as "PUSH1 0x80 PUSH1 0x40 MSTORE..."
+      // We want to format this nicely.
+      // Simple split by space, but some PUSH instructions have data.
+      // Solc opcode output is usually space separated. PUSH data is also space separated from PUSH opcode.
+      // e.g. "PUSH1 0x80" -> "PUSH1\n0x80" if we just replace space.
+      // Better: Keep instruction + operand on same line?
+
+      // Let's just create a more structured view.
+      // Replace generic spaces with newlines for now, simpler than full parsing which requires opcode table.
+      // If we want instruction + operand on one line, we need to know which ops take args.
+      // For now, let's just break lines.
+
+      // Attempt to group PUSHx + value:
+      // This is heuristic: if a token starts with 0x, append it to previous line instead of new one
+      const tokens = rawOpcodes.split(' ')
+      let formatted = ''
+      for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i]
+        if (token.startsWith('0x') && i > 0) {
+          // Append to previous line
+          formatted += ' ' + token
+        } else {
+          // Start new line (except first)
+          if (formatted !== '') formatted += '\n'
+          formatted += token
+        }
+      }
+      opcodes.value = formatted
       bytecode.value = contract.evm.bytecode.object
     }
   } else {

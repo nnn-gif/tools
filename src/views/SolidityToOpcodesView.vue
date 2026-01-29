@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import { ref, onUnmounted } from 'vue'
 
+import SolidityWorker from '@/workers/solidity.worker?worker'
+
 const sourceCode = ref(`// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
 contract Example {
     uint256 public value;
+
+    constructor() {
+        value = 100;
+    }
 
     function setValue(uint256 _value) public {
         value = _value;
@@ -20,88 +26,30 @@ const error = ref('')
 const isCompiling = ref(false)
 const isCompilerLoading = ref(false)
 const compilerLoaded = ref(false)
+const executionTrace = ref<Record<number, any>>({})
+const currentState = ref<any>(null)
 
 // Worker reference
 let worker: Worker | null = null
 
 const versions = ['0.8.26', '0.8.25', '0.8.24', '0.8.20', '0.8.0', '0.7.6', '0.6.12', '0.5.17']
 
-// Worker Code as a String
-const workerCode = `
-self.onmessage = async function(e) {
-  const { action, payload } = e.data;
-
-  if (action === 'load') {
-    try {
-      if (self.solcWrapper) {
-        self.postMessage({ action: 'loaded' });
-        return;
-      }
-
-      // Emscripten Module Setup
-      var Module = {
-        print: function() {},
-        printErr: function() {},
-        // If the script uses start function or similar
-        onRuntimeInitialized: function() {} 
-      };
-      self.Module = Module;
-
-      importScripts(payload.url);
-
-      // Handle Factory Pattern
-      if (typeof self.Module === 'function') {
-        self.Module = await self.Module();
-      }
-
-      // Wait for runtime if needed (though factory usually returns ready instance)
-      // Verify cwrap
-      if (!self.Module.cwrap) {
-         // Some very old versions might behave differently, but 0.5+ usually have cwrap or we need 'solc' wrapper
-         throw new Error('Module.cwrap missing. Compiler binary incompatible.');
-      }
-
-      const compileJSON = self.Module.cwrap('solidity_compile', 'string', ['string', 'number', 'number']);
-      
-      self.solcWrapper = function(input) {
-         const inputStr = JSON.stringify(input);
-         const outputStr = compileJSON(inputStr, 0, 0);
-         return JSON.parse(outputStr);
-      };
-
-      self.postMessage({ action: 'loaded' });
-    } catch (err) {
-      self.postMessage({ action: 'error', error: err.message || err.toString() });
-    }
-  } 
-  
-  else if (action === 'compile') {
-    try {
-      if (!self.solcWrapper) throw new Error('Compiler not loaded');
-      const output = self.solcWrapper(payload.input);
-      self.postMessage({ action: 'compiled', output });
-    } catch (err) {
-      self.postMessage({ action: 'error', error: err.message || err.toString() });
-    }
-  }
-};
-`
-
 const initWorker = () => {
   if (worker) return worker
-  const blob = new Blob([workerCode], { type: 'application/javascript' })
-  worker = new Worker(URL.createObjectURL(blob))
+  // Use Vite Import
+  worker = new SolidityWorker()
 
   worker.onmessage = (e) => {
-    const { action, output, error: err } = e.data
+    const { action, output, trace, error: err } = e.data
 
     if (action === 'loaded') {
       compilerLoaded.value = true
       isCompilerLoading.value = false
-      // If we were waiting to compile, check if we should trigger it?
-      // For now, simpler to let user click again or handle purely via UI state.
     } else if (action === 'compiled') {
       isCompiling.value = false
+      if (trace) {
+        executionTrace.value = trace
+      }
       processOutput(output)
     } else if (action === 'error') {
       isCompilerLoading.value = false
@@ -292,6 +240,43 @@ interface OpcodeLine {
   instruction: string
   args?: string
   description: string
+  pc: number
+}
+
+// Opcode Sizes (bytes) - Default is 1
+const OPCODE_SIZES: Record<string, number> = {
+  PUSH1: 2,
+  PUSH2: 3,
+  PUSH3: 4,
+  PUSH4: 5,
+  PUSH5: 6,
+  PUSH6: 7,
+  PUSH7: 8,
+  PUSH8: 9,
+  PUSH9: 10,
+  PUSH10: 11,
+  PUSH11: 12,
+  PUSH12: 13,
+  PUSH13: 14,
+  PUSH14: 15,
+  PUSH15: 16,
+  PUSH16: 17,
+  PUSH17: 18,
+  PUSH18: 19,
+  PUSH19: 20,
+  PUSH20: 21,
+  PUSH21: 22,
+  PUSH22: 23,
+  PUSH23: 24,
+  PUSH24: 25,
+  PUSH25: 26,
+  PUSH26: 27,
+  PUSH27: 28,
+  PUSH28: 29,
+  PUSH29: 30,
+  PUSH30: 31,
+  PUSH31: 32,
+  PUSH32: 33
 }
 
 const parsedOpcodes = ref<OpcodeLine[]>([])
@@ -305,6 +290,8 @@ const processOutput = (output: any) => {
       opcodes.value = ''
       parsedOpcodes.value = []
       bytecode.value = ''
+      executionTrace.value = {}
+      currentState.value = null
       return
     }
   }
@@ -314,40 +301,48 @@ const processOutput = (output: any) => {
     const contractName = Object.keys(contractFile)[0] as string
     const contract = contractFile[contractName]
     if (contract && contract.evm && contract.evm.bytecode) {
-      // Format opcodes: replace spaces with newlines for better readability
       const rawOpcodes = contract.evm.bytecode.opcodes || ''
       const tokens = rawOpcodes.split(' ')
 
       const lines: OpcodeLine[] = []
+      let currentPc = 0
 
       for (let i = 0; i < tokens.length; i++) {
         const token = tokens[i]
 
-        // Check if previous instruction was a PUSH that needs arguments attached
-        // PUSH instructions are usually the ones followed by 0x... in solc output
-        // Actually, solc output is "PUSH1 0x80" as two tokens.
-
-        // Simpler check: if current token starts with 0x, it's an argument to the previous instruction
         if (token.startsWith('0x') && lines.length > 0) {
           const prevLine = lines[lines.length - 1]
           if (prevLine) prevLine.args = token
-          // No new line/instruction added
+          // PC already incremented by the PUSH instruction size logic below
         } else {
           // New instruction
           lines.push({
             instruction: token,
-            description: OPCODE_DESCRIPTIONS[token] || 'Unknown or Data'
+            description: OPCODE_DESCRIPTIONS[token] || 'Unknown or Data',
+            pc: currentPc
           })
+
+          // Increment PC
+          const size = OPCODE_SIZES[token] || 1
+          currentPc += size
         }
       }
 
       parsedOpcodes.value = lines
-      opcodes.value = 'parsed' // trigger flag
-
+      opcodes.value = 'parsed'
       bytecode.value = contract.evm.bytecode.object
     }
   } else {
     error.value = 'No contracts compiled.'
+  }
+}
+
+const handleHover = (pc: number) => {
+  // Look up trace
+  if (executionTrace.value && executionTrace.value[pc]) {
+    currentState.value = executionTrace.value[pc]
+  } else {
+    currentState.value = null
   }
 }
 
@@ -403,13 +398,47 @@ onUnmounted(() => {
     <div class="prose dark:prose-invert max-w-none">
       <h1>Solidity to Opcodes</h1>
       <p class="text-slate-600 dark:text-slate-400">
-        Compile Solidity code explicitly to view its EVM Opcodes and Bytecode.
+        Compile Solidity code explicitly to view its EVM Opcodes, Bytecode, and execution trace.
         <br />
         <span class="text-xs text-muted-foreground"
-          >Compiles in a Web Worker to keep the UI responsive. First load may take a few
-          seconds.</span
+          >Compiles in a Web Worker. Hover over opcodes to see the Execution Stack & Memory.</span
         >
       </p>
+    </div>
+
+    <!-- Trace Dashboard -->
+    <div v-if="opcodes" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Stack -->
+      <div
+        class="bg-white dark:bg-slate-800 rounded-lg shadow border border-slate-200 dark:border-slate-700 p-4 min-h-[150px]"
+      >
+        <h3 class="font-semibold text-xs uppercase text-slate-500 mb-2">Stack</h3>
+        <div v-if="currentState" class="font-mono text-xs flex flex-col-reverse gap-1">
+          <div
+            v-for="(item, idx) in currentState.stack"
+            :key="idx"
+            class="bg-slate-100 dark:bg-slate-700 p-1 rounded px-2 w-full break-all"
+          >
+            {{ idx }}: 0x{{ item }}
+          </div>
+          <div v-if="currentState.stack.length === 0" class="text-slate-400 italic">Empty</div>
+        </div>
+        <div v-else class="text-slate-400 text-xs italic">Hover opcode to view state</div>
+      </div>
+
+      <!-- Memory -->
+      <div
+        class="bg-white dark:bg-slate-800 rounded-lg shadow border border-slate-200 dark:border-slate-700 p-4 min-h-[150px]"
+      >
+        <h3 class="font-semibold text-xs uppercase text-slate-500 mb-2">Memory</h3>
+        <div
+          v-if="currentState"
+          class="font-mono text-xs break-all text-slate-600 dark:text-slate-300"
+        >
+          {{ currentState.memory && currentState.memory !== '' ? currentState.memory : 'Empty' }}
+        </div>
+        <div v-else class="text-slate-400 text-xs italic">Hover opcode to view state</div>
+      </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[600px] lg:h-auto flex-1">
@@ -485,8 +514,12 @@ onUnmounted(() => {
               <div
                 v-for="(line, idx) in parsedOpcodes"
                 :key="idx"
-                class="group relative flex w-max hover:bg-indigo-50 dark:hover:bg-indigo-900/20 px-1 -mx-1 rounded cursor-help"
+                class="group relative flex w-max hover:bg-indigo-50 dark:hover:bg-indigo-900/20 px-1 -mx-1 rounded cursor-help items-baseline"
+                @mouseenter="handleHover(line.pc)"
               >
+                <div class="w-8 text-slate-400 text-[10px] select-none text-right mr-3">
+                  {{ line.pc }}
+                </div>
                 <div class="w-24 font-bold text-indigo-600 dark:text-indigo-400">
                   {{ line.instruction }}
                 </div>

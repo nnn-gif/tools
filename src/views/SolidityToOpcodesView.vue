@@ -68,22 +68,9 @@ const loadCompiler = async () => {
 
   const w = initWorker()
 
-  // URL Mapping
-  let url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.26+commit.8a97fa7a.js'
-  if (compilerVersion.value === '0.8.25')
-    url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.25+commit.b61c2a91.js'
-  if (compilerVersion.value === '0.8.24')
-    url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.24+commit.e11b9ed9.js'
-  if (compilerVersion.value === '0.8.20')
-    url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.20+commit.a1b79de6.js'
-  if (compilerVersion.value === '0.8.0')
-    url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.0+commit.c7dfd78e.js'
-  if (compilerVersion.value === '0.7.6')
-    url = 'https://binaries.soliditylang.org/bin/soljson-v0.7.6+commit.7338295f.js'
-  if (compilerVersion.value === '0.6.12')
-    url = 'https://binaries.soliditylang.org/bin/soljson-v0.6.12+commit.27d51765.js'
-  if (compilerVersion.value === '0.5.17')
-    url = 'https://binaries.soliditylang.org/bin/soljson-v0.5.17+commit.d19bba13.js'
+  // URL Mapping - Use unpkg for better CORS support
+  const v = compilerVersion.value
+  const url = `https://unpkg.com/solc@${v}/soljson.js`
 
   w.postMessage({ action: 'load', payload: { url } })
 }

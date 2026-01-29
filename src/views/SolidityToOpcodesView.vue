@@ -29,71 +29,91 @@ const versions = ['0.8.26', '0.8.25', '0.8.24', '0.8.20', '0.8.0', '0.7.6', '0.6
 // Helper to load script
 const loadScript = (url: string) => {
   return new Promise<void>((resolve, reject) => {
+    // Check if script is already present
     if (document.querySelector(`script[src="${url}"]`)) {
       resolve()
       return
     }
+
+    // Setup global Module object that soljson will use
+    // We need to define this BEFORE loading the script
+    const newModule: any = {
+      print: function () {},
+      printErr: function () {},
+      onRuntimeInitialized: function () {
+        // Runtime is ready
+        resolve()
+      }
+    }
+
+    // If window.Module already exists (from previous load), we might have a conflict.
+    // Ideally we usage separate workers for different versions, but for now let's hope overwriting works
+    // or we just reuse if it's the exact same URL (caught by querySelector above)
+    ;(window as any).Module = newModule
+
     const script = document.createElement('script')
     script.src = url
     script.async = true
-    script.onload = () => resolve()
+    // script.onload is NOT enough for Emscripten, we rely on onRuntimeInitialized above
     script.onerror = () => reject(new Error(`Failed to load script ${url}`))
     document.head.appendChild(script)
   })
 }
 
 // Minimal wrapper to bridge emscripten solc to JS
-// Based on standard solc-js wrapper logic
 const wrapSolc = (Module: any) => {
+  // If cwrap is missing, we might be dealing with a version that doesn't export it standardly
+  // or explicit runtime init was missed.
+  if (!Module.cwrap) {
+    throw new Error('Module.cwrap is not recognized. Compiler runtime issue.')
+  }
   const compileJSON = Module.cwrap('solidity_compile', 'string', ['string', 'number', 'number'])
   return (input: any) => {
     const inputStr = JSON.stringify(input)
-    // The second and third arguments are for callbacks (not used here)
     const outputStr = compileJSON(inputStr, 0, 0)
     return JSON.parse(outputStr)
   }
 }
 
 const loadCompiler = async () => {
-  if (compilerLoaded.value && (window as any).Module) return
+  if (compilerLoaded.value && solcWrapper) return
 
   isCompilerLoading.value = true
   error.value = ''
 
   try {
-    // Determine URL - using binaries.soliditylang.org
-    // We need the full build for 'solidity_compile' usually.
-    // list.json has exact filenames, but usually these shortcuts work or we hardcode a few common ones.
-    // For stability, let's use a specific one for the default.
     // 0.8.26
     let url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.26+commit.8a97fa7a.js'
 
-    // Very basic mapping for demo
     if (compilerVersion.value === '0.8.25')
       url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.25+commit.b61c2a91.js'
     if (compilerVersion.value === '0.8.24')
       url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.24+commit.e11b9ed9.js'
+    if (compilerVersion.value === '0.8.20')
+      url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.20+commit.a1b79de6.js'
+    if (compilerVersion.value === '0.8.0')
+      url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.0+commit.c7dfd78e.js'
 
-    // If user picks one without a known mapping, we might fail or need a lookup list.
-    // For now, let's stick to the default or matching the selection if we update the map.
-    // Fallback logic could be fetching list.json first, but let's keep it simple.
-
-    // Force default if detailed mapping missing for now
-    if (!url.includes(compilerVersion.value)) {
-      // Try to find a way, or just warn
-      // console.warn('Exact version mapping not implemented for this demo, using default')
-    }
-
+    // We wait for onRuntimeInitialized
     await loadScript(url)
 
-    // Wait for Module to be ready if it's async
-    const Module = (window as any).Module
+    let Module = (window as any).Module
     if (!Module) throw new Error('Compiler module not found')
+
+    // Handle Emscripten Factory Pattern (common in newer solc builds)
+    if (typeof Module === 'function') {
+      // It's a factory, we must call it to get the instance
+      Module = await Module()
+    }
+
+    // Double check instance
+    if (!Module) throw new Error('Compiler module instance creation failed')
 
     solcWrapper = wrapSolc(Module)
     compilerLoaded.value = true
   } catch (err: any) {
-    error.value = 'Failed to load compiler: ' + err.message
+    console.error('Solidity Compiler Error:', err)
+    error.value = 'Failed to load compiler: ' + (err.message || err)
   } finally {
     isCompilerLoading.value = false
   }

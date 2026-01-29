@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onUnmounted } from 'vue'
 
 const sourceCode = ref(`// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
@@ -21,165 +21,195 @@ const isCompiling = ref(false)
 const isCompilerLoading = ref(false)
 const compilerLoaded = ref(false)
 
-// We'll cache the compiler wrapper
-let solcWrapper: any = null
+// Worker reference
+let worker: Worker | null = null
 
 const versions = ['0.8.26', '0.8.25', '0.8.24', '0.8.20', '0.8.0', '0.7.6', '0.6.12', '0.5.17']
 
-// Helper to load script
-const loadScript = (url: string) => {
-  return new Promise<void>((resolve, reject) => {
-    // Check if script is already present
-    if (document.querySelector(`script[src="${url}"]`)) {
-      resolve()
-      return
-    }
+// Worker Code as a String
+const workerCode = `
+self.onmessage = async function(e) {
+  const { action, payload } = e.data;
 
-    // Setup global Module object that soljson will use
-    // We need to define this BEFORE loading the script
-    const newModule: any = {
-      print: function () {},
-      printErr: function () {},
-      onRuntimeInitialized: function () {
-        // Runtime is ready
-        resolve()
+  if (action === 'load') {
+    try {
+      if (self.solcWrapper) {
+        self.postMessage({ action: 'loaded' });
+        return;
       }
+
+      // Emscripten Module Setup
+      var Module = {
+        print: function() {},
+        printErr: function() {},
+        // If the script uses start function or similar
+        onRuntimeInitialized: function() {} 
+      };
+      self.Module = Module;
+
+      importScripts(payload.url);
+
+      // Handle Factory Pattern
+      if (typeof self.Module === 'function') {
+        self.Module = await self.Module();
+      }
+
+      // Wait for runtime if needed (though factory usually returns ready instance)
+      // Verify cwrap
+      if (!self.Module.cwrap) {
+         // Some very old versions might behave differently, but 0.5+ usually have cwrap or we need 'solc' wrapper
+         throw new Error('Module.cwrap missing. Compiler binary incompatible.');
+      }
+
+      const compileJSON = self.Module.cwrap('solidity_compile', 'string', ['string', 'number', 'number']);
+      
+      self.solcWrapper = function(input) {
+         const inputStr = JSON.stringify(input);
+         const outputStr = compileJSON(inputStr, 0, 0);
+         return JSON.parse(outputStr);
+      };
+
+      self.postMessage({ action: 'loaded' });
+    } catch (err) {
+      self.postMessage({ action: 'error', error: err.message || err.toString() });
     }
-
-    // If window.Module already exists (from previous load), we might have a conflict.
-    // Ideally we usage separate workers for different versions, but for now let's hope overwriting works
-    // or we just reuse if it's the exact same URL (caught by querySelector above)
-    ;(window as any).Module = newModule
-
-    const script = document.createElement('script')
-    script.src = url
-    script.async = true
-    // script.onload is NOT enough for Emscripten, we rely on onRuntimeInitialized above
-    script.onerror = () => reject(new Error(`Failed to load script ${url}`))
-    document.head.appendChild(script)
-  })
-}
-
-// Minimal wrapper to bridge emscripten solc to JS
-const wrapSolc = (Module: any) => {
-  // If cwrap is missing, we might be dealing with a version that doesn't export it standardly
-  // or explicit runtime init was missed.
-  if (!Module.cwrap) {
-    throw new Error('Module.cwrap is not recognized. Compiler runtime issue.')
+  } 
+  
+  else if (action === 'compile') {
+    try {
+      if (!self.solcWrapper) throw new Error('Compiler not loaded');
+      const output = self.solcWrapper(payload.input);
+      self.postMessage({ action: 'compiled', output });
+    } catch (err) {
+      self.postMessage({ action: 'error', error: err.message || err.toString() });
+    }
   }
-  const compileJSON = Module.cwrap('solidity_compile', 'string', ['string', 'number', 'number'])
-  return (input: any) => {
-    const inputStr = JSON.stringify(input)
-    const outputStr = compileJSON(inputStr, 0, 0)
-    return JSON.parse(outputStr)
+};
+`
+
+const initWorker = () => {
+  if (worker) return worker
+  const blob = new Blob([workerCode], { type: 'application/javascript' })
+  worker = new Worker(URL.createObjectURL(blob))
+
+  worker.onmessage = (e) => {
+    const { action, output, error: err } = e.data
+
+    if (action === 'loaded') {
+      compilerLoaded.value = true
+      isCompilerLoading.value = false
+      // If we were waiting to compile, check if we should trigger it?
+      // For now, simpler to let user click again or handle purely via UI state.
+    } else if (action === 'compiled') {
+      isCompiling.value = false
+      processOutput(output)
+    } else if (action === 'error') {
+      isCompilerLoading.value = false
+      isCompiling.value = false
+      error.value = err
+    }
   }
+  return worker
 }
 
 const loadCompiler = async () => {
-  if (compilerLoaded.value && solcWrapper) return
+  if (compilerLoaded.value && worker) return
 
   isCompilerLoading.value = true
   error.value = ''
 
-  try {
-    // 0.8.26
-    let url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.26+commit.8a97fa7a.js'
+  const w = initWorker()
 
-    if (compilerVersion.value === '0.8.25')
-      url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.25+commit.b61c2a91.js'
-    if (compilerVersion.value === '0.8.24')
-      url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.24+commit.e11b9ed9.js'
-    if (compilerVersion.value === '0.8.20')
-      url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.20+commit.a1b79de6.js'
-    if (compilerVersion.value === '0.8.0')
-      url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.0+commit.c7dfd78e.js'
+  // URL Mapping
+  let url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.26+commit.8a97fa7a.js'
+  if (compilerVersion.value === '0.8.25')
+    url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.25+commit.b61c2a91.js'
+  if (compilerVersion.value === '0.8.24')
+    url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.24+commit.e11b9ed9.js'
+  if (compilerVersion.value === '0.8.20')
+    url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.20+commit.a1b79de6.js'
+  if (compilerVersion.value === '0.8.0')
+    url = 'https://binaries.soliditylang.org/bin/soljson-v0.8.0+commit.c7dfd78e.js'
+  if (compilerVersion.value === '0.7.6')
+    url = 'https://binaries.soliditylang.org/bin/soljson-v0.7.6+commit.7338295f.js'
+  if (compilerVersion.value === '0.6.12')
+    url = 'https://binaries.soliditylang.org/bin/soljson-v0.6.12+commit.27d51765.js'
+  if (compilerVersion.value === '0.5.17')
+    url = 'https://binaries.soliditylang.org/bin/soljson-v0.5.17+commit.d19bba13.js'
 
-    // We wait for onRuntimeInitialized
-    await loadScript(url)
+  w.postMessage({ action: 'load', payload: { url } })
+}
 
-    let Module = (window as any).Module
-    if (!Module) throw new Error('Compiler module not found')
-
-    // Handle Emscripten Factory Pattern (common in newer solc builds)
-    if (typeof Module === 'function') {
-      // It's a factory, we must call it to get the instance
-      Module = await Module()
+const processOutput = (output: any) => {
+  if (output.errors) {
+    const criticalErrors = output.errors.filter((e: any) => e.severity === 'error')
+    if (criticalErrors.length > 0) {
+      error.value = criticalErrors.map((e: any) => e.formattedMessage).join('\n')
+      // Clear previous success data if failed
+      opcodes.value = ''
+      bytecode.value = ''
+      return
     }
+  }
 
-    // Double check instance
-    if (!Module) throw new Error('Compiler module instance creation failed')
-
-    solcWrapper = wrapSolc(Module)
-    compilerLoaded.value = true
-  } catch (err: any) {
-    console.error('Solidity Compiler Error:', err)
-    error.value = 'Failed to load compiler: ' + (err.message || err)
-  } finally {
-    isCompilerLoading.value = false
+  const contractFile = output.contracts['contract.sol']
+  if (contractFile) {
+    const contractName = Object.keys(contractFile)[0] as string
+    const contract = contractFile[contractName]
+    if (contract && contract.evm && contract.evm.bytecode) {
+      opcodes.value = contract.evm.bytecode.opcodes
+      bytecode.value = contract.evm.bytecode.object
+    }
+  } else {
+    error.value = 'No contracts compiled.'
   }
 }
 
 const compile = async () => {
   if (!compilerLoaded.value) {
-    await loadCompiler()
+    loadCompiler()
+    return
   }
-
-  if (!solcWrapper) return
 
   isCompiling.value = true
   error.value = ''
   opcodes.value = ''
   bytecode.value = ''
 
-  // Give UI a moment to update
-  setTimeout(() => {
-    try {
-      const input = {
-        language: 'Solidity',
-        sources: {
-          'contract.sol': {
-            content: sourceCode.value
-          }
-        },
-        settings: {
-          outputSelection: {
-            '*': {
-              '*': ['evm.bytecode.opcodes', 'evm.bytecode.object']
-            }
-          }
+  const input = {
+    language: 'Solidity',
+    sources: {
+      'contract.sol': {
+        content: sourceCode.value
+      }
+    },
+    settings: {
+      outputSelection: {
+        '*': {
+          '*': ['evm.bytecode.opcodes', 'evm.bytecode.object']
         }
       }
-
-      const output = solcWrapper(input)
-
-      if (output.errors) {
-        // Filter out warnings or show them differently?
-        const errors = output.errors.filter((e: any) => e.severity === 'error')
-        if (errors.length > 0) {
-          throw new Error(errors.map((e: any) => e.formattedMessage).join('\n'))
-        }
-      }
-
-      // Extract result
-      const contractFile = output.contracts['contract.sol']
-      if (contractFile) {
-        // Just take the first contract found
-        const contractName = Object.keys(contractFile)[0] as string
-        const contract = contractFile[contractName]
-        if (contract && contract.evm && contract.evm.bytecode) {
-          opcodes.value = contract.evm.bytecode.opcodes
-          bytecode.value = contract.evm.bytecode.object
-        }
-      } else {
-        error.value = 'No contracts found in compilation.'
-      }
-    } catch (err: any) {
-      error.value = err.message
-    } finally {
-      isCompiling.value = false
     }
-  }, 100)
+  }
+
+  if (worker) {
+    worker.postMessage({ action: 'compile', payload: { input } })
+  }
 }
+
+const resetWorker = () => {
+  if (worker) {
+    worker.terminate()
+  }
+  worker = null
+  compilerLoaded.value = false
+}
+
+onUnmounted(() => {
+  if (worker) {
+    worker.terminate()
+  }
+})
 </script>
 
 <template>
@@ -190,7 +220,8 @@ const compile = async () => {
         Compile Solidity code explicitly to view its EVM Opcodes and Bytecode.
         <br />
         <span class="text-xs text-muted-foreground"
-          >Compiles in your browser using solc-js. First load may take a few seconds.</span
+          >Compiles in a Web Worker to keep the UI responsive. First load may take a few
+          seconds.</span
         >
       </p>
     </div>
@@ -206,9 +237,10 @@ const compile = async () => {
           >
             <h2 class="font-semibold text-slate-900 dark:text-white">Solidity Source</h2>
             <div class="flex items-center gap-2">
-              <!-- Version Selector (Simplified) -->
+              <!-- Version Selector -->
               <select
                 v-model="compilerVersion"
+                @change="resetWorker"
                 class="text-xs p-1 rounded border dark:bg-slate-800 dark:border-slate-700"
               >
                 <option v-for="v in versions" :key="v" :value="v">{{ v }}</option>

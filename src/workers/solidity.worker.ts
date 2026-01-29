@@ -32,7 +32,13 @@ self.onmessage = async function (e: MessageEvent) {
       }
       self.Module = Module
 
-      importScripts(payload.url)
+      // Load script via fetch/eval because generic importScripts() is not supported in Module Workers
+      const response = await fetch(payload.url)
+      const scriptContent = await response.text()
+
+      // Execute script in global scope (indirect eval)
+      // soljson will look for 'Module' on global scope and populate it
+      ;(0, eval)(scriptContent)
 
       // Handle Factory Pattern
       if (typeof self.Module === 'function') {

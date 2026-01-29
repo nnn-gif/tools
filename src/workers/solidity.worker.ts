@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Common, Chain, Hardfork } from '@ethereumjs/common'
+import { Common } from '@ethereumjs/common'
 import { EVM } from '@ethereumjs/evm'
 
 // Constants
@@ -101,8 +101,12 @@ async function simulateExecution(bytecode: string) {
   try {
     if (!bytecode || bytecode === '0x') return null
 
-    const common = new Common({ chain: Chain.Mainnet as any, hardfork: Hardfork.Cancun })
-    // EVM will create default state manager internally
+    // Ensure Buffer is available
+    if (typeof Buffer === 'undefined') {
+      throw new Error('Buffer is not defined')
+    }
+
+    const common = new Common({ chain: 1 as any, hardfork: 'cancun' })
     const evm = new EVM({ common })
 
     const bytecodeBuffer = Buffer.from(bytecode.replace(/^0x/, ''), 'hex')
@@ -110,7 +114,6 @@ async function simulateExecution(bytecode: string) {
     const steps: any[] = []
 
     evm.events.on('step', (data: any) => {
-      // Capture state at this step
       steps.push({
         pc: data.pc,
         opcode: data.opcode.name,
@@ -122,21 +125,26 @@ async function simulateExecution(bytecode: string) {
 
     await evm.runCode({
       code: bytecodeBuffer,
-      gasLimit: BigInt(3000000) // Sufficient gas
+      gasLimit: BigInt(10000000)
     })
 
-    // Map steps by PC for O(1) lookup
-    // Use the *first* time a PC is hit to keep it simple for now
     const traceByPc: Record<number, any> = {}
     for (const step of steps) {
+      // We want the state *before* execution? Or after?
+      // "step" event is emitted *before* the opcode is executed.
+      // So traceByPc[pc] = state *before* instruction runs.
       if (!traceByPc[step.pc]) {
         traceByPc[step.pc] = step
       }
     }
 
     return traceByPc
-  } catch (e) {
-    console.error('Simulation failed', e)
+  } catch (e: any) {
+    // Send error back to main thread for debugging
+    self.postMessage({
+      action: 'error',
+      error: 'Simulation Failed: ' + (e.message || e.toString())
+    })
     return null
   }
 }

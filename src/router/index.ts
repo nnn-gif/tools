@@ -236,6 +236,18 @@ const router = createRouter({
             keywords:
               'private key to address, eth address, btc address, solana address, multi chain tool'
           }
+        },
+        {
+          path: 'solidity-to-opcodes',
+          name: 'solidity-to-opcodes',
+          component: () => import('../views/SolidityToOpcodesView.vue'),
+          meta: {
+            title: 'Solidity to EVM Opcodes',
+            description:
+              'Compile Solidity to EVM Opcodes and Bytecode in your browser. View the assembly of your smart contracts.',
+            keywords:
+              'solidity compile, evm opcodes, smart contract assembly, solidity bytecode, compiler'
+          }
         }
       ]
     }

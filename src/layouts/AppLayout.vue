@@ -356,6 +356,18 @@ const toggleSidebar = () => {
                 >Address from Key</span
               >
             </RouterLink>
+            <RouterLink
+              to="/solidity-to-opcodes"
+              class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground [&.router-link-active]:bg-secondary [&.router-link-active]:text-foreground transition-all overflow-hidden whitespace-nowrap"
+              :title="isCollapsed ? 'Solidity to Opcodes' : ''"
+            >
+              <FileCode class="h-5 w-5 flex-shrink-0" />
+              <span
+                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100'"
+                class="transition-all duration-200"
+                >Solidity to Opcodes</span
+              >
+            </RouterLink>
           </div>
         </div>
       </nav>

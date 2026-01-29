@@ -172,6 +172,12 @@ const tools = [
           'Derive addresses for Ethereum, Bitcoin, Solana, and more from a raw private key.',
         icon: KeyRound,
         route: '/address-from-key'
+      },
+      {
+        name: 'Solidity to Opcodes',
+        description: 'Compile Solidity to EVM Opcodes and Bytecode. View assembly instructions.',
+        icon: FileCode,
+        route: '/solidity-to-opcodes'
       }
     ]
   }

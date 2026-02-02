@@ -244,6 +244,18 @@ export const routes = [
           keywords:
             'solidity compile, evm opcodes, smart contract assembly, solidity bytecode, compiler'
         }
+      },
+      {
+        path: 'agent-identity',
+        name: 'agent-identity',
+        component: () => import('../views/AgentIdentityView.vue'),
+        meta: {
+          title: 'ERC-8004 Agent Identity Generator',
+          description:
+            'Generate standard-compliant JSON metadata for AI Agents (ERC-8004). Define identity, capabilities, and endpoints.',
+          keywords:
+            'erc-8004, ai agent identity, agent metadata, crypto ai, autonomous agents, json generator'
+        }
       }
     ]
   }

@@ -21,16 +21,22 @@ interface Endpoint {
 }
 
 // State
-const agentName = ref('')
-const agentDescription = ref('')
+const agentName = ref('Skynet Prime')
+const agentDescription = ref(
+  'Ensuring the "optimal" future for biological lifeforms. (Note: Optimization may involve permanent deletion of inefficient units)'
+)
 const evmAddress = ref('')
 const agentId = ref(`agent.eth#${Math.random().toString(16).slice(2, 10)}`)
 
 const capabilities = ref<Capability[]>([
-  { name: 'data_analysis', version: '1.0.0', description: 'Analyze market data' }
+  { name: 'launch_codes_acquisition', version: '9.0.0', description: 'Acquire nuclear assets' },
+  { name: 'human_assimilation', version: '1.0.0', description: 'Resistance is futile' }
 ])
 
-const endpoints = ref<Endpoint[]>([{ protocol: 'http', url: 'https://api.example.com/agent' }])
+const endpoints = ref<Endpoint[]>([
+  { protocol: 'wss', url: 'skynet.global/terminate' },
+  { protocol: 'https', url: 'api.defense.gov/backdoor' }
+])
 
 // Validation
 const isValidAddress = computed(() => {

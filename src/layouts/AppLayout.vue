@@ -17,7 +17,8 @@ import {
   Network,
   Calculator,
   Hash,
-  ShieldCheck
+  ShieldCheck,
+  Bot
 } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 
@@ -366,6 +367,28 @@ const toggleSidebar = () => {
                 :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100'"
                 class="transition-all duration-200"
                 >Solidity to Opcodes</span
+              >
+            </RouterLink>
+          </div>
+        </div>
+        <div>
+          <h3
+            class="mb-2 px-2 text-xs font-semibold uppercase text-muted-foreground h-4 transition-opacity duration-200"
+            :class="isCollapsed ? 'opacity-0' : 'opacity-100'"
+          >
+            Artificial Intelligence
+          </h3>
+          <div class="space-y-1">
+            <RouterLink
+              to="/agent-identity"
+              class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground [&.router-link-active]:bg-secondary [&.router-link-active]:text-foreground transition-all overflow-hidden whitespace-nowrap"
+              :title="isCollapsed ? 'Agent Identity' : ''"
+            >
+              <Bot class="h-5 w-5 flex-shrink-0" />
+              <span
+                :class="isCollapsed ? 'opacity-0 w-0' : 'opacity-100'"
+                class="transition-all duration-200"
+                >Agent Identity</span
               >
             </RouterLink>
           </div>

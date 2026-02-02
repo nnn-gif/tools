@@ -14,7 +14,8 @@ import {
   Network,
   Calculator,
   Hash,
-  ShieldCheck
+  ShieldCheck,
+  Bot
 } from 'lucide-vue-next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -178,6 +179,18 @@ const tools = [
         description: 'Compile Solidity to EVM Opcodes and Bytecode. View assembly instructions.',
         icon: FileCode,
         route: '/solidity-to-opcodes'
+      }
+    ]
+  },
+  {
+    category: 'Artificial Intelligence',
+    items: [
+      {
+        name: 'Agent Identity Generator',
+        description:
+          'Generate ERC-8004 compliant metadata for AI Agents. Define skills, endpoints, and identity.',
+        icon: Bot,
+        route: '/agent-identity'
       }
     ]
   }

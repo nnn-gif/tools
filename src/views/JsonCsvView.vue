@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import Papa from 'papaparse'
 import { FileJson, FileSpreadsheet, Download } from 'lucide-vue-next'
-import { saveAs } from 'file-saver'
+import FileSaver from 'file-saver'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
@@ -45,7 +45,7 @@ const convertToJson = () => {
 const downloadCsv = () => {
   if (!csvInput.value) return
   const blob = new Blob([csvInput.value], { type: 'text/csv;charset=utf-8' })
-  saveAs(blob, 'export.csv')
+  FileSaver.saveAs(blob, 'export.csv')
 }
 
 // Sample data

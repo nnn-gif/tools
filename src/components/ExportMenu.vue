@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { FileText, FileType } from 'lucide-vue-next'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx'
-import { saveAs } from 'file-saver'
+import FileSaver from 'file-saver'
 import { Button } from '@/components/ui/button'
 
 const props = defineProps<{
@@ -78,7 +78,7 @@ const handleExportDOCX = async () => {
     })
 
     const blob = await Packer.toBlob(doc)
-    saveAs(blob, 'document.docx')
+    FileSaver.saveAs(blob, 'document.docx')
   } catch (error) {
     console.error('DOCX Export failed', error)
   } finally {

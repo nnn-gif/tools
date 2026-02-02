@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 
 // @ts-ignore - bpmn-js doesn't have official TypeScript types
-import BpmnViewer from 'bpmn-js/lib/Viewer'
 
 const file = ref<File | null>(null)
 const bpmnXml = ref('')
@@ -53,6 +52,7 @@ const renderBpmn = async (xml: string) => {
   try {
     // Create viewer if it doesn't exist
     if (!viewer) {
+      const BpmnViewer = (await import('bpmn-js/lib/Viewer')).default
       viewer = new BpmnViewer({
         container: viewerContainer.value,
         width: '100%',

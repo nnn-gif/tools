@@ -256,6 +256,18 @@ export const routes = [
           keywords:
             'erc-8004, ai agent identity, agent metadata, crypto ai, autonomous agents, json generator'
         }
+      },
+      {
+        path: 'agents',
+        name: 'agents',
+        component: () => import('../views/AgentsView.vue'),
+        meta: {
+          title: 'Agent Browser - Blockchain Agents with Reputation',
+          description:
+            'Explore AI Agents on the blockchain with reputation tracking. View agent addresses, reputation scores, and activity. Real-time data from the blockchain.',
+          keywords:
+            'agent browser, blockchain agents, ai agents reputation, crypto agents, ethereum agents, agent explorer, reputation tracking'
+        }
       }
     ]
   }

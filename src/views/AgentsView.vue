@@ -9,7 +9,8 @@ import {
   RefreshCw,
   Copy,
   Check,
-  ChevronRight
+  ChevronRight,
+  XCircle
 } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
@@ -212,7 +213,7 @@ onMounted(() => {
 <template>
   <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
     <!-- Header -->
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between gap-4">
       <div class="flex items-center gap-3">
         <Bot class="h-8 w-8" />
         <div>
@@ -226,6 +227,34 @@ onMounted(() => {
         <RefreshCw :class="{ 'animate-spin': loading }" class="h-4 w-4 mr-2" />
         Refresh
       </Button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="flex gap-2 items-center">
+      <div class="flex-1 relative">
+        <Search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          v-model="searchAddress"
+          placeholder="Search by address (0x...)"
+          class="font-mono pl-9 pr-20"
+          @keyup.enter="searchAgent"
+        />
+        <Button
+          v-if="searchAddress"
+          variant="ghost"
+          size="sm"
+          class="absolute right-1 top-1/2 -translate-y-1/2 h-7 px-2"
+          @click="
+            () => {
+              searchAddress = ''
+              fetchAgents()
+            }
+          "
+        >
+          <XCircle class="h-4 w-4" />
+        </Button>
+      </div>
+      <Button @click="searchAgent" :disabled="loading"> Search </Button>
     </div>
 
     <!-- Indexer Status Card -->
@@ -310,36 +339,6 @@ onMounted(() => {
               </Button>
             </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
-
-    <!-- Search -->
-    <Card>
-      <CardContent class="pt-6">
-        <div class="flex gap-2">
-          <Input
-            v-model="searchAddress"
-            placeholder="Search by address (0x...)"
-            class="font-mono"
-            @keyup.enter="searchAgent"
-          />
-          <Button @click="searchAgent" :disabled="loading">
-            <Search class="h-4 w-4 mr-2" />
-            Search
-          </Button>
-          <Button
-            v-if="searchAddress"
-            variant="outline"
-            @click="
-              () => {
-                searchAddress = ''
-                fetchAgents()
-              }
-            "
-          >
-            Clear
-          </Button>
         </div>
       </CardContent>
     </Card>

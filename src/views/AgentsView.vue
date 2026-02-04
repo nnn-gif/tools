@@ -3,18 +3,15 @@ import { ref, onMounted, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import {
   Bot,
-  Search,
   ExternalLink,
   TrendingUp,
   RefreshCw,
   Copy,
   Check,
-  ChevronRight,
-  XCircle
+  ChevronRight
 } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 
 const API_BASE = 'https://api.formatho.com/api/v1'
@@ -64,7 +61,6 @@ const pagination = ref<Pagination>({
 const indexerStatus = ref<IndexerStatus | null>(null)
 const loading = ref(false)
 const error = ref('')
-const searchAddress = ref('')
 const currentPage = ref(1)
 const copiedAddress = ref<string | null>(null)
 const copyTimeout = ref<number | null>(null)
@@ -103,45 +99,6 @@ const fetchIndexerStatus = async () => {
     }
   } catch (e: any) {
     console.error('Failed to fetch indexer status:', e)
-  }
-}
-
-const searchAgent = async () => {
-  if (!searchAddress.value) {
-    fetchAgents()
-    return
-  }
-
-  loading.value = true
-  error.value = ''
-  try {
-    const response = await fetch(`${API_BASE}/agents/${searchAddress.value}`)
-    if (!response.ok) throw new Error('Agent not found')
-    const agent: Agent = await response.json()
-
-    // Get reputation records
-    const repResponse = await fetch(`${API_BASE}/agents/${searchAddress.value}/reputation`)
-    if (repResponse.ok) {
-      await repResponse.json()
-      agents.value = [agent]
-      pagination.value = {
-        limit: 1,
-        offset: 0,
-        count: 1,
-        total_count: 1
-      }
-    }
-  } catch (e: any) {
-    error.value = e.message
-    agents.value = []
-    pagination.value = {
-      limit: 20,
-      offset: 0,
-      count: 0,
-      total_count: 0
-    }
-  } finally {
-    loading.value = false
   }
 }
 
@@ -229,34 +186,6 @@ onMounted(() => {
       </Button>
     </div>
 
-    <!-- Search Bar -->
-    <div class="flex gap-2 items-center">
-      <div class="flex-1 relative">
-        <Search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          v-model="searchAddress"
-          placeholder="Search by address (0x...)"
-          class="font-mono pl-9 pr-20"
-          @keyup.enter="searchAgent"
-        />
-        <Button
-          v-if="searchAddress"
-          variant="ghost"
-          size="sm"
-          class="absolute right-1 top-1/2 -translate-y-1/2 h-7 px-2"
-          @click="
-            () => {
-              searchAddress = ''
-              fetchAgents()
-            }
-          "
-        >
-          <XCircle class="h-4 w-4" />
-        </Button>
-      </div>
-      <Button @click="searchAgent" :disabled="loading"> Search </Button>
-    </div>
-
     <!-- Indexer Status Card -->
     <Card v-if="indexerStatus" class="border-primary/20">
       <CardHeader class="pb-3">
@@ -266,77 +195,82 @@ onMounted(() => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-4">
-          <div>
-            <div class="text-muted-foreground">Total Agents</div>
-            <div class="text-2xl font-bold">{{ formatNumber(indexerStatus.total_agents) }}</div>
-          </div>
-          <div>
-            <div class="text-muted-foreground">Last Block</div>
-            <div class="text-lg font-semibold">{{ formatNumber(indexerStatus.last_block) }}</div>
-          </div>
-          <div>
-            <div class="text-muted-foreground">Reputation Records</div>
-            <div class="text-lg font-semibold">{{ formatNumber(indexerStatus.total_records) }}</div>
-          </div>
-          <div>
-            <div class="text-muted-foreground">Status</div>
-            <Badge variant="success" class="text-xs">Synced</Badge>
-          </div>
-        </div>
-        <div class="border-t pt-4 space-y-3">
-          <div class="flex items-center justify-between gap-4">
-            <span class="text-muted-foreground text-sm shrink-0">Registry Contract:</span>
-            <div class="flex items-center gap-2 min-w-0">
-              <span
-                v-if="indexerStatus.registry_addr"
-                class="font-mono text-xs font-medium truncate"
-              >
-                {{ indexerStatus.registry_addr }}
-              </span>
-              <span v-else class="text-muted-foreground text-xs">N/A</span>
-              <Button
-                v-if="indexerStatus.registry_addr"
-                variant="ghost"
-                size="sm"
-                class="h-6 w-6 p-0 shrink-0"
-                @click="copyAddress(indexerStatus.registry_addr)"
-                :title="copiedAddress === indexerStatus.registry_addr ? 'Copied!' : 'Copy address'"
-              >
-                <Check
-                  v-if="copiedAddress === indexerStatus.registry_addr"
-                  class="h-3 w-3 text-green-500"
-                />
-                <Copy v-else class="h-3 w-3" />
-              </Button>
+        <div class="space-y-4">
+          <!-- First Row: Key Metrics -->
+          <div class="grid grid-cols-3 gap-4 text-sm">
+            <div>
+              <div class="text-muted-foreground text-xs">Total Agents</div>
+              <div class="text-2xl font-bold">{{ formatNumber(indexerStatus.total_agents) }}</div>
+            </div>
+            <div>
+              <div class="text-muted-foreground text-xs">Last Block</div>
+              <div class="text-lg font-semibold">{{ formatNumber(indexerStatus.last_block) }}</div>
+            </div>
+            <div>
+              <div class="text-muted-foreground text-xs">Status</div>
+              <Badge variant="success" class="text-xs">Synced</Badge>
             </div>
           </div>
-          <div class="flex items-center justify-between gap-4">
-            <span class="text-muted-foreground text-sm shrink-0">Reputation Contract:</span>
-            <div class="flex items-center gap-2 min-w-0">
-              <span
-                v-if="indexerStatus.reputation_addr"
-                class="font-mono text-xs font-medium truncate"
-              >
-                {{ indexerStatus.reputation_addr }}
-              </span>
-              <span v-else class="text-muted-foreground text-xs">N/A</span>
-              <Button
-                v-if="indexerStatus.reputation_addr"
-                variant="ghost"
-                size="sm"
-                class="h-6 w-6 p-0 shrink-0"
-                @click="copyAddress(indexerStatus.reputation_addr)"
-                :title="
-                  copiedAddress === indexerStatus.reputation_addr ? 'Copied!' : 'Copy address'
-                "
-              >
-                <Check
-                  v-if="copiedAddress === indexerStatus.reputation_addr"
-                  class="h-3 w-3 text-green-500"
-                />
-                <Copy v-else class="h-3 w-3" />
-              </Button>
+
+          <!-- Second Row: Records and Contracts -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm pt-2">
+            <div>
+              <div class="text-muted-foreground text-xs">Reputation Records</div>
+              <div class="font-semibold">{{ formatNumber(indexerStatus.total_records) }}</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="flex-1 min-w-0">
+                <div class="text-muted-foreground text-xs">Registry Contract</div>
+                <div
+                  v-if="indexerStatus.registry_addr"
+                  class="font-mono text-xs font-medium truncate flex items-center gap-1"
+                >
+                  <span class="truncate">{{ indexerStatus.registry_addr }}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    class="h-5 w-5 p-0 shrink-0"
+                    @click="copyAddress(indexerStatus.registry_addr)"
+                    :title="
+                      copiedAddress === indexerStatus.registry_addr ? 'Copied!' : 'Copy address'
+                    "
+                  >
+                    <Check
+                      v-if="copiedAddress === indexerStatus.registry_addr"
+                      class="h-3 w-3 text-green-500"
+                    />
+                    <Copy v-else class="h-3 w-3" />
+                  </Button>
+                </div>
+                <div v-else class="text-muted-foreground text-xs">N/A</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="flex-1 min-w-0">
+                <div class="text-muted-foreground text-xs">Reputation Contract</div>
+                <div
+                  v-if="indexerStatus.reputation_addr"
+                  class="font-mono text-xs font-medium truncate flex items-center gap-1"
+                >
+                  <span class="truncate">{{ indexerStatus.reputation_addr }}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    class="h-5 w-5 p-0 shrink-0"
+                    @click="copyAddress(indexerStatus.reputation_addr)"
+                    :title="
+                      copiedAddress === indexerStatus.reputation_addr ? 'Copied!' : 'Copy address'
+                    "
+                  >
+                    <Check
+                      v-if="copiedAddress === indexerStatus.reputation_addr"
+                      class="h-3 w-3 text-green-500"
+                    />
+                    <Copy v-else class="h-3 w-3" />
+                  </Button>
+                </div>
+                <div v-else class="text-muted-foreground text-xs">N/A</div>
+              </div>
             </div>
           </div>
         </div>

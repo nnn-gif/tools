@@ -161,6 +161,23 @@ const formatNumber = (num: number) => {
   return new Intl.NumberFormat().format(num)
 }
 
+const getStatusVariant = (status: string) => {
+  switch (status?.toLowerCase()) {
+    case 'synced':
+      return 'success'
+    case 'syncing':
+      return 'warning'
+    case 'error':
+      return 'destructive'
+    default:
+      return 'secondary'
+  }
+}
+
+const formatStatus = (status: string) => {
+  return status?.charAt(0).toUpperCase() + status?.slice(1) || 'Unknown'
+}
+
 onMounted(() => {
   fetchAgents()
   fetchIndexerStatus()
@@ -208,7 +225,9 @@ onMounted(() => {
             </div>
             <div>
               <div class="text-muted-foreground text-xs">Status</div>
-              <Badge variant="success" class="text-xs">Synced</Badge>
+              <Badge :variant="getStatusVariant(indexerStatus.status)" class="text-xs">
+                {{ formatStatus(indexerStatus.status) }}
+              </Badge>
             </div>
           </div>
 

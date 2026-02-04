@@ -298,7 +298,7 @@ onMounted(() => {
         <RouterLink
           v-for="agent in agents"
           :key="agent.id"
-          :to="`/tools/agents/${agent.address}`"
+          :to="{ name: 'agent-detail', params: { address: agent.address } }"
           class="block"
         >
           <Card class="hover:shadow-md transition-shadow cursor-pointer h-full">

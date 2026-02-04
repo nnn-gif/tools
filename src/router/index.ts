@@ -268,6 +268,18 @@ export const routes = [
           keywords:
             'agent browser, blockchain agents, ai agents reputation, crypto agents, ethereum agents, agent explorer, reputation tracking'
         }
+      },
+      {
+        path: 'agents/:address',
+        name: 'agent-detail',
+        component: () => import('../views/AgentDetailView.vue'),
+        meta: {
+          title: 'Agent Details - View Reputation History & Metadata',
+          description:
+            'View detailed information about blockchain AI agents including reputation history, ratings, metadata, and transaction records. Track agent performance and feedback.',
+          keywords:
+            'agent details, agent reputation, blockchain agent history, ai agent ratings, crypto agent metadata, ethereum agent tracker'
+        }
       }
     ]
   }

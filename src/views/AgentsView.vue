@@ -1,6 +1,16 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { Bot, Search, ExternalLink, TrendingUp, RefreshCw, Copy, Check } from 'lucide-vue-next'
+import { RouterLink } from 'vue-router'
+import {
+  Bot,
+  Search,
+  ExternalLink,
+  TrendingUp,
+  RefreshCw,
+  Copy,
+  Check,
+  ChevronRight
+} from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -352,62 +362,75 @@ onMounted(() => {
     <!-- Agents Grid -->
     <div v-else class="flex-1 overflow-auto">
       <div class="grid gap-3">
-        <Card v-for="agent in agents" :key="agent.id" class="hover:shadow-md transition-shadow">
-          <CardContent class="pt-6">
-            <div class="flex items-start justify-between gap-4">
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-2 mb-2">
-                  <Bot class="h-5 w-5 text-primary" />
-                  <h3 class="font-mono text-lg font-semibold truncate">
-                    {{ shortenAddress(agent.address) }}
-                  </h3>
-                  <Badge variant="secondary" class="text-xs"> #{{ agent.id }} </Badge>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    class="h-6 w-6 p-0"
-                    @click="copyAddress(agent.address)"
-                    :title="copiedAddress === agent.address ? 'Copied!' : 'Copy address'"
-                  >
-                    <Check v-if="copiedAddress === agent.address" class="h-3 w-3 text-green-500" />
-                    <Copy v-else class="h-3 w-3" />
-                  </Button>
+        <RouterLink
+          v-for="agent in agents"
+          :key="agent.id"
+          :to="`/tools/agents/${agent.address}`"
+          class="block"
+        >
+          <Card class="hover:shadow-md transition-shadow cursor-pointer h-full">
+            <CardContent class="pt-6">
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-2">
+                    <Bot class="h-5 w-5 text-primary" />
+                    <h3 class="font-mono text-lg font-semibold truncate">
+                      {{ shortenAddress(agent.address) }}
+                    </h3>
+                    <Badge variant="secondary" class="text-xs"> #{{ agent.id }} </Badge>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      class="h-6 w-6 p-0"
+                      @click.prevent="copyAddress(agent.address)"
+                      :title="copiedAddress === agent.address ? 'Copied!' : 'Copy address'"
+                    >
+                      <Check
+                        v-if="copiedAddress === agent.address"
+                        class="h-3 w-3 text-green-500"
+                      />
+                      <Copy v-else class="h-3 w-3" />
+                    </Button>
+                  </div>
+
+                  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                    <div>
+                      <div class="text-muted-foreground text-xs">Chain ID</div>
+                      <div class="font-medium">{{ agent.chain_id }}</div>
+                    </div>
+                    <div>
+                      <div class="text-muted-foreground text-xs">First Seen</div>
+                      <div class="font-medium">Block {{ formatNumber(agent.first_seen) }}</div>
+                    </div>
+                    <div>
+                      <div class="text-muted-foreground text-xs">Owner</div>
+                      <div class="font-medium font-mono text-xs">
+                        {{ shortenAddress(agent.owner) }}
+                      </div>
+                    </div>
+                    <div v-if="agent.total_reputation !== undefined">
+                      <div class="text-muted-foreground text-xs">Reputation</div>
+                      <div class="font-medium">
+                        {{ agent.total_reputation }}
+                        <span v-if="agent.avg_score" class="text-muted-foreground text-xs">
+                          (avg: {{ agent.avg_score.toFixed(2) }})
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-                  <div>
-                    <div class="text-muted-foreground text-xs">Chain ID</div>
-                    <div class="font-medium">{{ agent.chain_id }}</div>
-                  </div>
-                  <div>
-                    <div class="text-muted-foreground text-xs">First Seen</div>
-                    <div class="font-medium">Block {{ formatNumber(agent.first_seen) }}</div>
-                  </div>
-                  <div>
-                    <div class="text-muted-foreground text-xs">Owner</div>
-                    <div class="font-medium font-mono text-xs">
-                      {{ shortenAddress(agent.owner) }}
-                    </div>
-                  </div>
-                  <div v-if="agent.total_reputation !== undefined">
-                    <div class="text-muted-foreground text-xs">Reputation</div>
-                    <div class="font-medium">
-                      {{ agent.total_reputation }}
-                      <span v-if="agent.avg_score" class="text-muted-foreground text-xs">
-                        (avg: {{ agent.avg_score.toFixed(2) }})
-                      </span>
-                    </div>
-                  </div>
+                <div class="flex items-center gap-2">
+                  <Button variant="outline" size="sm" @click.prevent="openEtherscan(agent.address)">
+                    <ExternalLink class="h-4 w-4 mr-2" />
+                    Etherscan
+                  </Button>
+                  <ChevronRight class="h-5 w-5 text-muted-foreground" />
                 </div>
               </div>
-
-              <Button variant="outline" size="sm" @click="openEtherscan(agent.address)">
-                <ExternalLink class="h-4 w-4 mr-2" />
-                Etherscan
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </RouterLink>
 
         <!-- Empty State -->
         <Card v-if="agents.length === 0 && !loading">

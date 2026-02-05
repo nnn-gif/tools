@@ -1,7 +1,16 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { Bot, ArrowLeft, ExternalLink, TrendingUp, CheckCircle, AlertCircle } from 'lucide-vue-next'
+import {
+  Bot,
+  ArrowLeft,
+  ExternalLink,
+  TrendingUp,
+  CheckCircle,
+  AlertCircle,
+  FileText,
+  Link
+} from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -38,18 +47,46 @@ interface ReputationRecord {
   created_at: string
 }
 
-interface ReputationResponse {
-  records: ReputationRecord[]
+interface MetadataRecord {
+  id: number
+  agent_id: number
+  chain_id: number
+  agent_address: string
+  metadata_key: string
+  metadata_value: string
+  block_number: number
+  tx_hash: string
+  log_index: number
+  timestamp: string
+  created_at: string
+}
+
+interface URIRecord {
+  id: number
+  agent_id: number
+  chain_id: number
+  agent_address: string
+  uri: string
+  block_number: number
+  tx_hash: string
+  log_index: number
+  timestamp: string
+  created_at: string
+}
+
+interface PaginatedResponse<T> {
+  records: T[]
   pagination: {
     count: number
     limit: number
     offset: number
-    total_count?: number
   }
 }
 
 const agent = ref<Agent | null>(null)
 const reputationHistory = ref<ReputationRecord[]>([])
+const metadataHistory = ref<MetadataRecord[]>([])
+const uriHistory = ref<URIRecord[]>([])
 const loading = ref(true)
 const error = ref('')
 
@@ -67,11 +104,37 @@ const fetchReputationHistory = async () => {
   try {
     const response = await fetch(`${API_BASE}/agents/${agentAddress.value}/reputation`)
     if (response.ok) {
-      const data: ReputationResponse = await response.json()
+      const data: PaginatedResponse<ReputationRecord> = await response.json()
       reputationHistory.value = data.records
     }
   } catch (e: any) {
     console.error('Failed to fetch reputation history:', e)
+  }
+}
+
+const fetchMetadataHistory = async () => {
+  try {
+    const response = await fetch(
+      `${API_BASE}/agents/${agentAddress.value}/metadata-history?limit=20`
+    )
+    if (response.ok) {
+      const data: PaginatedResponse<MetadataRecord> = await response.json()
+      metadataHistory.value = data.records || []
+    }
+  } catch (e: any) {
+    console.error('Failed to fetch metadata history:', e)
+  }
+}
+
+const fetchURIHistory = async () => {
+  try {
+    const response = await fetch(`${API_BASE}/agents/${agentAddress.value}/uri-history?limit=20`)
+    if (response.ok) {
+      const data: PaginatedResponse<URIRecord> = await response.json()
+      uriHistory.value = data.records || []
+    }
+  } catch (e: any) {
+    console.error('Failed to fetch URI history:', e)
   }
 }
 
@@ -128,7 +191,12 @@ const getScoreVariant = (score: number) => {
 
 onMounted(async () => {
   loading.value = true
-  await Promise.all([fetchAgent(), fetchReputationHistory()])
+  await Promise.all([
+    fetchAgent(),
+    fetchReputationHistory(),
+    fetchMetadataHistory(),
+    fetchURIHistory()
+  ])
   loading.value = false
 })
 </script>
@@ -259,6 +327,128 @@ onMounted(async () => {
                       <div class="text-muted-foreground text-xs">From</div>
                       <div class="font-mono text-xs">{{ shortenAddress(record.from_address) }}</div>
                     </div>
+                    <div>
+                      <div class="text-muted-foreground text-xs">Block</div>
+                      <div class="font-medium">{{ formatNumber(record.block_number) }}</div>
+                    </div>
+                    <div>
+                      <div class="text-muted-foreground text-xs">Time</div>
+                      <div class="font-medium text-xs">{{ formatDate(record.timestamp) }}</div>
+                    </div>
+                  </div>
+                  <div class="mt-2 text-xs">
+                    <span class="text-muted-foreground">TX: </span>
+                    <span
+                      class="font-mono cursor-pointer hover:text-primary"
+                      @click="openEtherscan(record.tx_hash)"
+                    >
+                      {{ shortenAddress(record.tx_hash) }}
+                    </span>
+                  </div>
+                </div>
+                <Button variant="ghost" size="sm" @click="openEtherscan(record.tx_hash)">
+                  <ExternalLink class="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <!-- Metadata History Card -->
+      <Card>
+        <CardHeader>
+          <CardTitle class="flex items-center gap-2">
+            <FileText class="h-5 w-5" />
+            Metadata History
+            <Badge variant="secondary" class="ml-2">{{ metadataHistory.length }} records</Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div v-if="metadataHistory.length === 0" class="text-center py-8 text-muted-foreground">
+            No metadata history available
+          </div>
+          <div v-else class="space-y-3">
+            <div
+              v-for="record in metadataHistory"
+              :key="record.id"
+              class="border rounded-lg p-4 hover:shadow-md transition-shadow"
+            >
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-2">
+                    <FileText class="h-4 w-4 text-blue-500" />
+                    <span class="font-mono text-sm font-medium">{{ record.metadata_key }}</span>
+                  </div>
+                  <div class="mb-2">
+                    <div class="text-muted-foreground text-xs mb-1">Value</div>
+                    <div
+                      class="font-mono text-xs bg-muted p-2 rounded break-all max-h-32 overflow-y-auto"
+                    >
+                      {{ record.metadata_value || '(empty)' }}
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+                    <div>
+                      <div class="text-muted-foreground text-xs">Block</div>
+                      <div class="font-medium">{{ formatNumber(record.block_number) }}</div>
+                    </div>
+                    <div>
+                      <div class="text-muted-foreground text-xs">Time</div>
+                      <div class="font-medium text-xs">{{ formatDate(record.timestamp) }}</div>
+                    </div>
+                  </div>
+                  <div class="mt-2 text-xs">
+                    <span class="text-muted-foreground">TX: </span>
+                    <span
+                      class="font-mono cursor-pointer hover:text-primary"
+                      @click="openEtherscan(record.tx_hash)"
+                    >
+                      {{ shortenAddress(record.tx_hash) }}
+                    </span>
+                  </div>
+                </div>
+                <Button variant="ghost" size="sm" @click="openEtherscan(record.tx_hash)">
+                  <ExternalLink class="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <!-- URI History Card -->
+      <Card>
+        <CardHeader>
+          <CardTitle class="flex items-center gap-2">
+            <Link class="h-5 w-5" />
+            URI History
+            <Badge variant="secondary" class="ml-2">{{ uriHistory.length }} records</Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div v-if="uriHistory.length === 0" class="text-center py-8 text-muted-foreground">
+            No URI history available
+          </div>
+          <div v-else class="space-y-3">
+            <div
+              v-for="record in uriHistory"
+              :key="record.id"
+              class="border rounded-lg p-4 hover:shadow-md transition-shadow"
+            >
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-2">
+                    <Link class="h-4 w-4 text-green-500" />
+                    <span class="font-medium">URI Update</span>
+                  </div>
+                  <div class="mb-2">
+                    <div class="text-muted-foreground text-xs mb-1">URI</div>
+                    <div class="font-mono text-xs bg-muted p-2 rounded break-all">
+                      {{ record.uri || '(empty)' }}
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
                     <div>
                       <div class="text-muted-foreground text-xs">Block</div>
                       <div class="font-medium">{{ formatNumber(record.block_number) }}</div>

@@ -36,6 +36,7 @@ interface Pagination {
   offset: number
   count: number
   total_count: number
+  sort_by: string
 }
 
 interface AgentResponse {
@@ -60,7 +61,8 @@ const pagination = ref<Pagination>({
   limit: 20,
   offset: 0,
   count: 0,
-  total_count: 0
+  total_count: 0,
+  sort_by: 'reputation'
 })
 const indexerStatus = ref<IndexerStatus | null>(null)
 const loading = ref(false)
@@ -68,6 +70,7 @@ const error = ref('')
 const currentPage = ref(1)
 const copiedAddress = ref<string | null>(null)
 const copyTimeout = ref<number | null>(null)
+const sortBy = ref('reputation')
 
 const totalPages = computed(() => Math.ceil(pagination.value.total_count / pagination.value.limit))
 
@@ -77,7 +80,8 @@ const fetchAgents = async () => {
   try {
     const params = new URLSearchParams({
       limit: pagination.value.limit.toString(),
-      offset: pagination.value.offset.toString()
+      offset: pagination.value.offset.toString(),
+      sort_by: sortBy.value
     })
 
     const response = await fetch(`${API_BASE}/agents?${params}`)
@@ -125,6 +129,13 @@ const prevPage = () => {
 const goToPage = (page: number) => {
   currentPage.value = page
   pagination.value.offset = (page - 1) * pagination.value.limit
+  fetchAgents()
+}
+
+const changeSort = (newSort: string) => {
+  sortBy.value = newSort
+  currentPage.value = 1
+  pagination.value.offset = 0
   fetchAgents()
 }
 
@@ -205,6 +216,42 @@ onMounted(() => {
         <RefreshCw :class="{ 'animate-spin': loading }" class="h-4 w-4 mr-2" />
         Refresh
       </Button>
+    </div>
+
+    <!-- Sort Controls -->
+    <div class="flex items-center gap-2">
+      <span class="text-sm text-muted-foreground">Sort by:</span>
+      <div class="flex gap-2">
+        <Button
+          :variant="sortBy === 'reputation' ? 'default' : 'outline'"
+          size="sm"
+          @click="changeSort('reputation')"
+        >
+          <TrendingUp class="h-4 w-4 mr-2" />
+          Reputation
+        </Button>
+        <Button
+          :variant="sortBy === 'created' ? 'default' : 'outline'"
+          size="sm"
+          @click="changeSort('created')"
+        >
+          Newly Created
+        </Button>
+        <Button
+          :variant="sortBy === 'updated' ? 'default' : 'outline'"
+          size="sm"
+          @click="changeSort('updated')"
+        >
+          Last Updated
+        </Button>
+        <Button
+          :variant="sortBy === 'first_seen' ? 'default' : 'outline'"
+          size="sm"
+          @click="changeSort('first_seen')"
+        >
+          First Seen
+        </Button>
+      </div>
     </div>
 
     <!-- Indexer Status Card -->

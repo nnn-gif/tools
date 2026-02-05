@@ -93,6 +93,7 @@ const agent = ref<Agent | null>(null)
 const reputationHistory = ref<ReputationRecord[]>([])
 const metadataHistory = ref<MetadataRecord[]>([])
 const uriHistory = ref<URIRecord[]>([])
+const agentMetadata = ref<{ name?: string; description?: string }>({})
 const loading = ref(true)
 const error = ref('')
 
@@ -146,9 +147,32 @@ const fetchURIHistory = async () => {
     if (response.ok) {
       const data: PaginatedResponse<URIRecord> = await response.json()
       uriHistory.value = data.records || []
+
+      // Fetch metadata from the latest URI
+      if (data.records && data.records.length > 0) {
+        const latestUri = data.records[0]?.uri
+        if (latestUri && latestUri !== 'N/A') {
+          await fetchAgentMetadata(latestUri)
+        }
+      }
     }
   } catch (e: any) {
     console.error('Failed to fetch URI history:', e)
+  }
+}
+
+const fetchAgentMetadata = async (uri: string) => {
+  try {
+    const response = await fetch(uri)
+    if (response.ok) {
+      const data = await response.json()
+      agentMetadata.value = {
+        name: data.name || data.agentName,
+        description: data.description || data.about
+      }
+    }
+  } catch (e: any) {
+    console.error('Failed to fetch agent metadata from URI:', e)
   }
 }
 
@@ -255,13 +279,16 @@ onMounted(async () => {
             <div class="flex-1">
               <CardTitle class="text-xl mb-2 flex items-center gap-2">
                 <Bot class="h-6 w-6 text-primary" />
-                {{ agent.name || shortenAddress(agent.address) }}
+                {{ agentMetadata.name || agent.name || shortenAddress(agent.address) }}
                 <Badge v-if="agent.active" variant="success">Active</Badge>
                 <Badge v-else variant="secondary">Inactive</Badge>
               </CardTitle>
               <p class="text-sm text-muted-foreground font-mono">{{ agent.address }}</p>
-              <p v-if="agent.metadata?.description" class="text-sm mt-2">
-                {{ agent.metadata.description }}
+              <p
+                v-if="agentMetadata.description || agent.metadata?.description"
+                class="text-sm mt-2"
+              >
+                {{ agentMetadata.description || agent.metadata?.description }}
               </p>
             </div>
             <Button variant="outline" size="sm" @click="openAddress(agent.address)">

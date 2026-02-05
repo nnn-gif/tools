@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { decodeMetadataValue, getTypeLabel } from '@/lib/metadataDecoder'
 
 const API_BASE = 'https://api.formatho.com/api/v1'
 const route = useRoute()
@@ -93,6 +94,14 @@ const metadataHistory = ref<MetadataRecord[]>([])
 const uriHistory = ref<URIRecord[]>([])
 const loading = ref(true)
 const error = ref('')
+
+// Computed property to decode metadata values
+const decodedMetadataHistory = computed(() => {
+  return metadataHistory.value.map((record) => ({
+    ...record,
+    decoded: decodeMetadataValue(record.metadata_value)
+  }))
+})
 
 const fetchAgent = async () => {
   try {
@@ -377,7 +386,7 @@ onMounted(async () => {
           </div>
           <div v-else class="space-y-3">
             <div
-              v-for="record in metadataHistory"
+              v-for="record in decodedMetadataHistory"
               :key="record.id"
               class="border rounded-lg p-4 hover:shadow-md transition-shadow"
             >
@@ -385,15 +394,53 @@ onMounted(async () => {
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-2 mb-2">
                     <FileText class="h-4 w-4 text-blue-500" />
-                    <span class="font-mono text-sm font-medium">{{ record.metadata_key }}</span>
+                    <span class="font-mono text-sm font-medium">{{
+                      record.decoded.key || record.metadata_key
+                    }}</span>
+                    <Badge variant="outline" class="text-xs">{{
+                      getTypeLabel(record.decoded)
+                    }}</Badge>
                   </div>
+
+                  <!-- Decoded Value (Human Readable) -->
                   <div class="mb-2">
-                    <div class="text-muted-foreground text-xs mb-1">Value</div>
-                    <div
-                      class="font-mono text-xs bg-muted p-2 rounded break-all max-h-32 overflow-y-auto"
-                    >
-                      {{ record.metadata_value || '(empty)' }}
+                    <div class="text-muted-foreground text-xs mb-1 flex items-center gap-1">
+                      <CheckCircle class="h-3 w-3 text-green-500" />
+                      Decoded Value
                     </div>
+                    <div
+                      class="font-mono text-sm bg-green-50 dark:bg-green-950/20 p-2 rounded border border-green-200 dark:border-green-800 break-all"
+                    >
+                      <span v-if="record.decoded.isAddress">
+                        <a
+                          :href="`https://etherscan.io/address/${record.decoded.value}`"
+                          target="_blank"
+                          rel="noopener"
+                          class="text-blue-600 dark:text-blue-400 hover:underline"
+                        >
+                          {{ record.decoded.value }}
+                        </a>
+                      </span>
+                      <span v-else>{{ record.decoded.value || '(empty)' }}</span>
+                    </div>
+                  </div>
+
+                  <!-- Raw Encoded Value -->
+                  <div class="mb-2">
+                    <details class="group">
+                      <summary
+                        class="text-muted-foreground text-xs mb-1 cursor-pointer hover:text-foreground flex items-center gap-1"
+                      >
+                        <AlertCircle class="h-3 w-3 text-orange-500" />
+                        Raw ABI-Encoded Value
+                        <span class="text-xs opacity-50">(click to expand)</span>
+                      </summary>
+                      <div
+                        class="font-mono text-xs bg-muted p-2 rounded break-all max-h-32 overflow-y-auto mt-1"
+                      >
+                        {{ record.decoded.raw }}
+                      </div>
+                    </details>
                   </div>
                   <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
                     <div>

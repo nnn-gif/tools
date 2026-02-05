@@ -23,6 +23,10 @@ interface Agent {
   id: number
   chain_id: number
   address: string
+  name?: string
+  metadata?: {
+    description?: string
+  }
   first_seen: number
   last_updated: number
   active: boolean
@@ -241,11 +245,14 @@ onMounted(async () => {
             <div class="flex-1">
               <CardTitle class="text-xl mb-2 flex items-center gap-2">
                 <Bot class="h-6 w-6 text-primary" />
-                {{ shortenAddress(agent.address) }}
+                {{ agent.name || shortenAddress(agent.address) }}
                 <Badge v-if="agent.active" variant="success">Active</Badge>
                 <Badge v-else variant="secondary">Inactive</Badge>
               </CardTitle>
               <p class="text-sm text-muted-foreground font-mono">{{ agent.address }}</p>
+              <p v-if="agent.metadata?.description" class="text-sm mt-2">
+                {{ agent.metadata.description }}
+              </p>
             </div>
             <Button variant="outline" size="sm" @click="openAddress(agent.address)">
               <ExternalLink class="h-4 w-4 mr-2" />

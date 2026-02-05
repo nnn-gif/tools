@@ -21,6 +21,10 @@ interface Agent {
   chain_id: number
   address: string
   owner: string
+  name?: string
+  metadata?: {
+    description?: string
+  }
   first_seen: number
   last_updated: number
   total_reputation?: number
@@ -326,8 +330,8 @@ onMounted(() => {
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-2 mb-2">
                     <Bot class="h-5 w-5 text-primary" />
-                    <h3 class="font-mono text-lg font-semibold truncate">
-                      {{ shortenAddress(agent.address) }}
+                    <h3 class="text-lg font-semibold truncate">
+                      {{ agent.name || shortenAddress(agent.address) }}
                     </h3>
                     <Badge variant="secondary" class="text-xs"> #{{ agent.id }} </Badge>
                     <Button
@@ -344,7 +348,12 @@ onMounted(() => {
                       <Copy v-else class="h-3 w-3" />
                     </Button>
                   </div>
-
+                  <p
+                    v-if="agent.metadata?.description"
+                    class="text-sm text-muted-foreground mb-3 line-clamp-2"
+                  >
+                    {{ agent.metadata.description }}
+                  </p>
                   <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                     <div>
                       <div class="text-muted-foreground text-xs">Chain ID</div>

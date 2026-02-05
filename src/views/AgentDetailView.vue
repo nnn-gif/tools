@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import {
   Bot,
   ArrowLeft,
@@ -18,6 +18,7 @@ import { decodeMetadataValue, getTypeLabel, formatBlockDate } from '@/lib/metada
 
 const API_BASE = 'https://api.formatho.com/api/v1'
 const route = useRoute()
+const router = useRouter()
 const agentAddress = computed(() => route.params.address as string)
 
 interface Agent {
@@ -218,7 +219,7 @@ onMounted(async () => {
   <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
     <!-- Header -->
     <div class="flex items-center gap-3">
-      <Button variant="ghost" size="sm" @click="$router.back()">
+      <Button variant="ghost" size="sm" @click="router.push('/tools/agents')">
         <ArrowLeft class="h-4 w-4 mr-2" />
         Back
       </Button>

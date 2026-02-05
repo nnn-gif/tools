@@ -219,7 +219,7 @@ onMounted(async () => {
   <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
     <!-- Header -->
     <div class="flex items-center gap-3">
-      <Button variant="ghost" size="sm" @click="router.push('/tools/agents')">
+      <Button variant="ghost" size="sm" @click="router.push({ name: 'agents' })">
         <ArrowLeft class="h-4 w-4 mr-2" />
         Back
       </Button>

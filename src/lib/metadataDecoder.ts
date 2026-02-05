@@ -149,3 +149,27 @@ export function formatIpfsUrl(value: string): string | null {
   }
   return null
 }
+
+/**
+ * Converts an Ethereum block number to approximate timestamp
+ * Uses average block time of 12 seconds from Ethereum genesis (July 30, 2015)
+ * Genesis block: 0 at timestamp 1438269973
+ */
+export function blockToTimestamp(blockNumber: number): Date {
+  const GENESIS_BLOCK = 0
+  const GENESIS_TIMESTAMP = 1438269973 // July 30, 2015, 3:46:13 PM UTC
+  const AVERAGE_BLOCK_TIME = 12 // seconds per block (Ethereum mainnet)
+
+  const blocksSinceGenesis = blockNumber - GENESIS_BLOCK
+  const estimatedTimestamp = GENESIS_TIMESTAMP + blocksSinceGenesis * AVERAGE_BLOCK_TIME
+
+  return new Date(estimatedTimestamp * 1000) // Convert to milliseconds
+}
+
+/**
+ * Formats a block number to a human-readable date string
+ */
+export function formatBlockDate(blockNumber: number): string {
+  const date = blockToTimestamp(blockNumber)
+  return date.toLocaleString()
+}

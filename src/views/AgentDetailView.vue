@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { decodeMetadataValue, getTypeLabel } from '@/lib/metadataDecoder'
+import { decodeMetadataValue, getTypeLabel, formatBlockDate } from '@/lib/metadataDecoder'
 
 const API_BASE = 'https://api.formatho.com/api/v1'
 const route = useRoute()
@@ -289,19 +289,17 @@ onMounted(async () => {
             </div>
             <div>
               <div class="text-sm text-muted-foreground">First Seen</div>
-              <div class="font-medium">Block {{ formatNumber(agent.first_seen) }}</div>
+              <div class="font-medium text-sm">Block {{ formatNumber(agent.first_seen) }}</div>
+              <div class="text-xs text-muted-foreground">
+                {{ formatBlockDate(agent.first_seen) }}
+              </div>
             </div>
             <div>
               <div class="text-sm text-muted-foreground">Last Updated</div>
-              <div class="font-medium">Block {{ formatNumber(agent.last_updated) }}</div>
-            </div>
-            <div>
-              <div class="text-sm text-muted-foreground">Created</div>
-              <div class="font-medium text-sm">{{ formatDate(agent.created_at) }}</div>
-            </div>
-            <div>
-              <div class="text-sm text-muted-foreground">Updated</div>
-              <div class="font-medium text-sm">{{ formatDate(agent.updated_at) }}</div>
+              <div class="font-medium text-sm">Block {{ formatNumber(agent.last_updated) }}</div>
+              <div class="text-xs text-muted-foreground">
+                {{ formatBlockDate(agent.last_updated) }}
+              </div>
             </div>
           </div>
         </CardContent>

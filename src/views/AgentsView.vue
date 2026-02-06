@@ -8,7 +8,9 @@ import {
   RefreshCw,
   Copy,
   Check,
-  ChevronRight
+  ChevronRight,
+  Search,
+  X
 } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
@@ -71,6 +73,7 @@ const currentPage = ref(1)
 const copiedAddress = ref<string | null>(null)
 const copyTimeout = ref<number | null>(null)
 const sortBy = ref('reputation')
+const searchQuery = ref('')
 
 const totalPages = computed(() => Math.ceil(pagination.value.total_count / pagination.value.limit))
 
@@ -84,6 +87,10 @@ const fetchAgents = async () => {
       sort_by: sortBy.value
     })
 
+    if (searchQuery.value.trim()) {
+      params.append('search', searchQuery.value.trim())
+    }
+
     const response = await fetch(`${API_BASE}/agents?${params}`)
     if (!response.ok) throw new Error('Failed to fetch agents')
     const data: AgentResponse = await response.json()
@@ -95,6 +102,17 @@ const fetchAgents = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const handleSearch = () => {
+  pagination.value.offset = 0
+  currentPage.value = 1
+  fetchAgents()
+}
+
+const clearSearch = () => {
+  searchQuery.value = ''
+  handleSearch()
 }
 
 const fetchIndexerStatus = async () => {
@@ -215,6 +233,31 @@ onMounted(() => {
       <Button variant="outline" size="sm" @click="refresh" :disabled="loading">
         <RefreshCw :class="{ 'animate-spin': loading }" class="h-4 w-4 mr-2" />
         Refresh
+      </Button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="flex items-center gap-2">
+      <div class="relative flex-1 max-w-md">
+        <Search
+          class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"
+        />
+        <input
+          v-model="searchQuery"
+          @keyup.enter="handleSearch"
+          type="text"
+          placeholder="Search by Agent ID, Address, Wallet Address, or URI..."
+          class="w-full pl-10 pr-10 py-2 text-sm bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+        />
+        <X
+          v-if="searchQuery"
+          @click="clearSearch"
+          class="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground cursor-pointer hover:text-foreground"
+        />
+      </div>
+      <Button variant="default" size="sm" @click="handleSearch" :disabled="loading">
+        <Search class="h-4 w-4 mr-2" />
+        Search
       </Button>
     </div>
 

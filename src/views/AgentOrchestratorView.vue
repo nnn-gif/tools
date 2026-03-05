@@ -2,7 +2,6 @@
 import {
   Bot,
   Cpu,
-  Clock,
   ListTodo,
   Download,
   Github,
@@ -10,12 +9,9 @@ import {
   Code,
   LayoutDashboard,
   Calendar,
-  FileText,
   Wand2,
   Settings,
-  RefreshCw,
   MessageSquare,
-  Database,
   Shield
 } from 'lucide-vue-next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'

@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { ref, computed } from 'vue'
+import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Button } from '@/components/ui/button'
 
 const searchQuery = ref('')
 const selectedEmoji = ref('')
@@ -120,10 +118,6 @@ const copyEmoji = (emoji: string) => {
   copied.value = true
   setTimeout(() => { copied.value = false }, 2000)
 }
-</script>
-
-<script lang="ts">
-import { computed } from 'vue'
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { Fingerprint, Copy, Check, RefreshCw, Trash2 } from 'lucide-vue-next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -15,20 +15,23 @@ const generateUlid = (): string => {
   const now = Date.now()
   
   // Time component (10 characters)
-  const time = []
+  const time: string[] = []
   let timestamp = now
   for (let i = 0; i < 10; i++) {
-    time.unshift(ENCODING[timestamp % 32])
+    const char = ENCODING[timestamp % 32]
+    time.unshift(char ?? '0')
     timestamp = Math.floor(timestamp / 32)
   }
   
   // Random component (16 characters)
-  const random = []
+  const random: string[] = []
   const randomBytes = new Uint8Array(16)
   crypto.getRandomValues(randomBytes)
   
   for (let i = 0; i < 16; i++) {
-    random.push(ENCODING[randomBytes[i] % 32])
+    const byte = randomBytes[i]
+    const char = byte !== undefined ? ENCODING[byte % 32] : '0'
+    random.push(char ?? '0')
   }
   
   return time.join('') + random.join('')
@@ -39,7 +42,7 @@ const parseUlid = (ulid: string): { timestamp: number; date: string } => {
   let timestamp = 0
   
   for (let i = 0; i < timeComponent.length; i++) {
-    const char = timeComponent[i]
+    const char = timeComponent[i] ?? '0'
     const value = ENCODING.indexOf(char)
     timestamp = timestamp * 32 + value
   }
@@ -63,9 +66,12 @@ const clear = () => {
 }
 
 const copyUlid = (index: number) => {
-  navigator.clipboard.writeText(ulids.value[index])
-  copied.value = index
-  setTimeout(() => copied.value = null, 2000)
+  const ulid = ulids.value[index]
+  if (ulid) {
+    navigator.clipboard.writeText(ulid)
+    copied.value = index
+    setTimeout(() => copied.value = null, 2000)
+  }
 }
 
 const copyAll = () => {

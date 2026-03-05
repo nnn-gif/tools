@@ -22,8 +22,17 @@ const expandedIps = computed<ExpandedIp[]>(() => {
   if (startParts.some(p => isNaN(p) || p < 0 || p > 255)) return []
   if (endParts.some(p => isNaN(p) || p < 0 || p > 255)) return []
   
-  const startNum = (startParts[0] << 24) + (startParts[1] << 16) + (startParts[2] << 8) + startParts[3]
-  const endNum = (endParts[0] << 24) + (endParts[1] << 16) + (endParts[2] << 8) + endParts[3]
+  const s0 = startParts[0] ?? 0
+  const s1 = startParts[1] ?? 0
+  const s2 = startParts[2] ?? 0
+  const s3 = startParts[3] ?? 0
+  const e0 = endParts[0] ?? 0
+  const e1 = endParts[1] ?? 0
+  const e2 = endParts[2] ?? 0
+  const e3 = endParts[3] ?? 0
+  
+  const startNum = (s0 << 24) + (s1 << 16) + (s2 << 8) + s3
+  const endNum = (e0 << 24) + (e1 << 16) + (e2 << 8) + e3
   
   if (endNum < startNum) return []
   

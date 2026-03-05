@@ -47,13 +47,16 @@ const formatXml = () => {
         // Add attributes
         for (let i = 0; i < element.attributes.length; i++) {
           const attr = element.attributes[i]
-          result += ` ${attr.name}="${attr.value}"`
+          if (attr) {
+            result += ` ${attr.name}="${attr.value}"`
+          }
         }
         
         if (children.length === 0) {
           result += '/>\n'
-        } else if (children.length === 1 && children[0].nodeType === Node.TEXT_NODE) {
-          result += `>${children[0].textContent?.trim()}</${element.tagName}>\n`
+        } else if (children.length === 1 && children[0]?.nodeType === Node.TEXT_NODE) {
+          const child = children[0]
+          result += `>${child?.textContent?.trim() ?? ''}</${element.tagName}>\n`
         } else {
           result += '>\n'
           for (const child of children) {

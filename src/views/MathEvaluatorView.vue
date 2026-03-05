@@ -10,11 +10,6 @@ const copied = ref(false)
 
 const evaluateExpression = (expr: string): string => {
   try {
-    // Sanitize input - only allow numbers, operators, parentheses, and math functions
-    const sanitized = expr
-      .replace(/[^0-9+\-*/().%\s^eE]/g, '')
-      .replace(/\^/g, '**')
-    
     // Create a safe evaluation context
     const mathFunctions = {
       abs: Math.abs,
@@ -43,7 +38,7 @@ const evaluateExpression = (expr: string): string => {
 
     // Replace math functions
     let processed = expr
-    for (const [name, fn] of Object.entries(mathFunctions)) {
+    for (const name of Object.keys(mathFunctions)) {
       const regex = new RegExp(name, 'gi')
       processed = processed.replace(regex, `Math.${name}`)
     }

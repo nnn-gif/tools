@@ -16,8 +16,9 @@ const handleFileUpload = async (event: Event) => {
   base64Output.value = ''
   
   if (target.files && target.files[0]) {
-    fileInput.value = target.files[0]
-    fileName.value = fileInput.value.name
+    const file = target.files[0]
+    fileInput.value = file
+    fileName.value = file.name
     await convertToBase64()
   }
 }
@@ -30,7 +31,7 @@ const convertToBase64 = async () => {
     reader.onload = () => {
       const result = reader.result as string
       // Remove data URL prefix
-      base64Output.value = result.split(',')[1]
+      base64Output.value = result.split(',')[1] ?? ''
     }
     reader.onerror = () => {
       error.value = 'Failed to read file'

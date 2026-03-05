@@ -27,7 +27,9 @@ const xmlToJson = (xml: string): any => {
         obj['@attributes'] = {}
         for (let i = 0; i < element.attributes.length; i++) {
           const attr = element.attributes[i]
-          obj['@attributes'][attr.name] = attr.value
+          if (attr) {
+            obj['@attributes'][attr.name] = attr.value
+          }
         }
       }
       
@@ -41,8 +43,9 @@ const xmlToJson = (xml: string): any => {
         return obj['@attributes'] || ''
       }
       
-      if (childNodes.length === 1 && childNodes[0].nodeType === Node.TEXT_NODE) {
-        return childNodes[0].textContent?.trim() || ''
+      const firstChild = childNodes[0]
+      if (childNodes.length === 1 && firstChild?.nodeType === Node.TEXT_NODE) {
+        return firstChild.textContent?.trim() || ''
       }
       
       for (const child of childNodes) {

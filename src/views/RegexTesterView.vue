@@ -146,10 +146,9 @@ const applyExample = (examplePattern: string) => {
             <div>
               <label class="block text-sm font-medium mb-2">Flags</label>
               <div class="space-y-2">
-                <label v-for="(enabled, flag) in flags" :key="flag" class="flex items-center gap-2">
+                <label v-for="(_enabled, flag) in flags" :key="flag" class="flex items-center gap-2">
                   <input
                     v-model="flags[flag as keyof typeof flags]"
-                    @change="flags"
                     type="checkbox"
                     class="rounded"
                   />

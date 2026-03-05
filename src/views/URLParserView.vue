@@ -54,15 +54,24 @@ const examples = [
 ]
 
 const copyComponent = (type: string) => {
-  navigator.clipboard.writeText(components.value[type as keyof typeof components.value])
-  copied.value = type
-  setTimeout(() => copied.value = null, 2000)
+  const value = components.value[type as keyof typeof components.value]
+  if (value !== undefined) {
+    navigator.clipboard.writeText(value)
+    copied.value = type
+    setTimeout(() => copied.value = null, 2000)
+  }
 }
 
 const openUrl = () => {
   if (parsedUrl.value) {
     window.open(parsedUrl.value.href, '_blank')
   }
+}
+
+const copyParam = (value: string, key: string) => {
+  navigator.clipboard.writeText(value)
+  copied.value = key
+  setTimeout(() => copied.value = null, 2000)
 }
 </script>
 
@@ -162,7 +171,7 @@ const openUrl = () => {
                     <div class="font-mono text-sm mt-1 break-all">{{ value || '(empty)' }}</div>
                   </div>
                   <Button
-                    @click="navigator.clipboard.writeText(value); copied = key; setTimeout(() => copied = null, 2000)"
+                    @click="copyParam(value, key)"
                     variant="ghost"
                     size="sm"
                   >

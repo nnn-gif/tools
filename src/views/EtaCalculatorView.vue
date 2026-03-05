@@ -4,8 +4,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-const distance = ref(100)
-const speed = ref(60)
+const distance = ref<number | undefined>(100)
+const speed = ref<number | undefined>(60)
 const startTime = ref('')
 
 interface EtaInfo {
@@ -16,13 +16,17 @@ interface EtaInfo {
 }
 
 const etaInfo = computed<EtaInfo>(() => {
-  const totalMinutes = (distance.value / speed.value) * 60
+  const dist = distance.value ?? 0
+  const spd = speed.value ?? 1
+  const totalMinutes = (dist / spd) * 60
   const hours = Math.floor(totalMinutes / 60)
   const minutes = Math.round(totalMinutes % 60)
   
   let arrivalTime: string | null = null
   if (startTime.value) {
-    const [h, m] = startTime.value.split(':').map(Number)
+    const parts = startTime.value.split(':')
+    const h = Number(parts[0] ?? 0)
+    const m = Number(parts[1] ?? 0)
     if (!isNaN(h) && !isNaN(m)) {
       const startDate = new Date()
       startDate.setHours(h, m, 0, 0)

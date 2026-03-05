@@ -49,11 +49,6 @@ const swapMode = () => {
     mode.value = 'text-to-binary'
   }
 }
-
-const encodingOptions = [
-  { label: 'ASCII', value: 'ascii' },
-  { label: 'UTF-8', value: 'utf-8' },
-]
 </script>
 
 <template>

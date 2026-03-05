@@ -10,8 +10,8 @@ const permissions = ref({
 })
 
 const chmodValue = computed(() => {
-  const calcSection = (perms: { read: boolean; write: boolean; execute: boolean }) => {
-    return (perms.read ? 4 : 0) + (perms.write ? 2 : 0) + (perms.execute ? 1 : 0)
+  const calcSection = (p: { read: boolean; write: boolean; execute: boolean }) => {
+    return (p.read ? 4 : 0) + (p.write ? 2 : 0) + (p.execute ? 1 : 0)
   }
   
   return String(calcSection(permissions.value.owner)) + 
@@ -20,8 +20,8 @@ const chmodValue = computed(() => {
 })
 
 const symbolicValue = computed(() => {
-  const calcSection = (perms: { read: boolean; write: boolean; execute: boolean }) => {
-    return (perms.read ? 'r' : '-') + (perms.write ? 'w' : '-') + (perms.execute ? 'x' : '-')
+  const calcSection = (p: { read: boolean; write: boolean; execute: boolean }) => {
+    return (p.read ? 'r' : '-') + (p.write ? 'w' : '-') + (p.execute ? 'x' : '-')
   }
   
   return calcSection(permissions.value.owner) + 
@@ -67,16 +67,16 @@ const applyPreset = (preset: typeof presetPermissions[0]) => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(perms, category) in permissions" :key="category">
+              <tr v-for="(perm, category) in permissions" :key="category">
                 <td class="py-2 font-semibold capitalize text-left">{{ category }}</td>
                 <td class="py-2">
-                  <input type="checkbox" v-model="(permissions as any)[category].read" class="w-5 h-5" />
+                  <input type="checkbox" v-model="perm.read" class="w-5 h-5" />
                 </td>
                 <td class="py-2">
-                  <input type="checkbox" v-model="(permissions as any)[category].write" class="w-5 h-5" />
+                  <input type="checkbox" v-model="perm.write" class="w-5 h-5" />
                 </td>
                 <td class="py-2">
-                  <input type="checkbox" v-model="(permissions as any)[category].execute" class="w-5 h-5" />
+                  <input type="checkbox" v-model="perm.execute" class="w-5 h-5" />
                 </td>
               </tr>
             </tbody>

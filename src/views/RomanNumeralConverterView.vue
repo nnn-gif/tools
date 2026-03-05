@@ -17,9 +17,11 @@ const intToRoman = (num: number): string => {
   let roman = ''
   let i = 0
   while (num > 0) {
-    const div = Math.floor(num / val[i])
-    num = num % val[i]
-    roman += syms[i].repeat(div)
+    const currentVal = val[i] ?? 1
+    const currentSym = syms[i] ?? 'I'
+    const div = Math.floor(num / currentVal)
+    num = num % currentVal
+    roman += currentSym.repeat(div)
     i++
   }
   return roman
@@ -32,8 +34,8 @@ const romanToInt = (s: string): number => {
   }
   let result = 0
   for (let i = 0; i < s.length; i++) {
-    const current = map[s[i]]
-    const next = map[s[i + 1]]
+    const current = map[s[i] ?? ''] ?? 0
+    const next = map[s[i + 1] ?? ''] ?? 0
     if (next && current < next) {
       result += next - current
       i++

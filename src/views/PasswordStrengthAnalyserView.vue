@@ -63,6 +63,8 @@ const analysis = computed<AnalysisResult>(() => {
   const levels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong', 'Very Strong']
   const colors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-blue-500', 'bg-green-500', 'bg-emerald-500']
   const levelIndex = Math.min(Math.floor(score), 5)
+  const level = levels[levelIndex] ?? 'Very Weak'
+  const color = colors[levelIndex] ?? 'bg-red-500'
 
   // Estimate crack time (assuming 10 billion guesses per second)
   const combinations = Math.pow(2, entropy)
@@ -79,8 +81,8 @@ const analysis = computed<AnalysisResult>(() => {
 
   return {
     score,
-    level: levels[levelIndex],
-    color: colors[levelIndex],
+    level,
+    color,
     checks,
     entropy: Math.round(entropy),
     crackTime

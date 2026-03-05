@@ -45,7 +45,10 @@ const cases = computed(() => {
 })
 
 const copyCase = (type: string) => {
-  navigator.clipboard.writeText(cases.value[type as keyof typeof cases.value])
+  const value = cases.value[type as keyof typeof cases.value]
+  if (value) {
+    navigator.clipboard.writeText(value)
+  }
   copied.value = type
   setTimeout(() => copied.value = null, 2000)
 }

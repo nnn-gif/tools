@@ -58,12 +58,15 @@ const formats = computed(() => {
     'Custom (DD/MM/YYYY)': `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`,
     'Custom (MM/DD/YYYY)': `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}/${d.getFullYear()}`,
     'ISO Date': d.toISOString().split('T')[0],
-    'ISO Time': d.toISOString().split('T')[1].split('.')[0],
+    'ISO Time': d.toISOString().split('T')[1]?.split('.')[0] ?? '',
   }
 })
 
 const copyFormat = (type: string) => {
-  navigator.clipboard.writeText(formats.value[type])
+  const value = formats.value[type as keyof typeof formats.value]
+  if (value !== undefined) {
+    navigator.clipboard.writeText(value)
+  }
   copied.value = type
   setTimeout(() => copied.value = null, 2000)
 }

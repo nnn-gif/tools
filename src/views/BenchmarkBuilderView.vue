@@ -24,7 +24,7 @@ const runBenchmark = async () => {
     `)
     
     // Run the benchmark
-    const time = fn(iterations.value)
+    const time = fn(iterations) as number
     results.value.push({
       name: 'Benchmark',
       time
@@ -48,8 +48,8 @@ const runComparison = async () => {
   
   for (let i = 0; i < implementations.length; i++) {
     const code = implementations[i]
-    const nameMatch = code.match(/\/\/\s*name:\s*(.+)/i)
-    const name = nameMatch ? nameMatch[1].trim() : `Implementation ${i + 1}`
+    const nameMatch = code?.match(/\/\/\s*name:\s*(.+)/i)
+    const name = nameMatch?.[1]?.trim() ?? `Implementation ${i + 1}`
     
     try {
       const fn = new Function('iterations', `
@@ -59,7 +59,7 @@ const runComparison = async () => {
         return end - start;
       `)
       
-      const time = fn(iterations.value)
+      const time = fn(iterations) as number
       results.value.push({ name, time })
     } catch (e: any) {
       results.value.push({ name, time: 0, error: e.message })
@@ -126,7 +126,7 @@ for (let i = 0; i < iterations; i++) {
             <div v-if="!result.error" class="text-right">
               <div class="text-2xl font-bold font-mono">{{ result.time.toFixed(3) }} ms</div>
               <div class="text-sm text-muted-foreground">
-                {{ (result.time / iterations.value).toFixed(6) }} ms/op
+                {{ (result.time / iterations).toFixed(6) }} ms/op
               </div>
             </div>
           </div>
@@ -134,7 +134,7 @@ for (let i = 0; i < iterations; i++) {
             <div class="h-2 bg-muted rounded-full overflow-hidden">
               <div 
                 class="h-full bg-primary transition-all"
-                :style="{ width: `${(result.time / results[0].time) * 100}%` }"
+                :style="{ width: `${(result.time / (results[0]?.time ?? 1)) * 100}%` }"
               ></div>
             </div>
           </div>

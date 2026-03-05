@@ -71,7 +71,8 @@ const validateIban = (iban: string): IbanInfo | null => {
   
   let remainder = 0
   for (let i = 0; i < numeric.length; i++) {
-    remainder = (remainder * 10 + parseInt(numeric[i])) % 97
+    const char = numeric[i]
+    remainder = (remainder * 10 + parseInt(char ?? '0')) % 97
   }
   
   const valid = remainder === 1
@@ -94,6 +95,12 @@ const formatIban = (iban: string): string => {
 const ibanInfo = computed(() => {
   return validateIban(ibanInput.value)
 })
+
+const copyIban = () => {
+  if (ibanInfo.value?.formatted) {
+    navigator.clipboard.writeText(ibanInfo.value.formatted.replace(/\s/g, ''))
+  }
+}
 </script>
 
 <template>
@@ -158,7 +165,7 @@ const ibanInfo = computed(() => {
             variant="ghost" 
             size="sm" 
             class="mt-2"
-            @click="navigator.clipboard.writeText(ibanInfo!.formatted.replace(/\\s/g, ''))"
+            @click="copyIban"
           >
             Copy
           </Button>

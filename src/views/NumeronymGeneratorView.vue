@@ -12,8 +12,8 @@ const numeronyms = computed(() => {
   const word = inputWord.value.trim()
   if (word.length < 4) return [{ original: word, numeronym: word }]
   
-  const first = word[0]
-  const last = word[word.length - 1]
+  const first = word[0] ?? ''
+  const last = word[word.length - 1] ?? ''
   const middle = word.length - 2
   
   return [{
@@ -56,17 +56,17 @@ const commonNumeronyms = [
       </CardContent>
     </Card>
 
-    <div v-if="numeronyms.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div v-if="numeronyms.length > 0 && numeronyms[0]" class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <Card>
         <CardContent class="pt-6 text-center">
           <div class="text-sm text-muted-foreground">Original</div>
-          <div class="text-3xl font-bold">{{ numeronyms[0].original }}</div>
+          <div class="text-3xl font-bold">{{ numeronyms[0]!.original }}</div>
         </CardContent>
       </Card>
       <Card>
         <CardContent class="pt-6 text-center">
           <div class="text-sm text-muted-foreground">Numeronym</div>
-          <div class="text-3xl font-bold font-mono text-primary">{{ numeronyms[0].numeronym }}</div>
+          <div class="text-3xl font-bold font-mono text-primary">{{ numeronyms[0]!.numeronym }}</div>
         </CardContent>
       </Card>
     </div>

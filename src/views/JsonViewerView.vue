@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button'
 const jsonInput = ref('')
 const jsonOutput = ref('')
 const error = ref('')
-const expanded = ref(true)
 
 const formatJson = () => {
   try {

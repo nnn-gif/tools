@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
+
 
 const inputList = ref('')
 const outputList = ref('')

@@ -26,12 +26,12 @@ const base32Decode = (base32: string): Uint8Array => {
 const hmacSha1 = async (key: Uint8Array, message: Uint8Array): Promise<ArrayBuffer> => {
   const cryptoKey = await crypto.subtle.importKey(
     'raw',
-    key,
+    key.buffer as ArrayBuffer,
     { name: 'HMAC', hash: 'SHA-1' },
     false,
     ['sign']
   )
-  return crypto.subtle.sign('HMAC', cryptoKey, message)
+  return crypto.subtle.sign('HMAC', cryptoKey, message.buffer as ArrayBuffer)
 }
 
 const generateTOTP = async () => {
@@ -46,12 +46,17 @@ const generateTOTP = async () => {
     
     const hmac = await hmacSha1(key, new Uint8Array(counterBuffer))
     const hmacArray = new Uint8Array(hmac)
-    const offset = hmacArray[hmacArray.length - 1] & 0x0f
+    const lastByte = hmacArray[hmacArray.length - 1] ?? 0
+    const offset = lastByte & 0x0f
+    const o0 = hmacArray[offset] ?? 0
+    const o1 = hmacArray[offset + 1] ?? 0
+    const o2 = hmacArray[offset + 2] ?? 0
+    const o3 = hmacArray[offset + 3] ?? 0
     const code = (
-      ((hmacArray[offset] & 0x7f) << 24) |
-      ((hmacArray[offset + 1] & 0xff) << 16) |
-      ((hmacArray[offset + 2] & 0xff) << 8) |
-      (hmacArray[offset + 3] & 0xff)
+      ((o0 & 0x7f) << 24) |
+      ((o1 & 0xff) << 16) |
+      ((o2 & 0xff) << 8) |
+      (o3 & 0xff)
     ) % Math.pow(10, digits.value)
     
     otpCode.value = code.toString().padStart(digits.value, '0')

@@ -40,7 +40,8 @@ const generateToken = (): string => {
   
   let token = ''
   for (let i = 0; i < length.value; i++) {
-    token += chars[bytes[i] % chars.length]
+    const char = chars[bytes[i]! % chars.length]
+    token += char ?? ''
   }
   
   return token
@@ -51,9 +52,12 @@ const generate = () => {
 }
 
 const copyToken = (index: number) => {
-  navigator.clipboard.writeText(tokens.value[index])
-  copied.value = index
-  setTimeout(() => copied.value = null, 2000)
+  const token = tokens.value[index]
+  if (token) {
+    navigator.clipboard.writeText(token)
+    copied.value = index
+    setTimeout(() => copied.value = null, 2000)
+  }
 }
 
 const copyAll = () => {

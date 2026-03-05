@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
 
-const prefix = ref('')
 const generatedUla = ref('')
 
 const generateULA = () => {
@@ -13,10 +13,16 @@ const generateULA = () => {
   crypto.getRandomValues(randomBytes)
   
   // ULA prefix starts with fd
+  const b0 = randomBytes[0] ?? 0
+  const b1 = randomBytes[1] ?? 0
+  const b2 = randomBytes[2] ?? 0
+  const b3 = randomBytes[3] ?? 0
+  const b4 = randomBytes[4] ?? 0
+  
   const parts = [
-    'fd' + randomBytes[0].toString(16).padStart(2, '0'),
-    randomBytes[1].toString(16).padStart(2, '0') + randomBytes[2].toString(16).padStart(2, '0'),
-    randomBytes[3].toString(16).padStart(2, '0') + randomBytes[4].toString(16).padStart(2, '0')
+    'fd' + b0.toString(16).padStart(2, '0'),
+    b1.toString(16).padStart(2, '0') + b2.toString(16).padStart(2, '0'),
+    b3.toString(16).padStart(2, '0') + b4.toString(16).padStart(2, '0')
   ]
   
   generatedUla.value = parts.join(':') + '::/48'

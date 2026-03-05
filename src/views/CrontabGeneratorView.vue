@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { Clock, Copy, Check, Play, Pause } from 'lucide-vue-next'
+import { Clock, Copy, Check } from 'lucide-vue-next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
@@ -13,35 +13,6 @@ const copied = ref(false)
 
 const cronExpression = computed(() => {
   return `${minute.value} ${hour.value} ${dayOfMonth.value} ${month.value} ${dayOfWeek.value}`
-})
-
-const nextRuns = computed(() => {
-  const dates: Date[] = []
-  const now = new Date()
-  
-  try {
-    // Simple next run calculation (basic implementation)
-    // For production, use a proper cron parser library
-    const min = minute.value === '*' ? null : parseInt(minute.value)
-    const hr = hour.value === '*' ? null : parseInt(hour.value)
-    const dom = dayOfMonth.value === '*' ? null : parseInt(dayOfMonth.value)
-    
-    for (let i = 0; i < 5; i++) {
-      const date = new Date(now.getTime() + (i + 1) * 60000 * 60 * 24) // Simplified
-      
-      if (min !== null) date.setMinutes(min)
-      if (hr !== null) date.setHours(hr)
-      if (dom !== null) date.setDate(dom)
-      
-      if (date > now) {
-        dates.push(date)
-      }
-    }
-  } catch {
-    // Fallback
-  }
-  
-  return dates.slice(0, 5)
 })
 
 const humanReadable = computed(() => {
@@ -78,11 +49,11 @@ const presets = [
 
 const applyPreset = (cron: string) => {
   const parts = cron.split(' ')
-  minute.value = parts[0]
-  hour.value = parts[1]
-  dayOfMonth.value = parts[2]
-  month.value = parts[3]
-  dayOfWeek.value = parts[4]
+  minute.value = parts[0] ?? '*'
+  hour.value = parts[1] ?? '*'
+  dayOfMonth.value = parts[2] ?? '*'
+  month.value = parts[3] ?? '*'
+  dayOfWeek.value = parts[4] ?? '*'
 }
 
 const copyCron = () => {

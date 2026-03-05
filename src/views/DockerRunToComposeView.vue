@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
@@ -41,13 +41,20 @@ const parseDockerRun = (cmd: string): DockerArgs => {
   let i = 0
   while (i < tokens.length) {
     const token = tokens[i]
+    if (!token) {
+      i++
+      continue
+    }
     
     if (token === '-p' || token === '--publish') {
-      args.ports.push(tokens[++i])
+      const port = tokens[++i]
+      if (port) args.ports.push(port)
     } else if (token === '-v' || token === '--volume') {
-      args.volumes.push(tokens[++i])
+      const vol = tokens[++i]
+      if (vol) args.volumes.push(vol)
     } else if (token === '-e' || token === '--env') {
-      args.environment.push(tokens[++i])
+      const env = tokens[++i]
+      if (env) args.environment.push(env)
     } else if (token === '--name') {
       args.name = tokens[++i]
     } else if (token === '--network') {
@@ -67,7 +74,9 @@ const parseDockerRun = (cmd: string): DockerArgs => {
 }
 
 const generateCompose = (args: DockerArgs): string => {
-  const serviceName = args.name || args.image.split('/')[0].split(':')[0]
+  const imageParts = args.image.split('/')
+  const namePart = (imageParts[0] ?? args.image).split(':')[0] ?? args.image
+  const serviceName = args.name || namePart
   
   let compose = `version: '3.8'\n\nservices:\n  ${serviceName}:\n`
   compose += `    image: ${args.image}\n`

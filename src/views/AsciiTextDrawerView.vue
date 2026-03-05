@@ -37,7 +37,8 @@ const generateAscii = () => {
   const lines = ['', '', '', '', '']
   
   for (const char of chars) {
-    const art = asciiFonts[font.value][char] || asciiFonts.standard[char] || ''
+    const fontMap = asciiFonts[font.value] ?? asciiFonts.standard
+    const art = fontMap?.[char] ?? ''
     const charLines = art.split('\n')
     
     for (let i = 0; i < 5; i++) {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { Palette, Copy, Check } from 'lucide-vue-next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -11,15 +11,10 @@ const copied = ref<string | null>(null)
 const hexToRgb = (hexStr: string) => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexStr)
   return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
+    r: parseInt(result[1] ?? '0', 16),
+    g: parseInt(result[2] ?? '0', 16),
+    b: parseInt(result[3] ?? '0', 16)
   } : null
-}
-
-// RGB to HEX
-const rgbToHex = (r: number, g: number, b: number) => {
-  return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('').toUpperCase()
 }
 
 // RGB to HSL
@@ -71,7 +66,7 @@ const rgbToCmyk = (r: number, g: number, b: number) => {
   }
 }
 
-const rgb = computed(() => hexToRgb(hex.value) || { r: 0, g: 0, b: 0 })
+const rgb = computed(() => hexToRgb(hex.value) ?? { r: 0, g: 0, b: 0 })
 const hsl = computed(() => rgbToHsl(rgb.value.r, rgb.value.g, rgb.value.b))
 const cmyk = computed(() => rgbToCmyk(rgb.value.r, rgb.value.g, rgb.value.b))
 
@@ -103,7 +98,10 @@ const presets = [
 ]
 
 const copyFormat = (type: string) => {
-  navigator.clipboard.writeText(formats.value[type as keyof typeof formats.value])
+  const value = formats.value[type as keyof typeof formats.value]
+  if (value) {
+    navigator.clipboard.writeText(value)
+  }
   copied.value = type
   setTimeout(() => copied.value = null, 2000)
 }
@@ -221,7 +219,7 @@ const randomColor = () => {
             </div>
             <div class="p-4 bg-surface-hover rounded-lg text-center">
               <div class="text-sm text-muted-foreground mb-2">Lightness</div>
-              <div class="text-2xl font-bold">{{ hsl.l }}%</div>
+              <div class="text-2xl font-bold">{{ hsl.l ?? 0 }}%</div>
             </div>
           </div>
         </CardContent>

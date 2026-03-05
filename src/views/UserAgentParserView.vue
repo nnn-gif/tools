@@ -40,7 +40,7 @@ const parsedInfo = computed(() => {
     const match = ua.match(pattern)
     if (match) {
       browser = name
-      browserVersion = match[1]
+      browserVersion = match[1] ?? ''
       break
     }
   }

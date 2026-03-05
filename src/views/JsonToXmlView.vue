@@ -19,7 +19,6 @@ const jsonToXml = (obj: any, rootName = 'root', indent = 2): string => {
 
   const toXml = (data: any, name: string, level: number): string => {
     const indentStr = ' '.repeat(level * indent)
-    const nextIndent = ' '.repeat((level + 1) * indent)
     
     if (data === null || data === undefined) {
       return `${indentStr}<${name}/>\n`

@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 
 const searchQuery = ref('')
 
@@ -65,10 +64,6 @@ const filteredCommands = computed(() => {
 const copyCommand = (cmd: string) => {
   navigator.clipboard.writeText(cmd)
 }
-</script>
-
-<script lang="ts">
-import { computed } from 'vue'
 </script>
 
 <template>

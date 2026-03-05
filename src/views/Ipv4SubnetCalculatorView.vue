@@ -32,7 +32,12 @@ const subnetInfo = computed<SubnetInfo | null>(() => {
   const mask = (0xFFFFFFFF << (32 - cidrVal)) >>> 0
   const wildcard = ~mask >>> 0
   
-  const ipNum = (ip[0] << 24) + (ip[1] << 16) + (ip[2] << 8) + ip[3]
+  const i0 = ip[0] ?? 0
+  const i1 = ip[1] ?? 0
+  const i2 = ip[2] ?? 0
+  const i3 = ip[3] ?? 0
+  
+  const ipNum = (i0 << 24) + (i1 << 16) + (i2 << 8) + i3
   const network = (ipNum & mask) >>> 0
   const broadcast = (network | wildcard) >>> 0
   

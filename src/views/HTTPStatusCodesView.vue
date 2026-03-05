@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { Globe, Copy, Check, Search } from 'lucide-vue-next'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 
 const searchQuery = ref('')
 const copied = ref<number | null>(null)
@@ -104,7 +103,10 @@ const groupedCodes = computed(() => {
     if (!groups[code.category]) {
       groups[code.category] = []
     }
-    groups[code.category].push(code)
+    const group = groups[code.category]
+    if (group) {
+      group.push(code)
+    }
   }
   return groups
 })

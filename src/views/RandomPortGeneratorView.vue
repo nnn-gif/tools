@@ -10,7 +10,6 @@ const minPort = ref(1024)
 const maxPort = ref(65535)
 
 const generatePort = () => {
-  let newPort: number
   const availablePorts: number[] = []
   
   for (let i = minPort.value; i <= maxPort.value; i++) {
@@ -25,18 +24,7 @@ const generatePort = () => {
   }
   
   const randomIndex = Math.floor(Math.random() * availablePorts.length)
-  port.value = availablePorts[randomIndex]
-}
-
-const generateMultiple = (count: number) => {
-  const ports: number[] = []
-  for (let i = 0; i < count; i++) {
-    generatePort()
-    if (port.value) {
-      ports.push(port.value)
-    }
-  }
-  return ports
+  port.value = availablePorts[randomIndex] ?? 0
 }
 
 const copyPort = () => {

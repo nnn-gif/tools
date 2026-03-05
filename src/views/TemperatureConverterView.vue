@@ -27,8 +27,8 @@ const result = computed(() => {
   if (isNaN(value)) return null
   
   // Convert to Celsius first, then to target unit
-  const celsius = reverseConversions[fromUnit.value](value)
-  return conversions[toUnit.value](celsius)
+  const celsius = (reverseConversions[fromUnit.value] ?? ((n: number) => n))(value)
+  return (conversions[toUnit.value] ?? ((c: number) => c))(celsius)
 })
 
 const units = [

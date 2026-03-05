@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { v4 as uuidv4 } from 'uuid'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -11,7 +10,8 @@ const generateMac = () => {
   // Generate a random MAC with locally administered bit set
   const bytes = Array.from({ length: 6 }, () => Math.floor(Math.random() * 256))
   // Set locally administered bit (bit 1 of first octet)
-  bytes[0] = (bytes[0] & 0xFE) | 0x02
+  const firstByte = bytes[0] ?? 0
+  bytes[0] = (firstByte & 0xFE) | 0x02
   macAddress.value = bytes.map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(':')
 }
 

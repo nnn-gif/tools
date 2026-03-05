@@ -186,6 +186,13 @@ const tools = [
     category: 'Artificial Intelligence',
     items: [
       {
+        name: 'Agent Orchestrator',
+        description:
+          'Spin up AI workers with text. Let them run autonomously. Check results later. Desktop app for managing AI agents locally.',
+        icon: Bot,
+        route: '/agent-orchestrator'
+      },
+      {
         name: 'Agent Identity Generator',
         description:
           'Generate ERC-8004 compliant metadata for AI Agents. Define skills, endpoints, and identity.',

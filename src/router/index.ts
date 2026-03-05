@@ -280,6 +280,18 @@ export const routes = [
           keywords:
             'agent details, agent reputation, blockchain agent history, ai agent ratings, crypto agent metadata, ethereum agent tracker'
         }
+      },
+      {
+        path: 'agent-orchestrator',
+        name: 'agent-orchestrator',
+        component: () => import('../views/AgentOrchestratorView.vue'),
+        meta: {
+          title: 'Agent Orchestrator - Local-First AI Agent Management',
+          description:
+            'Spin up AI workers with text, let them run autonomously, check results later. A desktop app for managing AI agents locally. Open source, privacy-first.',
+          keywords:
+            'ai agent orchestrator, autonomous agents, local ai, agent management, llm orchestration, open source, privacy-first'
+        }
       }
     ]
   }

@@ -292,6 +292,394 @@ export const routes = [
           keywords:
             'ai agent orchestrator, autonomous agents, local ai, agent management, llm orchestration, open source, privacy-first'
         }
+      },
+      // Crypto Tools
+      {
+        path: 'bcrypt',
+        name: 'bcrypt',
+        component: () => import('../views/BcryptView.vue'),
+        meta: { title: 'Bcrypt Hash Generator', description: 'Generate and verify bcrypt password hashes. Privacy-first tool that runs entirely in your browser.' }
+      },
+      {
+        path: 'encryption',
+        name: 'encryption',
+        component: () => import('../views/EncryptionView.vue'),
+        meta: { title: 'Text Encryption/Decryption', description: 'Encrypt and decrypt text using AES, DES, and other algorithms. Privacy-first tool.' }
+      },
+      {
+        path: 'bip39-generator',
+        name: 'bip39-generator',
+        component: () => import('../views/Bip39GeneratorView.vue'),
+        meta: { title: 'BIP39 Mnemonic Generator', description: 'Generate BIP39 mnemonic phrases and derive seeds. Privacy-first crypto tool.' }
+      },
+      {
+        path: 'hmac-generator',
+        name: 'hmac-generator',
+        component: () => import('../views/HmacGeneratorView.vue'),
+        meta: { title: 'HMAC Generator', description: 'Generate HMAC hashes using various algorithms. Privacy-first tool.' }
+      },
+      {
+        path: 'rsa-key-pair-generator',
+        name: 'rsa-key-pair-generator',
+        component: () => import('../views/RsaKeyPairGeneratorView.vue'),
+        meta: { title: 'RSA Key Pair Generator', description: 'Generate RSA public/private key pairs. Privacy-first crypto tool.' }
+      },
+      {
+        path: 'password-strength-analyser',
+        name: 'password-strength-analyser',
+        component: () => import('../views/PasswordStrengthAnalyserView.vue'),
+        meta: { title: 'Password Strength Analyzer', description: 'Analyze password strength and security. Privacy-first tool.' }
+      },
+      {
+        path: 'pdf-signature-checker',
+        name: 'pdf-signature-checker',
+        component: () => import('../views/PdfSignatureCheckerView.vue'),
+        meta: { title: 'PDF Signature Checker', description: 'Check and validate digital signatures in PDF files. Privacy-first tool.' }
+      },
+      // Converter Tools
+      {
+        path: 'integer-base-converter',
+        name: 'integer-base-converter',
+        component: () => import('../views/IntegerBaseConverterView.vue'),
+        meta: { title: 'Integer Base Converter', description: 'Convert numbers between binary, octal, decimal, and hexadecimal.' }
+      },
+      {
+        path: 'roman-numeral-converter',
+        name: 'roman-numeral-converter',
+        component: () => import('../views/RomanNumeralConverterView.vue'),
+        meta: { title: 'Roman Numeral Converter', description: 'Convert between Roman numerals and numbers.' }
+      },
+      {
+        path: 'base64-file-converter',
+        name: 'base64-file-converter',
+        component: () => import('../views/Base64FileConverterView.vue'),
+        meta: { title: 'Base64 File Converter', description: 'Convert files to and from Base64 format. Privacy-first tool.' }
+      },
+      {
+        path: 'text-to-nato-alphabet',
+        name: 'text-to-nato-alphabet',
+        component: () => import('../views/TextToNatoAlphabetView.vue'),
+        meta: { title: 'Text to NATO Alphabet', description: 'Convert text to NATO phonetic alphabet.' }
+      },
+      {
+        path: 'text-to-unicode',
+        name: 'text-to-unicode',
+        component: () => import('../views/TextToUnicodeView.vue'),
+        meta: { title: 'Text to Unicode Converter', description: 'Convert text to Unicode code points and HTML entities.' }
+      },
+      {
+        path: 'yaml-to-toml',
+        name: 'yaml-to-toml',
+        component: () => import('../views/YamlToTomlView.vue'),
+        meta: { title: 'YAML to TOML Converter', description: 'Convert YAML configuration files to TOML format.' }
+      },
+      {
+        path: 'json-to-toml',
+        name: 'json-to-toml',
+        component: () => import('../views/JsonToTomlView.vue'),
+        meta: { title: 'JSON to TOML Converter', description: 'Convert JSON to TOML format.' }
+      },
+      {
+        path: 'list-converter',
+        name: 'list-converter',
+        component: () => import('../views/ListConverterView.vue'),
+        meta: { title: 'List Converter', description: 'Convert lists between different formats (comma, newline, JSON, etc).' }
+      },
+      {
+        path: 'toml-to-json',
+        name: 'toml-to-json',
+        component: () => import('../views/TomlToJsonView.vue'),
+        meta: { title: 'TOML to JSON Converter', description: 'Convert TOML configuration files to JSON format.' }
+      },
+      {
+        path: 'toml-to-yaml',
+        name: 'toml-to-yaml',
+        component: () => import('../views/TomlToYamlView.vue'),
+        meta: { title: 'TOML to YAML Converter', description: 'Convert TOML configuration files to YAML format.' }
+      },
+      {
+        path: 'xml-to-json',
+        name: 'xml-to-json',
+        component: () => import('../views/XmlToJsonView.vue'),
+        meta: { title: 'XML to JSON Converter', description: 'Convert XML documents to JSON format.' }
+      },
+      {
+        path: 'json-to-xml',
+        name: 'json-to-xml',
+        component: () => import('../views/JsonToXmlView.vue'),
+        meta: { title: 'JSON to XML Converter', description: 'Convert JSON data to XML format.' }
+      },
+      {
+        path: 'markdown-to-html',
+        name: 'markdown-to-html',
+        component: () => import('../views/MarkdownToHtmlView.vue'),
+        meta: { title: 'Markdown to HTML Converter', description: 'Convert Markdown to HTML with syntax highlighting.' }
+      },
+      // Web Tools
+      {
+        path: 'url-encoder',
+        name: 'url-encoder',
+        component: () => import('../views/UrlEncoderView.vue'),
+        meta: { title: 'URL Encoder/Decoder', description: 'Encode and decode URL strings. Privacy-first tool.' }
+      },
+      {
+        path: 'html-entities',
+        name: 'html-entities',
+        component: () => import('../views/HtmlEntitiesView.vue'),
+        meta: { title: 'HTML Entities Encoder/Decoder', description: 'Encode and decode HTML entities.' }
+      },
+      {
+        path: 'device-information',
+        name: 'device-information',
+        component: () => import('../views/DeviceInformationView.vue'),
+        meta: { title: 'Device Information', description: 'View browser and device information.' }
+      },
+      {
+        path: 'basic-auth-generator',
+        name: 'basic-auth-generator',
+        component: () => import('../views/BasicAuthGeneratorView.vue'),
+        meta: { title: 'HTTP Basic Auth Generator', description: 'Generate HTTP Basic Authentication headers.' }
+      },
+      {
+        path: 'meta-tag-generator',
+        name: 'meta-tag-generator',
+        component: () => import('../views/MetaTagGeneratorView.vue'),
+        meta: { title: 'Meta Tag Generator', description: 'Generate HTML meta tags for SEO and social sharing.' }
+      },
+      {
+        path: 'otp-code-generator',
+        name: 'otp-code-generator',
+        component: () => import('../views/OtpCodeGeneratorView.vue'),
+        meta: { title: 'OTP/TOTP Generator', description: 'Generate TOTP codes from secrets. Privacy-first tool.' }
+      },
+      {
+        path: 'mime-types',
+        name: 'mime-types',
+        component: () => import('../views/MimeTypesView.vue'),
+        meta: { title: 'MIME Type Lookup', description: 'Look up MIME types for file extensions.' }
+      },
+      {
+        path: 'keycode-info',
+        name: 'keycode-info',
+        component: () => import('../views/KeycodeInfoView.vue'),
+        meta: { title: 'Keycode Info', description: 'Get keyboard keycode information.' }
+      },
+      {
+        path: 'slugify-string',
+        name: 'slugify-string',
+        component: () => import('../views/SlugifyStringView.vue'),
+        meta: { title: 'Slugify String', description: 'Convert text to URL-friendly slugs.' }
+      },
+      {
+        path: 'html-wysiwyg-editor',
+        name: 'html-wysiwyg-editor',
+        component: () => import('../views/HtmlWysiwygEditorView.vue'),
+        meta: { title: 'WYSIWYG HTML Editor', description: 'Rich text HTML editor.' }
+      },
+      {
+        path: 'user-agent-parser',
+        name: 'user-agent-parser',
+        component: () => import('../views/UserAgentParserView.vue'),
+        meta: { title: 'User Agent Parser', description: 'Parse and analyze user agent strings.' }
+      },
+      {
+        path: 'json-diff',
+        name: 'json-diff',
+        component: () => import('../views/JsonDiffView.vue'),
+        meta: { title: 'JSON Diff', description: 'Compare and find differences between JSON objects.' }
+      },
+      {
+        path: 'safelink-decoder',
+        name: 'safelink-decoder',
+        component: () => import('../views/SafelinkDecoderView.vue'),
+        meta: { title: 'Outlook Safelink Decoder', description: 'Decode Outlook safelink URLs.' }
+      },
+      // Images/Videos Tools
+      {
+        path: 'wifi-qr-code-generator',
+        name: 'wifi-qr-code-generator',
+        component: () => import('../views/WifiQrCodeGeneratorView.vue'),
+        meta: { title: 'WiFi QR Code Generator', description: 'Generate QR codes for WiFi network credentials.' }
+      },
+      {
+        path: 'svg-placeholder-generator',
+        name: 'svg-placeholder-generator',
+        component: () => import('../views/SvgPlaceholderGeneratorView.vue'),
+        meta: { title: 'SVG Placeholder Generator', description: 'Generate SVG placeholder images.' }
+      },
+      {
+        path: 'camera-recorder',
+        name: 'camera-recorder',
+        component: () => import('../views/CameraRecorderView.vue'),
+        meta: { title: 'Camera Recorder', description: 'Record video from your camera in the browser.' }
+      },
+      // Development Tools
+      {
+        path: 'git-memo',
+        name: 'git-memo',
+        component: () => import('../views/GitMemoView.vue'),
+        meta: { title: 'Git Cheat Sheet', description: 'Common Git commands and their usage.' }
+      },
+      {
+        path: 'random-port-generator',
+        name: 'random-port-generator',
+        component: () => import('../views/RandomPortGeneratorView.vue'),
+        meta: { title: 'Random Port Generator', description: 'Generate random port numbers for development.' }
+      },
+      {
+        path: 'json-viewer',
+        name: 'json-viewer',
+        component: () => import('../views/JsonViewerView.vue'),
+        meta: { title: 'JSON Viewer/Formatter', description: 'Format and beautify JSON data.' }
+      },
+      {
+        path: 'json-minify',
+        name: 'json-minify',
+        component: () => import('../views/JsonMinifyView.vue'),
+        meta: { title: 'JSON Minifier', description: 'Minify JSON to reduce size.' }
+      },
+      {
+        path: 'chmod-calculator',
+        name: 'chmod-calculator',
+        component: () => import('../views/ChmodCalculatorView.vue'),
+        meta: { title: 'Chmod Calculator', description: 'Calculate Unix file permissions.' }
+      },
+      {
+        path: 'docker-run-to-compose',
+        name: 'docker-run-to-compose',
+        component: () => import('../views/DockerRunToComposeView.vue'),
+        meta: { title: 'Docker Run to Compose', description: 'Convert docker run commands to docker-compose.yml.' }
+      },
+      {
+        path: 'xml-formatter',
+        name: 'xml-formatter',
+        component: () => import('../views/XmlFormatterView.vue'),
+        meta: { title: 'XML Formatter', description: 'Format and beautify XML documents.' }
+      },
+      {
+        path: 'yaml-viewer',
+        name: 'yaml-viewer',
+        component: () => import('../views/YamlViewerView.vue'),
+        meta: { title: 'YAML Viewer', description: 'Format and validate YAML documents.' }
+      },
+      {
+        path: 'email-normalizer',
+        name: 'email-normalizer',
+        component: () => import('../views/EmailNormalizerView.vue'),
+        meta: { title: 'Email Normalizer', description: 'Normalize and validate email addresses.' }
+      },
+      {
+        path: 'regex-memo',
+        name: 'regex-memo',
+        component: () => import('../views/RegexMemoView.vue'),
+        meta: { title: 'Regex Cheat Sheet', description: 'Regular expression patterns and syntax reference.' }
+      },
+      // Network Tools
+      {
+        path: 'ipv4-subnet-calculator',
+        name: 'ipv4-subnet-calculator',
+        component: () => import('../views/Ipv4SubnetCalculatorView.vue'),
+        meta: { title: 'IPv4 Subnet Calculator', description: 'Calculate IPv4 subnet information.' }
+      },
+      {
+        path: 'ipv4-address-converter',
+        name: 'ipv4-address-converter',
+        component: () => import('../views/Ipv4AddressConverterView.vue'),
+        meta: { title: 'IPv4 Address Converter', description: 'Convert IPv4 addresses to different formats.' }
+      },
+      {
+        path: 'ipv4-range-expander',
+        name: 'ipv4-range-expander',
+        component: () => import('../views/Ipv4RangeExpanderView.vue'),
+        meta: { title: 'IPv4 Range Expander', description: 'Expand IPv4 address ranges to individual IPs.' }
+      },
+      {
+        path: 'mac-address-lookup',
+        name: 'mac-address-lookup',
+        component: () => import('../views/MacAddressLookupView.vue'),
+        meta: { title: 'MAC Address Lookup', description: 'Look up MAC address vendor information.' }
+      },
+      {
+        path: 'mac-address-generator',
+        name: 'mac-address-generator',
+        component: () => import('../views/MacAddressGeneratorView.vue'),
+        meta: { title: 'MAC Address Generator', description: 'Generate random MAC addresses.' }
+      },
+      {
+        path: 'ipv6-ula-generator',
+        name: 'ipv6-ula-generator',
+        component: () => import('../views/Ipv6UlaGeneratorView.vue'),
+        meta: { title: 'IPv6 ULA Generator', description: 'Generate IPv6 Unique Local Addresses.' }
+      },
+      // Math Tools
+      {
+        path: 'eta-calculator',
+        name: 'eta-calculator',
+        component: () => import('../views/EtaCalculatorView.vue'),
+        meta: { title: 'ETA Calculator', description: 'Calculate estimated time of arrival.' }
+      },
+      // Measurement Tools
+      {
+        path: 'chronometer',
+        name: 'chronometer',
+        component: () => import('../views/ChronometerView.vue'),
+        meta: { title: 'Chronometer', description: 'Online stopwatch and timer.' }
+      },
+      {
+        path: 'temperature-converter',
+        name: 'temperature-converter',
+        component: () => import('../views/TemperatureConverterView.vue'),
+        meta: { title: 'Temperature Converter', description: 'Convert between temperature units.' }
+      },
+      {
+        path: 'benchmark-builder',
+        name: 'benchmark-builder',
+        component: () => import('../views/BenchmarkBuilderView.vue'),
+        meta: { title: 'Benchmark Builder', description: 'Benchmark JavaScript code performance.' }
+      },
+      // Text Tools
+      {
+        path: 'text-statistics',
+        name: 'text-statistics',
+        component: () => import('../views/TextStatisticsView.vue'),
+        meta: { title: 'Text Statistics', description: 'Analyze text statistics (characters, words, etc).' }
+      },
+      {
+        path: 'emoji-picker',
+        name: 'emoji-picker',
+        component: () => import('../views/EmojiPickerView.vue'),
+        meta: { title: 'Emoji Picker', description: 'Browse and copy emojis.' }
+      },
+      {
+        path: 'string-obfuscator',
+        name: 'string-obfuscator',
+        component: () => import('../views/StringObfuscatorView.vue'),
+        meta: { title: 'String Obfuscator', description: 'Obfuscate text with hidden characters.' }
+      },
+      {
+        path: 'numeronym-generator',
+        name: 'numeronym-generator',
+        component: () => import('../views/NumeronymGeneratorView.vue'),
+        meta: { title: 'Numeronym Generator', description: 'Generate numeronyms like i18n, k8s.' }
+      },
+      {
+        path: 'ascii-text-drawer',
+        name: 'ascii-text-drawer',
+        component: () => import('../views/AsciiTextDrawerView.vue'),
+        meta: { title: 'ASCII Text Drawer', description: 'Generate ASCII art text.' }
+      },
+      // Data Tools
+      {
+        path: 'phone-parser',
+        name: 'phone-parser',
+        component: () => import('../views/PhoneParserView.vue'),
+        meta: { title: 'Phone Parser & Formatter', description: 'Parse and format phone numbers.' }
+      },
+      {
+        path: 'iban-validator',
+        name: 'iban-validator',
+        component: () => import('../views/IbanValidatorView.vue'),
+        meta: { title: 'IBAN Validator & Parser', description: 'Validate and parse IBAN numbers.' }
       }
     ]
   }

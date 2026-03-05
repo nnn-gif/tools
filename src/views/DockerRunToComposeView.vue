@@ -1,0 +1,152 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+
+const dockerRunInput = ref('')
+const dockerComposeOutput = ref('')
+
+const convertToCompose = () => {
+  if (!dockerRunInput.value.trim()) {
+    dockerComposeOutput.value = ''
+    return
+  }
+  
+  const args = parseDockerRun(dockerRunInput.value)
+  const compose = generateCompose(args)
+  dockerComposeOutput.value = compose
+}
+
+interface DockerArgs {
+  image: string
+  name?: string
+  ports: string[]
+  volumes: string[]
+  environment: string[]
+  network?: string
+  restart?: string
+  command?: string
+}
+
+const parseDockerRun = (cmd: string): DockerArgs => {
+  const tokens = cmd.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g) || []
+  const args: DockerArgs = {
+    image: '',
+    ports: [],
+    volumes: [],
+    environment: []
+  }
+  
+  let i = 0
+  while (i < tokens.length) {
+    const token = tokens[i]
+    
+    if (token === '-p' || token === '--publish') {
+      args.ports.push(tokens[++i])
+    } else if (token === '-v' || token === '--volume') {
+      args.volumes.push(tokens[++i])
+    } else if (token === '-e' || token === '--env') {
+      args.environment.push(tokens[++i])
+    } else if (token === '--name') {
+      args.name = tokens[++i]
+    } else if (token === '--network') {
+      args.network = tokens[++i]
+    } else if (token === '--restart') {
+      args.restart = tokens[++i]
+    } else if (!token.startsWith('-') && !args.image) {
+      args.image = token
+    } else if (args.image && i === tokens.length - 1) {
+      args.command = token
+    }
+    
+    i++
+  }
+  
+  return args
+}
+
+const generateCompose = (args: DockerArgs): string => {
+  const serviceName = args.name || args.image.split('/')[0].split(':')[0]
+  
+  let compose = `version: '3.8'\n\nservices:\n  ${serviceName}:\n`
+  compose += `    image: ${args.image}\n`
+  
+  if (args.name) {
+    compose += `    container_name: ${args.name}\n`
+  }
+  
+  if (args.restart) {
+    compose += `    restart: ${args.restart}\n`
+  }
+  
+  if (args.ports.length > 0) {
+    compose += '    ports:\n'
+    args.ports.forEach(p => {
+      compose += `      - "${p}"\n`
+    })
+  }
+  
+  if (args.volumes.length > 0) {
+    compose += '    volumes:\n'
+    args.volumes.forEach(v => {
+      compose += `      - ${v}\n`
+    })
+  }
+  
+  if (args.environment.length > 0) {
+    compose += '    environment:\n'
+    args.environment.forEach(e => {
+      compose += `      - ${e}\n`
+    })
+  }
+  
+  if (args.command) {
+    compose += `    command: ${args.command}\n`
+  }
+  
+  return compose
+}
+
+const copyOutput = () => {
+  navigator.clipboard.writeText(dockerComposeOutput.value)
+}
+</script>
+
+<template>
+  <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
+    <div class="flex items-center justify-between">
+      <h1 class="text-3xl font-bold tracking-tight">Docker Run to Compose</h1>
+    </div>
+
+    <Card class="flex flex-col min-h-0">
+      <CardHeader>
+        <CardTitle>Docker Run Command</CardTitle>
+      </CardHeader>
+      <CardContent class="flex-1 min-h-0 space-y-4">
+        <Textarea
+          v-model="dockerRunInput"
+          rows="3"
+          placeholder="docker run -d -p 80:80 --name nginx nginx:latest"
+          class="font-mono"
+        />
+        <Button @click="convertToCompose">Convert</Button>
+      </CardContent>
+    </Card>
+
+    <Card v-if="dockerComposeOutput" class="flex flex-col min-h-0">
+      <CardHeader class="flex-row items-center justify-between">
+        <CardTitle>docker-compose.yml</CardTitle>
+        <Button variant="outline" size="sm" @click="copyOutput">Copy</Button>
+      </CardHeader>
+      <CardContent class="flex-1 min-h-0">
+        <Textarea
+          :model-value="dockerComposeOutput"
+          readonly
+          rows="15"
+          class="font-mono text-sm"
+        />
+      </CardContent>
+    </Card>
+  </div>
+</template>

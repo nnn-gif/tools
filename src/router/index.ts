@@ -20,6 +20,18 @@ export const routes = [
         }
       },
       {
+        path: 'about',
+        name: 'about',
+        component: () => import('../views/AboutView.vue'),
+        meta: {
+          title: 'About Us - Formatho',
+          description:
+            'Learn about Formatho - our mission to build privacy-first developer tools and AI agent orchestration solutions.',
+          keywords:
+            'about formatho, privacy-first tools, developer tools, ai agent orchestrator, open source'
+        }
+      },
+      {
         path: 'markdown',
         name: 'markdown',
         component: MarkdownView,

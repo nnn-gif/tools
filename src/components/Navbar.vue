@@ -109,6 +109,13 @@ const categories = [
             Home
           </RouterLink>
 
+          <RouterLink
+            to="/about"
+            class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            About
+          </RouterLink>
+
           <a
             href="https://github.com/nnn-gif/tools"
             target="_blank"
@@ -163,6 +170,20 @@ const categories = [
           </div>
 
           <div class="pt-4 border-t border-border">
+            <RouterLink
+              to="/"
+              @click="isMobileMenuOpen = false"
+              class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all"
+            >
+              Home
+            </RouterLink>
+            <RouterLink
+              to="/about"
+              @click="isMobileMenuOpen = false"
+              class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all"
+            >
+              About
+            </RouterLink>
             <a
               href="https://github.com/nnn-gif/tools"
               target="_blank"

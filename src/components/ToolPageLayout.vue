@@ -103,6 +103,7 @@ defineExpose({
               size="sm"
               @click="handleClear"
               class="flex items-center gap-2 hover:bg-destructive/10 hover:text-destructive"
+              aria-label="Clear all input and output"
             >
               <Trash2 class="w-4 h-4" />
               <span class="hidden sm:inline">Clear</span>
@@ -132,6 +133,7 @@ defineExpose({
                 size="sm"
                 @click="handleClear"
                 class="h-8 px-2"
+                aria-label="Clear input"
               >
                 <Trash2 class="w-4 h-4" />
               </Button>
@@ -176,6 +178,7 @@ defineExpose({
                 size="sm"
                 @click="handleCopy"
                 class="h-8 flex items-center gap-2"
+                aria-label="Copy output to clipboard"
               >
                 <Copy v-if="!isCopied" class="w-4 h-4" />
                 <Check v-else class="w-4 h-4 text-success" />

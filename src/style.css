@@ -208,3 +208,113 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
 }
+
+/* ============================================
+   ACCESSIBILITY IMPROVEMENTS (WCAG 2.1)
+   ============================================ */
+
+/* Focus States - Highly visible for keyboard navigation */
+@layer base {
+  *:focus {
+    outline: none;
+  }
+
+  *:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid hsl(189 94% 43%);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Remove default focus styles that are invisible */
+  *:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+/* Mobile Touch Targets - Minimum 44x44px for WCAG 2.1 */
+@media (max-width: 768px) {
+  /* Touch targets for tool cards */
+  .glass-card a,
+  .tools-grid a,
+  .tools-list a,
+  nav a,
+  footer a {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  /* Buttons on mobile */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Ensure proper spacing */
+  .space-y-2 > * + * {
+    margin-top: 12px;
+  }
+}
+
+/* Color Contrast Fixes - WCAG AA 4.5:1 ratio */
+@layer base {
+  /* Muted text should be darker for better contrast */
+  .text-muted-foreground {
+    color: hsl(215 16% 37%); /* Darker grey - passes 4.5:1 on white */
+  }
+
+  /* Light backgrounds need darker text */
+  .bg-muted\/30 {
+    background-color: hsl(var(--muted) / 0.4);
+  }
+
+  /* Ensure placeholder text is visible */
+  ::placeholder {
+    color: hsl(215 16% 47%); /* Darker for better readability */
+  }
+}
+
+/* Better link visibility */
+@layer base {
+  a:not(.router-link-active):not([class*="text-primary"]) {
+    color: hsl(221 83% 53%); /* Clear blue for links */
+    text-decoration: underline;
+    text-decoration-color: hsl(221 83% 53% / 0.3);
+    text-underline-offset: 2px;
+  }
+
+  a:hover:not(.router-link-active) {
+    text-decoration-color: hsl(221 83% 53%);
+  }
+}
+
+/* Skip to main content link for screen readers */
+.skip-to-main {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: hsl(var(--primary));
+  color: white;
+  padding: 8px 16px;
+  z-index: 10000;
+  text-decoration: none;
+  transition: top 0.3s;
+}
+
+.skip-to-main:focus {
+  top: 0;
+}
+

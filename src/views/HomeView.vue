@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import {
   FileCode,
@@ -26,31 +27,30 @@ import {
   Phone,
   CreditCard,
   Settings,
-  Terminal,
-  Layers,
-  Wifi,
-  QrCode,
-  Camera,
-  Palette,
   Calendar,
   GitBranch,
   Braces,
   Shield,
   Key,
-  Binary as BinaryIcon,
-  Languages,
-  List,
-  FileText,
-  CaseSensitive,
   Clock,
-  Gauge,
   Search,
   Code,
   AppWindow,
-  Keyboard
+  Keyboard,
+  Palette,
+  QrCode,
+  Languages,
+  FileText,
+  CaseSensitive,
+  Layers,
+  Wifi,
+  Camera
 } from 'lucide-vue-next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import LiveSiteAnalytics from '@/components/LiveSiteAnalytics.vue'
+
+const searchQuery = ref('')
 
 const tools = [
   {
@@ -130,13 +130,13 @@ const tools = [
       {
         name: 'Integer Base Converter',
         description: 'Convert numbers between binary, octal, decimal, and hexadecimal.',
-        icon: BinaryIcon,
+        icon: Binary,
         route: '/integer-base-converter'
       },
       {
         name: 'Roman Numerals',
         description: 'Convert between Roman numerals and Arabic numbers.',
-        icon: Languages,
+        icon: Calculator,
         route: '/roman-numeral-converter'
       },
       {
@@ -172,14 +172,8 @@ const tools = [
       {
         name: 'Text to Binary',
         description: 'Convert text to binary and vice versa.',
-        icon: BinaryIcon,
+        icon: Binary,
         route: '/text-to-binary'
-      },
-      {
-        name: 'Text to Unicode',
-        description: 'Convert text to Unicode code points and vice versa.',
-        icon: Languages,
-        route: '/text-to-unicode'
       },
       {
         name: 'JSON <> YAML',
@@ -194,12 +188,6 @@ const tools = [
         route: '/json-csv'
       },
       {
-        name: 'List Converter',
-        description: 'Convert lists between different formats (array, newline, comma-separated).',
-        icon: List,
-        route: '/list-converter'
-      },
-      {
         name: 'Temperature',
         description: 'Convert temperatures between Celsius, Fahrenheit, Kelvin, and Rankine.',
         icon: Thermometer,
@@ -210,12 +198,6 @@ const tools = [
         description: 'Convert between XML and JSON formats.',
         icon: Braces,
         route: '/xml-to-json'
-      },
-      {
-        name: 'Markdown to HTML',
-        description: 'Convert Markdown text to HTML.',
-        icon: FileCode,
-        route: '/markdown-to-html'
       }
     ]
   },
@@ -257,18 +239,6 @@ const tools = [
         description: 'Generate HTML meta tags for SEO.',
         icon: FileCode,
         route: '/meta-tag-generator'
-      },
-      {
-        name: 'OTP Generator',
-        description: 'Generate TOTP/HOTP one-time passwords.',
-        icon: Key,
-        route: '/otp-code-generator'
-      },
-      {
-        name: 'MIME Types',
-        description: 'Look up MIME types for file extensions.',
-        icon: FileType,
-        route: '/mime-types'
       },
       {
         name: 'JWT Debugger',
@@ -324,12 +294,6 @@ const tools = [
         route: '/wifi-qr-code-generator'
       },
       {
-        name: 'SVG Placeholder',
-        description: 'Generate SVG placeholder images.',
-        icon: Image,
-        route: '/svg-placeholder-generator'
-      },
-      {
         name: 'Image Compressor',
         description: 'Compress and optimize images.',
         icon: Image,
@@ -351,12 +315,6 @@ const tools = [
         description: 'Quick reference for common Git commands.',
         icon: GitBranch,
         route: '/git-memo'
-      },
-      {
-        name: 'Random Port',
-        description: 'Generate random port numbers for development.',
-        icon: Terminal,
-        route: '/random-port-generator'
       },
       {
         name: 'Crontab Generator',
@@ -479,23 +437,6 @@ const tools = [
     ]
   },
   {
-    category: 'Measurement',
-    items: [
-      {
-        name: 'Chronometer',
-        description: 'Stopwatch and timer tool.',
-        icon: Timer,
-        route: '/chronometer'
-      },
-      {
-        name: 'Benchmark Builder',
-        description: 'Build and run code benchmarks.',
-        icon: Gauge,
-        route: '/benchmark-builder'
-      }
-    ]
-  },
-  {
     category: 'Text Tools',
     items: [
       {
@@ -533,12 +474,6 @@ const tools = [
         description: 'Obfuscate strings to hide sensitive data.',
         icon: Lock,
         route: '/string-obfuscator'
-      },
-      {
-        name: 'Numeronym Generator',
-        description: 'Generate numeronyms (i18n, k8s, a11y, etc.).',
-        icon: TextCursor,
-        route: '/numeronym-generator'
       },
       {
         name: 'ASCII Art',
@@ -636,98 +571,177 @@ const tools = [
     ]
   }
 ]
+
+// Filter tools based on search query
+const filteredTools = computed(() => {
+  if (!searchQuery.value.trim()) {
+    return tools
+  }
+
+  const query = searchQuery.value.toLowerCase()
+
+  return tools
+    .map((category) => ({
+      category: category.category,
+      items: category.items.filter(
+        (tool) =>
+          tool.name.toLowerCase().includes(query) || tool.description.toLowerCase().includes(query)
+      )
+    }))
+    .filter((category) => category.items.length > 0)
+})
 </script>
 
 <template>
-  <div class="flex flex-col h-full overflow-y-auto bg-background">
+  <div class="min-h-screen">
     <!-- Hero Section -->
     <section
-      class="border-b border-border bg-gradient-to-b from-muted/20 via-muted/10 to-background"
+      class="relative overflow-hidden border-b border-border/50 bg-gradient-to-b from-primary/5 via-background to-background"
     >
-      <div class="container mx-auto px-6 py-20 md:py-28">
+      <!-- Background Pattern -->
+      <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
+
+      <div class="container mx-auto px-4 py-20 md:py-28 relative">
         <div class="flex flex-col items-center text-center space-y-8 max-w-4xl mx-auto">
+          <!-- Logo & Title -->
           <div class="flex items-center gap-4">
             <img
               src="/logo.png"
               alt="Formatho"
-              class="h-20 w-20 md:h-24 md:w-24 rounded-xl shadow-lg"
+              class="h-20 w-20 rounded-xl shadow-2xl ring-2 ring-primary/20"
             />
-            <h1
-              class="text-5xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent"
-            >
-              Formatho
-            </h1>
+            <h1 class="text-5xl md:text-7xl font-bold tracking-tight gradient-text">Formatho</h1>
           </div>
+
+          <!-- Description -->
           <p class="text-2xl md:text-3xl font-semibold text-foreground max-w-3xl leading-tight">
-            The Privacy-First Online Text & Developer Utility Toolkit
+            The Privacy-First Developer Toolkit
           </p>
           <p class="text-base md:text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            Fast, secure, privacy-first collection of 100+ online text formatting tools, developer
-            utilities, and content productivity tools — built to solve everyday formatting,
-            conversion, and debugging problems directly in your browser.
+            Fast, secure, privacy-first collection of 100+ developer utilities and content
+            productivity tools — built to solve everyday formatting, conversion, and debugging
+            problems directly in your browser.
           </p>
-          <div class="flex flex-wrap gap-3 justify-center mt-2">
+
+          <!-- Feature Tags -->
+          <div class="flex flex-wrap gap-3 justify-center mt-4">
             <span
-              class="px-4 py-2 text-sm font-medium rounded-lg bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 transition-colors"
+              class="px-4 py-2 text-sm font-medium rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 transition-colors"
             >
               No sign-up
             </span>
             <span
-              class="px-4 py-2 text-sm font-medium rounded-lg bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 transition-colors"
+              class="px-4 py-2 text-sm font-medium rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 transition-colors"
             >
               No uploads
             </span>
             <span
-              class="px-4 py-2 text-sm font-medium rounded-lg bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 transition-colors"
+              class="px-4 py-2 text-sm font-medium rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 transition-colors"
             >
               No tracking
             </span>
+            <span
+              class="px-4 py-2 text-sm font-medium rounded-full bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 transition-colors"
+            >
+              100% Client-side
+            </span>
+          </div>
+
+          <!-- Search Bar -->
+          <div class="w-full max-w-2xl mt-8">
+            <div class="relative">
+              <Search
+                class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground"
+              />
+              <Input
+                v-model="searchQuery"
+                type="text"
+                placeholder="Search tools... (e.g., JSON, Base64, UUID)"
+                class="w-full pl-12 pr-4 py-6 text-lg glass-card border-primary/20 focus:border-primary/50 focus:ring-primary/20"
+              />
+            </div>
+            <p v-if="searchQuery" class="text-sm text-muted-foreground mt-3 text-left">
+              Found {{ filteredTools.reduce((acc, cat) => acc + cat.items.length, 0) }} tools for
+              "{{ searchQuery }}"
+            </p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Tools Section -->
-    <section class="container mx-auto px-6 py-12 md:py-16">
-      <div class="space-y-16">
-        <div v-for="category in tools" :key="category.category" class="space-y-6">
-          <div class="flex items-center gap-3">
-            <h2 class="text-3xl font-bold tracking-tight">{{ category.category }}</h2>
-            <div class="flex-1 h-px bg-border"></div>
+    <section class="container mx-auto px-4 py-12 md:py-16">
+      <div v-if="filteredTools.length === 0" class="text-center py-20">
+        <p class="text-xl text-muted-foreground">No tools found matching "{{ searchQuery }}"</p>
+        <button
+          @click="searchQuery = ''"
+          class="mt-4 px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+        >
+          Clear search
+        </button>
+      </div>
+
+      <div v-else class="space-y-16">
+        <div v-for="category in filteredTools" :key="category.category" class="space-y-6">
+          <div class="flex items-center gap-4">
+            <h2 class="text-2xl md:text-3xl font-bold tracking-tight">{{ category.category }}</h2>
+            <div class="flex-1 h-px bg-gradient-to-r from-border to-transparent"></div>
             <span class="text-sm text-muted-foreground font-medium">
               {{ category.items.length }} {{ category.items.length === 1 ? 'tool' : 'tools' }}
             </span>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <RouterLink
               v-for="tool in category.items"
               :key="tool.name"
               :to="tool.route"
               class="group"
             >
-              <Card
-                class="h-full transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/50 hover:-translate-y-1 cursor-pointer border-2"
-              >
-                <CardHeader>
-                  <div class="flex items-start gap-4">
+              <div class="glass-card h-full p-6 cursor-pointer">
+                <div class="flex flex-col h-full">
+                  <!-- Icon -->
+                  <div class="mb-4">
                     <div
-                      class="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors"
+                      class="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-all w-fit"
                     >
-                      <component :is="tool.icon" class="h-5 w-5 text-primary flex-shrink-0" />
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <CardTitle
-                        class="group-hover:text-primary transition-colors text-lg leading-tight"
-                      >
-                        {{ tool.name }}
-                      </CardTitle>
+                      <component :is="tool.icon" class="h-6 w-6 text-primary" />
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription class="leading-relaxed">{{ tool.description }}</CardDescription>
-                </CardContent>
-              </Card>
+
+                  <!-- Content -->
+                  <div class="flex-1">
+                    <h3
+                      class="text-lg font-semibold mb-2 group-hover:text-primary transition-colors"
+                    >
+                      {{ tool.name }}
+                    </h3>
+                    <p class="text-sm text-muted-foreground leading-relaxed">
+                      {{ tool.description }}
+                    </p>
+                  </div>
+
+                  <!-- Arrow indicator -->
+                  <div
+                    class="mt-4 flex items-center text-primary text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    Open tool
+                    <svg
+                      class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
             </RouterLink>
           </div>
         </div>
@@ -738,3 +752,12 @@ const tools = [
     <LiveSiteAnalytics />
   </div>
 </template>
+
+<style scoped>
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(to right, currentColor 1px, transparent 1px),
+    linear-gradient(to bottom, currentColor 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+</style>

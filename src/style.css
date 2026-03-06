@@ -7,90 +7,93 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
+    /* Light mode with white background */
+    --background: 0 0% 100%; /* #ffffff - Pure white */
+    --foreground: 222 47% 11%; /* Dark text for white background */
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
+    /* Card backgrounds with glassmorphism effect */
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
+    --popover-foreground: 222 47% 11%;
 
-    /* Monochrome primary: Pure black */
-    --primary: 0 0% 0%;
+    /* Primary: Neon Cyan for CTAs and active states */
+    --primary: 189 94% 43%; /* #06b6d4 - Cyan-500 */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 0%;
+    /* Secondary: Light gray */
+    --secondary: 210 40% 96%; /* #f8fafc - Slate-50 */
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    /* Muted backgrounds */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 0 0% 0%;
+    /* Accent: Electric Green alternative */
+    --accent: 142 76% 36%; /* #10b981 - Emerald-500 */
     --accent-foreground: 0 0% 100%;
 
-    /* Destructive: Dark gray for errors (monochrome) */
-    --destructive: 0 0% 20%;
+    /* Destructive: Red for errors */
+    --destructive: 0 84% 60%; /* #ef4444 - Red-500 */
     --destructive-foreground: 0 0% 100%;
 
-    /* Semantic colors - monochrome variants */
-    --success: 0 0% 30%;
+    /* Semantic colors */
+    --success: 142 76% 36%; /* Green */
     --success-foreground: 0 0% 100%;
 
-    --warning: 0 0% 50%;
-    --warning-foreground: 0 0% 0%;
+    --warning: 38 92% 50%; /* Orange */
+    --warning-foreground: 0 0% 100%;
 
-    --info: 0 0% 40%;
+    --info: 199 89% 48%; /* Sky blue */
     --info-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 0% 0%;
+    /* Borders - Subtle with glassmorphism */
+    --border: 214 32% 91%; /* #e2e8f0 - Slate-200 */
+    --input: 214 32% 91%;
+    --ring: 189 94% 43%; /* Cyan focus ring */
 
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
+    /* Dark mode variant (optional) */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
 
-    /* Card background: Dark gray for depth */
-    --card: 0 0% 8%;
-    --card-foreground: 0 0% 100%;
+    --card: 222 47% 13%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 8%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 222 47% 13%;
+    --popover-foreground: 210 40% 98%;
 
-    /* Monochrome primary: Pure white */
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
+    --primary: 189 94% 43%;
+    --primary-foreground: 222 47% 11%;
 
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 0 0% 100%;
-    --accent-foreground: 0 0% 0%;
+    --accent: 142 76% 36%;
+    --accent-foreground: 222 47% 11%;
 
-    /* Destructive: Light gray for errors (monochrome) */
-    --destructive: 0 0% 80%;
-    --destructive-foreground: 0 0% 0%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
 
-    /* Semantic colors for dark mode - monochrome */
-    --success: 0 0% 70%;
-    --success-foreground: 0 0% 0%;
+    --success: 142 76% 36%;
+    --success-foreground: 222 47% 11%;
 
-    --warning: 0 0% 50%;
-    --warning-foreground: 0 0% 0%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 11%;
 
-    --info: 0 0% 60%;
-    --info-foreground: 0 0% 0%;
+    --info: 199 89% 48%;
+    --info-foreground: 222 47% 11%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 0 0% 100%;
+    --border: 217 33% 23%;
+    --input: 217 33% 23%;
+    --ring: 189 94% 43%;
   }
 }
 
@@ -100,7 +103,68 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family:
+      'Inter',
+      system-ui,
+      -apple-system,
+      sans-serif;
+  }
+
+  /* Monospace fonts for code and inputs */
+  code,
+  pre,
+  textarea,
+  input {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  }
+}
+
+/* Glassmorphism effect */
+@layer components {
+  .glass {
+    background: hsl(var(--card) / 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--border));
+  }
+
+  .glass-card {
+    @apply glass rounded-lg;
+    box-shadow:
+      0 1px 3px 0 rgba(0, 0, 0, 0.1),
+      0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+  }
+
+  .glass-card:hover {
+    border-color: hsl(var(--primary) / 0.5);
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Gradient text for headings - solid dark color for white background */
+  .gradient-text {
+    @apply text-foreground;
+  }
+
+  /* Custom scrollbar for modern look */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
   }
 }
 

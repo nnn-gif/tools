@@ -1,111 +1,116 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { Textarea } from '@/components/ui/textarea'
+import ToolPageLayout from '@/components/ToolPageLayout.vue'
 import { Button } from '@/components/ui/button'
-import { AlertCircle, CheckCircle, ArrowRight } from 'lucide-vue-next'
 
-const jsonInput = ref('')
-const jsonOutput = ref('')
-const error = ref<string | null>(null)
-const isValid = ref(false)
+const toolLayout = ref<InstanceType<typeof ToolPageLayout>>()
 
-const validateJSON = () => {
-  if (!jsonInput.value.trim()) {
-    error.value = null
-    isValid.value = false
-    jsonOutput.value = ''
+const input = ref('')
+let output = ''
+
+const processJson = (value: string) => {
+  if (!value.trim()) {
+    toolLayout.value?.setOutput('')
+    toolLayout.value?.setValid()
     return
   }
 
   try {
-    JSON.parse(jsonInput.value)
-    error.value = null
-    isValid.value = true
-  } catch (e: any) {
-    error.value = e.message
-    isValid.value = false
-    jsonOutput.value = ''
+    const parsed = JSON.parse(value)
+    output = JSON.stringify(parsed, null, 2)
+    toolLayout.value?.setOutput(output)
+    toolLayout.value?.setValid()
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'Invalid JSON'
+    toolLayout.value?.setError(errorMessage)
+    toolLayout.value?.setOutput('')
   }
 }
 
-const formatJSON = () => {
-  if (!isValid.value) return
+watch(input, (newValue) => {
+  processJson(newValue)
+})
 
-  try {
-    const parsed = JSON.parse(jsonInput.value)
-    jsonOutput.value = JSON.stringify(parsed, null, 2)
-  } catch (e: any) {
-    error.value = e.message
-  }
+const handleInput = (value: string) => {
+  input.value = value
 }
-
-watch(jsonInput, validateJSON)
 
 const fillSample = () => {
-  jsonInput.value =
+  const sample =
     '{"name":"John Doe","age":30,"email":"john@example.com","address":{"street":"123 Main St","city":"New York"}}'
-  validateJSON()
+  input.value = sample
+  processJson(sample)
 }
 </script>
 
 <template>
-  <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
-    <div class="flex items-center justify-between">
-      <h1 class="text-3xl font-bold tracking-tight">JSON Linter</h1>
-      <Button variant="ghost" @click="fillSample">Load Sample</Button>
-    </div>
+  <ToolPageLayout
+    ref="toolLayout"
+    title="JSON Linter"
+    description="Validate, format, and beautify your JSON code instantly. Detect and fix syntax errors with real-time validation."
+    placeholder="Paste or type your JSON here..."
+    @input="handleInput"
+    @clear="
+      () => {
+        input = ''
+      }
+    "
+  >
+    <template #options>
+      <div class="space-y-6">
+        <!-- Sample Button -->
+        <div>
+          <Button variant="outline" @click="fillSample" class="gap-2"> Load Sample JSON </Button>
+        </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 min-h-0">
-      <!-- Input Column -->
-      <Card class="flex flex-col min-h-0">
-        <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle class="text-sm font-medium flex items-center gap-2">
-            <div class="flex items-center gap-2">
-              JSON Input
-              <div v-if="jsonInput.trim()" class="flex items-center gap-1">
-                <CheckCircle v-if="isValid" class="h-4 w-4 text-success" />
-                <AlertCircle v-else class="h-4 w-4 text-destructive" />
-                <span :class="isValid ? 'text-success' : 'text-destructive'" class="text-xs">
-                  {{ isValid ? 'Valid' : 'Invalid' }}
-                </span>
-              </div>
+        <!-- Features -->
+        <div class="space-y-4">
+          <h3 class="text-lg font-semibold">Features</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-4 glass-card">
+              <div class="text-sm font-medium text-primary mb-2">Real-time Validation</div>
+              <p class="text-sm text-muted-foreground">
+                Instantly detects and highlights JSON syntax errors as you type.
+              </p>
             </div>
-          </CardTitle>
-          <Button size="sm" @click="formatJSON" :disabled="!isValid">
-            Format <ArrowRight class="ml-1 h-4 w-4" />
-          </Button>
-        </CardHeader>
-        <CardContent class="flex-1 min-h-0 flex flex-col gap-2">
-          <Textarea
-            v-model="jsonInput"
-            class="flex-1 resize-none font-mono text-sm"
-            placeholder='{"key": "value"}'
-          />
-          <div
-            v-if="error"
-            class="p-3 rounded-md bg-destructive/10 border border-destructive/20 text-destructive text-sm"
-          >
-            <div class="font-semibold mb-1">Syntax Error:</div>
-            {{ error }}
+            <div class="p-4 glass-card">
+              <div class="text-sm font-medium text-primary mb-2">Format & Beautify</div>
+              <p class="text-sm text-muted-foreground">
+                Automatically formats your JSON with proper indentation.
+              </p>
+            </div>
+            <div class="p-4 glass-card">
+              <div class="text-sm font-medium text-primary mb-2">100% Client-Side</div>
+              <p class="text-sm text-muted-foreground">
+                Your JSON never leaves your browser. Complete privacy.
+              </p>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      <!-- Output Column -->
-      <Card class="flex flex-col min-h-0">
-        <CardHeader class="pb-2">
-          <CardTitle class="text-sm font-medium">Formatted Output</CardTitle>
-        </CardHeader>
-        <CardContent class="flex-1 min-h-0">
-          <Textarea
-            v-model="jsonOutput"
-            class="h-full resize-none font-mono text-sm"
-            placeholder="Formatted JSON will appear here..."
-            readonly
-          />
-        </CardContent>
-      </Card>
-    </div>
-  </div>
+        <!-- Usage Examples -->
+        <div class="space-y-3">
+          <h3 class="text-lg font-semibold">Common Use Cases</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 border border-border rounded-lg">
+              <div class="font-mono text-sm mb-2 text-muted-foreground">// API Response</div>
+              <pre class="text-xs bg-muted p-3 rounded overflow-x-auto"><code>{
+  "status": "success",
+  "data": {...}
+}</code></pre>
+            </div>
+            <div class="p-4 border border-border rounded-lg">
+              <div class="font-mono text-sm mb-2 text-muted-foreground">// Configuration</div>
+              <pre class="text-xs bg-muted p-3 rounded overflow-x-auto"><code>{
+  "app": {
+    "name": "MyApp",
+    "version": "1.0.0"
+  }
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </ToolPageLayout>
 </template>

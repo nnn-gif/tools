@@ -4,88 +4,89 @@ import { ref, onMounted, onUnmounted } from 'vue'
 // ============================================
 // DATA HOOK - Easy to replace with API call
 // ============================================
-const MONTHLY_VISITORS = 12847 // Replace with: await fetch('/api/analytics/monthly')
+const INITIAL_VISITORS = 12847 // Starting count
+const INCREMENT_INTERVAL = 5000 // Increment every 5 seconds
 
 // State
-const liveUsers = ref(1)
-const monthlyVisitors = ref(MONTHLY_VISITORS)
-let simulationInterval: number | undefined
+const monthlyVisitors = ref(INITIAL_VISITORS)
+let incrementInterval: number | undefined
 
 // Format number with commas
 const formatNumber = (num: number): string => {
   return num.toLocaleString('en-US')
 }
 
-// Simulate live users (1-50, fluctuating every 3 seconds)
-const simulateLiveUsers = () => {
-  // Random fluctuation: +/- 1-5 users, staying within 1-50 range
-  const change = Math.floor(Math.random() * 11) - 5 // -5 to +5
-  liveUsers.value = Math.max(1, Math.min(50, liveUsers.value + change))
+// Smoothly increment visitors (simulating real-time traffic)
+const incrementVisitors = () => {
+  // Increment by random amount (1-3 visitors)
+  const increment = Math.floor(Math.random() * 3) + 1
+  monthlyVisitors.value += increment
 }
 
 onMounted(() => {
-  // Start simulation - updates every 3 seconds
-  liveUsers.value = Math.floor(Math.random() * 50) + 1
-  simulationInterval = window.setInterval(simulateLiveUsers, 3000)
+  // Start continuous increment - every 5 seconds
+  incrementInterval = window.setInterval(incrementVisitors, INCREMENT_INTERVAL)
 })
 
 onUnmounted(() => {
-  if (simulationInterval) {
-    clearInterval(simulationInterval)
+  if (incrementInterval) {
+    clearInterval(incrementInterval)
   }
 })
 </script>
 
 <template>
-  <div class="live-analytics-widget">
-    <div class="analytics-card">
-      <!-- Live Users -->
+  <div class="visitors-counter-widget">
+    <div class="counter-card">
+      <!-- Monthly Traffic Counter -->
       <div class="metric">
         <div class="metric-header">
           <span class="pulse-dot"></span>
-          <span class="metric-label">Current Live Users</span>
+          <span class="metric-label">Total Visitors This Month</span>
         </div>
-        <div class="metric-value">{{ liveUsers }}</div>
-      </div>
-
-      <!-- Divider -->
-      <div class="divider"></div>
-
-      <!-- Monthly Traffic -->
-      <div class="metric">
-        <div class="metric-header">
-          <span class="metric-label">Total Visitors this Month</span>
+        <div class="metric-value">
+          <span class="number">{{ formatNumber(monthlyVisitors) }}</span>
         </div>
-        <div class="metric-value">{{ formatNumber(monthlyVisitors) }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.live-analytics-widget {
+.visitors-counter-widget {
   position: fixed;
   bottom: 20px;
-  left: 20px;
+  right: 20px;
   z-index: 9999;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
-.analytics-card {
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 16px 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  min-width: 180px;
+.counter-card {
+  /* Liquid Glass Effect */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 16px 24px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  min-width: 200px;
+  transition: all 0.3s ease;
+}
+
+.counter-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .metric {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 }
 
 .metric-header {
@@ -96,88 +97,63 @@ onUnmounted(() => {
 
 .metric-label {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.6);
+  color: hsl(var(--foreground) / 0.7);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .metric-value {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
-  color: #fff;
-  line-height: 1.2;
+  color: hsl(var(--primary));
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
 }
 
-.divider {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.1);
-  margin: 12px 0;
+.number {
+  font-variant-numeric: tabular-nums;
+  transition: transform 0.3s ease;
 }
 
-/* Pulsing green dot */
+/* Pulsing indicator dot */
 .pulse-dot {
   width: 8px;
   height: 8px;
-  background: #22c55e;
+  background: hsl(142 76% 36%);
   border-radius: 50%;
   position: relative;
   flex-shrink: 0;
-}
-
-.pulse-dot::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
-  background: #22c55e;
-  border-radius: 50%;
   animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: scale(1);
   }
   50% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(2);
+    opacity: 0.6;
+    transform: scale(1.3);
   }
 }
 
 /* Mobile responsiveness */
 @media (max-width: 640px) {
-  .live-analytics-widget {
+  .visitors-counter-widget {
     bottom: 10px;
-    left: 10px;
     right: 10px;
   }
 
-  .analytics-card {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  .counter-card {
     padding: 12px 16px;
-    min-width: auto;
-  }
-
-  .metric {
-    flex: 1;
-  }
-
-  .divider {
-    width: 1px;
-    height: auto;
-    margin: 0;
-    align-self: stretch;
+    min-width: 160px;
   }
 
   .metric-value {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   .metric-label {
@@ -187,9 +163,17 @@ onUnmounted(() => {
 
 /* Ensure it doesn't block important elements */
 @media (max-width: 480px) {
-  .live-analytics-widget {
+  .visitors-counter-widget {
     /* Move above bottom navigation if present */
     bottom: 70px;
+  }
+}
+
+/* Dark mode adjustment */
+@media (prefers-color-scheme: dark) {
+  .counter-card {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 }
 </style>

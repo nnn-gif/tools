@@ -4,10 +4,53 @@ import { useRoute, RouterLink } from 'vue-router'
 import { Calendar, Clock, ArrowLeft, Tag, ExternalLink } from 'lucide-vue-next'
 import { blogPosts } from '../data/blogPosts'
 
-const route = useRoute()
-const slug = computed(() => route.params.slug as string)
+// Define props - slug can come from route params or from props (for static routes)
+const props = defineProps<{
+  slug?: string
+}>()
 
-const post = computed(() => blogPosts.find(p => p.slug === slug.value))
+const route = useRoute()
+
+// Get slug from multiple sources (in order of priority):
+// 1. Props (for static routes with explicit props)
+// 2. Route params (for dynamic routes with :slug)
+// 3. Route name (for static routes named 'blog-post-{slug}')
+// 4. URL path parsing (fallback for SSR)
+const slug = computed(() => {
+  // 1. Check route meta.slug (set by static routes)
+  if (route.meta?.slug) return route.meta.slug as string
+  
+  // 2. Props (for static routes with explicit props)
+  if (props.slug) return props.slug
+  
+  // 3. Route params (for dynamic routes with :slug)
+  if (route.params.slug) return route.params.slug as string
+  
+  // 4. Extract slug from route name (e.g., 'blog-post-uuid-v1-vs-v4' -> 'uuid-v1-vs-v4')
+  if (route.name && typeof route.name === 'string' && route.name.startsWith('blog-post-')) {
+    return route.name.replace('blog-post-', '')
+  }
+  
+  // 5. Fallback: parse from URL path (e.g., '/blogs/uuid-v1-vs-v4' -> 'uuid-v1-vs-v4')
+  if (route.path) {
+    const pathParts = route.path.split('/').filter(Boolean)
+    // For path like /blogs/uuid-v1-vs-v4, pathParts = ['blogs', 'uuid-v1-vs-v4']
+    if (pathParts.length >= 2 && pathParts[0] === 'blogs') {
+      return pathParts.slice(1).join('/')
+    }
+  }
+  
+  return ''
+})
+
+const post = computed(() => {
+  // First check if postData was injected into meta during SSR
+  if (route.meta?.postData) {
+    return route.meta.postData as typeof blogPosts[0]
+  }
+  // Otherwise look up by slug
+  return blogPosts.find(p => p.slug === slug.value)
+})
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString)

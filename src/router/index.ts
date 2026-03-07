@@ -3,7 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import MarkdownView from '../views/MarkdownView.vue'
 import { blogPosts } from '../data/blogPosts'
 
-// Generate static routes for each blog post
+// Generate static routes for each blog post (for SSG pre-rendering)
+// Store slug in meta since props don't work reliably during SSR
 const blogPostRoutes = blogPosts.map(post => ({
   path: `blogs/${post.slug}`,
   name: `blog-post-${post.slug}`,
@@ -11,7 +12,8 @@ const blogPostRoutes = blogPosts.map(post => ({
   meta: {
     title: post.title,
     description: post.excerpt,
-    keywords: post.tags.join(', ')
+    keywords: post.tags.join(', '),
+    slug: post.slug  // Store slug in meta for SSR access
   }
 }))
 
@@ -56,7 +58,9 @@ export const routes = [
             'formatho blog, developer tools blog, privacy-first, ai agents, web development'
         }
       },
-      // Dynamic fallback for blog posts (for client-side navigation)
+      // Static blog post routes (MUST come before dynamic route for proper matching)
+      ...blogPostRoutes,
+      // Dynamic fallback for blog posts (only used if no static route matches)
       {
         path: 'blogs/:slug',
         name: 'blog-post-dynamic',
@@ -67,7 +71,6 @@ export const routes = [
           keywords: 'formatho blog, developer tools, privacy, ai agents'
         }
       },
-      ...blogPostRoutes,
       {
         path: 'privacy',
         name: 'privacy',

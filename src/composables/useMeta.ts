@@ -5,6 +5,9 @@ const domain = 'https://formatho.com/tools'
 const siteName = 'Formatho'
 const defaultImage = `${domain}/logo.png`
 
+// Check if running in browser environment
+const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined'
+
 interface MetaTags {
   title: string
   description: string
@@ -19,6 +22,8 @@ function updateMetaTag(
   value: string,
   tagName: 'meta' | 'link' = 'meta'
 ) {
+  if (!isBrowser) return
+
   let element = document.querySelector(selector) as HTMLElement
   if (!element) {
     element = document.createElement(tagName)
@@ -43,6 +48,8 @@ function updateMetaTag(
 }
 
 function updateMetaTags(meta: MetaTags) {
+  if (!isBrowser) return
+
   const url = `${domain}${meta.path || '/'}`
   const fullTitle = meta.title.includes(siteName) ? meta.title : `${meta.title} - ${siteName}`
 
@@ -73,6 +80,9 @@ function updateMetaTags(meta: MetaTags) {
 }
 
 export function useMeta() {
+  // Skip during SSR
+  if (!isBrowser) return
+
   const route = useRoute()
 
   watch(

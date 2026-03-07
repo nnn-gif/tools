@@ -139,9 +139,18 @@ const currentYear = new Date().getFullYear()
           <Heart class="w-4 h-4 inline text-red-500" />
           for developers.
         </p>
-        <div class="flex items-center gap-6 text-sm text-muted-foreground">
-          <RouterLink to="/" class="hover:text-primary transition-colors">
+        <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
+          <RouterLink to="/about" class="hover:text-primary transition-colors">
+            About Us
+          </RouterLink>
+          <RouterLink to="/privacy" class="hover:text-primary transition-colors">
             Privacy Policy
+          </RouterLink>
+          <RouterLink to="/terms" class="hover:text-primary transition-colors">
+            Terms of Service
+          </RouterLink>
+          <RouterLink to="/contact" class="hover:text-primary transition-colors">
+            Contact Us
           </RouterLink>
           <a
             href="https://github.com/nnn-gif/tools"

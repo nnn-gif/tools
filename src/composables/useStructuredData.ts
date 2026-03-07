@@ -10,7 +10,13 @@ interface RouteMeta {
   keywords?: string
 }
 
+// Check if running in browser environment
+const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined'
+
 function injectJSONLD(id: string, jsonLd: object) {
+  // Skip during SSR
+  if (!isBrowser) return
+
   // Remove existing script with same id
   const existing = document.getElementById(id)
   if (existing) {
@@ -149,11 +155,14 @@ function getSoftwareApplicationSchema(meta: RouteMeta, path: string) {
 }
 
 export function useStructuredData() {
+  // Skip everything during SSR
+  if (!isBrowser) return
+
   const route = useRoute()
 
   // Inject breadcrumb IMMEDIATELY based on current URL (before router is ready)
   // This is critical for SEO crawlers that might not wait for JavaScript execution
-  if (typeof window !== 'undefined' && document.head) {
+  if (document.head) {
     const initialPath = window.location.pathname
     injectJSONLD('schema-breadcrumb', getBreadcrumbSchema(initialPath))
   }

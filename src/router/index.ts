@@ -44,6 +44,46 @@ export const routes = [
         }
       },
       {
+        path: 'blogs/:slug',
+        name: 'blog-post',
+        component: () => import('../views/BlogPostView.vue'),
+        meta: {
+          title: 'Blog Post - Formatho',
+          description: 'Read technical articles about developer tools, privacy-first development, and AI agents.',
+          keywords: 'formatho blog, developer tools, privacy, ai agents'
+        }
+      },
+      {
+        path: 'privacy',
+        name: 'privacy',
+        component: () => import('../views/PrivacyPolicyView.vue'),
+        meta: {
+          title: 'Privacy Policy - Formatho',
+          description: 'Learn about Formatho privacy practices. All data processing happens locally in your browser.',
+          keywords: 'privacy policy, data protection, client-side processing'
+        }
+      },
+      {
+        path: 'terms',
+        name: 'terms',
+        component: () => import('../views/TermsOfServiceView.vue'),
+        meta: {
+          title: 'Terms of Service - Formatho',
+          description: 'Terms of Service for Formatho - privacy-first developer tools.',
+          keywords: 'terms of service, user agreement'
+        }
+      },
+      {
+        path: 'contact',
+        name: 'contact',
+        component: () => import('../views/ContactView.vue'),
+        meta: {
+          title: 'Contact Us - Formatho',
+          description: 'Get in touch with the Formatho team. Report bugs, request features, or join our community.',
+          keywords: 'contact, support, feedback, github'
+        }
+      },
+      {
         path: 'markdown',
         name: 'markdown',
         component: MarkdownView,

@@ -47,8 +47,6 @@ import {
   Camera
 } from 'lucide-vue-next'
 import { Input } from '@/components/ui/input'
-import LiveSiteAnalytics from '@/components/LiveSiteAnalytics.vue'
-
 const searchQuery = ref('')
 
 const tools = [
@@ -747,8 +745,8 @@ const filteredTools = computed(() => {
       </div>
     </section>
 
-    <!-- Live Analytics Widget -->
-    <LiveSiteAnalytics />
+    <!-- Live Analytics Widget - Temporarily disabled for AdSense compliance -->
+    <!-- <LiveSiteAnalytics /> -->
   </div>
 </template>
 

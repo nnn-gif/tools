@@ -63,6 +63,14 @@ const categories = [
 
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center gap-6">
+          <!-- Home Link -->
+          <RouterLink
+            to="/"
+            class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Home
+          </RouterLink>
+
           <!-- About Us Link -->
           <RouterLink
             to="/about"
@@ -121,14 +129,6 @@ const categories = [
             <Github class="w-4 h-4" />
             GitHub
           </a>
-
-          <!-- Blogs Link -->
-          <RouterLink
-            to="/blogs"
-            class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Blogs
-          </RouterLink>
         </div>
 
         <!-- Search & Mobile Menu Button -->
@@ -158,6 +158,15 @@ const categories = [
       <!-- Mobile Menu -->
       <div v-if="isMobileMenuOpen" class="md:hidden py-4 border-t border-border">
         <div class="space-y-4">
+          <!-- Home Link -->
+          <RouterLink
+            to="/"
+            @click="isMobileMenuOpen = false"
+            class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all"
+          >
+            Home
+          </RouterLink>
+
           <!-- About Us Link -->
           <RouterLink
             to="/about"
@@ -185,20 +194,6 @@ const categories = [
 
           <!-- GitHub Link -->
           <div class="pt-4 border-t border-border">
-            <RouterLink
-              to="/"
-              @click="isMobileMenuOpen = false"
-              class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all"
-            >
-              Home
-            </RouterLink>
-            <RouterLink
-              to="/about"
-              @click="isMobileMenuOpen = false"
-              class="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all"
-            >
-              About
-            </RouterLink>
             <a
               href="https://github.com/nnn-gif/tools"
               target="_blank"
@@ -208,15 +203,6 @@ const categories = [
               <Github class="w-4 h-4" />
               GitHub
             </a>
-
-            <!-- Blogs Link -->
-            <RouterLink
-              to="/blogs"
-              @click="isMobileMenuOpen = false"
-              class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all"
-            >
-              Blogs
-            </RouterLink>
           </div>
         </div>
       </div>

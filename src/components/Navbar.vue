@@ -63,6 +63,15 @@ const categories = [
 
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center gap-6">
+          <!-- About Us Link -->
+          <RouterLink
+            to="/about"
+            class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            About Us
+          </RouterLink>
+
+          <!-- Tools Dropdown -->
           <div class="relative group">
             <button
               class="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2"
@@ -102,20 +111,7 @@ const categories = [
             </div>
           </div>
 
-          <RouterLink
-            to="/"
-            class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Home
-          </RouterLink>
-
-          <RouterLink
-            to="/about"
-            class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            About
-          </RouterLink>
-
+          <!-- GitHub Link -->
           <a
             href="https://github.com/nnn-gif/tools"
             target="_blank"
@@ -125,6 +121,14 @@ const categories = [
             <Github class="w-4 h-4" />
             GitHub
           </a>
+
+          <!-- Blogs Link -->
+          <RouterLink
+            to="/blogs"
+            class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Blogs
+          </RouterLink>
         </div>
 
         <!-- Search & Mobile Menu Button -->
@@ -154,6 +158,16 @@ const categories = [
       <!-- Mobile Menu -->
       <div v-if="isMobileMenuOpen" class="md:hidden py-4 border-t border-border">
         <div class="space-y-4">
+          <!-- About Us Link -->
+          <RouterLink
+            to="/about"
+            @click="isMobileMenuOpen = false"
+            class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all"
+          >
+            About Us
+          </RouterLink>
+
+          <!-- Tools Categories -->
           <div v-for="category in categories" :key="category.name" class="space-y-2">
             <h3 class="text-xs font-semibold uppercase text-primary px-3">{{ category.name }}</h3>
             <div class="space-y-1">
@@ -169,6 +183,7 @@ const categories = [
             </div>
           </div>
 
+          <!-- GitHub Link -->
           <div class="pt-4 border-t border-border">
             <RouterLink
               to="/"
@@ -193,6 +208,15 @@ const categories = [
               <Github class="w-4 h-4" />
               GitHub
             </a>
+
+            <!-- Blogs Link -->
+            <RouterLink
+              to="/blogs"
+              @click="isMobileMenuOpen = false"
+              class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all"
+            >
+              Blogs
+            </RouterLink>
           </div>
         </div>
       </div>

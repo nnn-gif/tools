@@ -287,17 +287,15 @@
   }
 }
 
-/* Better link visibility */
+/* Link styling - keep original text color, no underlines */
 @layer base {
   a:not(.router-link-active):not([class*="text-primary"]) {
-    color: hsl(221 83% 53%); /* Clear blue for links */
-    text-decoration: underline;
-    text-decoration-color: hsl(221 83% 53% / 0.3);
-    text-underline-offset: 2px;
+    /* Removed blue color and underline - text uses original color */
+    text-decoration: none;
   }
 
   a:hover:not(.router-link-active) {
-    text-decoration-color: hsl(221 83% 53%);
+    /* Optional: subtle hover effect if needed */
   }
 }
 

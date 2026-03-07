@@ -74,6 +74,19 @@ const formatDate = (dateString: string) => {
         </div>
       </header>
 
+      <!-- Featured Image -->
+      <div v-if="post.image" class="mb-8 rounded-xl overflow-hidden">
+        <img
+          :src="post.image"
+          :alt="post.imageAlt || post.title"
+          class="w-full h-auto object-cover"
+          loading="lazy"
+        />
+        <p v-if="post.imageAlt" class="text-xs text-muted-foreground mt-2 text-center">
+          {{ post.imageAlt }}
+        </p>
+      </div>
+
       <!-- Article Body -->
       <div class="prose prose-lg max-w-none dark:prose-invert">
         <div v-html="post.content"></div>

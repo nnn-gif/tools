@@ -32,11 +32,23 @@ const formatDate = (dateString: string) => {
         <article
           v-for="post in blogPosts"
           :key="post.id"
-          class="glass-card p-6 hover:border-primary/50 transition-all group"
+          class="glass-card overflow-hidden hover:border-primary/50 transition-all group"
         >
-          <div class="flex flex-col md:flex-row md:items-start gap-4">
+          <div class="flex flex-col md:flex-row">
+            <!-- Image -->
+            <div v-if="post.image" class="md:w-1/3 flex-shrink-0">
+              <RouterLink :to="`/blogs/${post.slug}`">
+                <img
+                  :src="post.image"
+                  :alt="post.imageAlt || post.title"
+                  class="w-full h-48 md:h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                />
+              </RouterLink>
+            </div>
+            
             <!-- Content -->
-            <div class="flex-1">
+            <div class="flex-1 p-6">
               <!-- Meta -->
               <div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-3">
                 <div class="flex items-center gap-1">
@@ -50,9 +62,11 @@ const formatDate = (dateString: string) => {
               </div>
 
               <!-- Title -->
-              <h2 class="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">
-                {{ post.title }}
-              </h2>
+              <RouterLink :to="`/blogs/${post.slug}`">
+                <h2 class="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">
+                  {{ post.title }}
+                </h2>
+              </RouterLink>
 
               <!-- Excerpt -->
               <p class="text-muted-foreground mb-4 leading-relaxed">

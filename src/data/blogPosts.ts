@@ -6,6 +6,8 @@ export interface BlogPost {
   readTime: string
   tags: string[]
   slug: string
+  image?: string
+  imageAlt?: string
   content: string
   cta?: {
     title: string
@@ -652,6 +654,8 @@ export const blogPosts: BlogPost[] = [
     readTime: '12 min',
     tags: ['AI Agents', 'Career', 'Technology', 'Enterprise AI'],
     slug: 'ai-agent-orchestration-career-blueprint-2026',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&q=80&auto=format&fit=crop',
+    imageAlt: 'Artificial Intelligence robot brain representing autonomous AI agent systems',
     content: `<p>The technology landscape of 2026 is defined by a singular, structural transition.</p>
 <p>It's not about smarter chatbots. It's not about larger language models.</p>
 <p>It's about <strong>autonomous multi-agent systems</strong> that can execute complex, end-to-end workflows without continuous human oversight.</p>
@@ -694,6 +698,8 @@ export const blogPosts: BlogPost[] = [
     readTime: '11 min',
     tags: ['Meta', 'AI Industry', 'Technology', 'Enterprise'],
     slug: 'meta-ai-restructuring-applied-superintelligence-2026',
+    image: 'https://images.unsplash.com/photo-1639322537228-f710d846310a?w=1200&q=80&auto=format&fit=crop',
+    imageAlt: 'Abstract neural network visualization representing AI research and superintelligence',
     content: `<p>In March 2026, Meta Platforms announced its fourth organizational restructuring in six months. The formation of a new Applied AI engineering organization. Led by Maher Saba. Reporting directly to CTO Andrew Bosworth.</p>
 <p>This isn't just another corporate reshuffle. It signals a decisive pivot in Mark Zuckerberg's long-term strategy—moving away from siloed research toward production-grade infrastructure designed to support "personal superintelligence."</p>
 <h2>The Philosophy of Ultra-Flat Management</h2>
@@ -733,6 +739,8 @@ export const blogPosts: BlogPost[] = [
     readTime: '12 min',
     tags: ['AI', 'Career', 'Future of Work', 'Research'],
     slug: 'ai-job-safety-22-careers-anthropic-research',
+    image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1200&q=80&auto=format&fit=crop',
+    imageAlt: 'Human and robot hand reaching towards each other, representing AI and human collaboration in the workplace',
     content: `<p>The predictions have been catastrophic. MIT simulations suggested more than one in ten U.S. workers could be readily replaced by AI. Goldman Sachs estimated AI could match humans in 47% of tasks. McKinsey projected 375 million workers would need to change careers.</p>
 <p>But here's what's strange: The predicted job losses haven't materialized at the scale forecasted.</p>
 <h2>The Problem With Automation Forecasts</h2>

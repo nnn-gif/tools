@@ -4,7 +4,7 @@ Theme URI: https://formatho.com
 Author: Formatho
 Author URI: https://formatho.com
 Description: Monochrome WordPress theme matching the Formatho developer tools website. Clean, minimal, and privacy-focused design.
-Version: 1.0.0
+Version: 1.1.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: formatho
@@ -12,25 +12,33 @@ Tags: monochrome, minimal, clean, developer, blog, one-column, custom-logo, cust
 */
 
 /* ============================================
-   CSS Variables (Monochrome Theme - Light Mode)
+   CSS Variables (Formatho Theme - Light Mode)
+   Matches: https://formatho.com/tools/
    ============================================ */
 :root {
   --formatho-bg: #ffffff;
-  --formatho-foreground: #000000;
-  --formatho-primary: #000000;
+  --formatho-foreground: #1e293b;          /* Dark navy */
+  --formatho-primary: #00b4d8;             /* Light blue accent */
   --formatho-primary-bg: #ffffff;
-  --formatho-secondary: #f5f5f5;
-  --formatho-muted: #f5f5f5;
-  --formatho-muted-text: #737373;
-  --formatho-border: #e5e5e5;
+  --formatho-secondary: #f1f5f9;
+  --formatho-muted: #f1f5f9;
+  --formatho-muted-text: #64748b;
+  --formatho-border: #e2e8f0;
   --formatho-card: #ffffff;
   --formatho-radius: 0.5rem;
+  --formatho-accent: #00b4d8;              /* Primary accent */
+  --formatho-success: #22c55e;
+  --formatho-shadow-sm: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1);
+  --formatho-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
 }
 
 /* Force light mode - remove dark mode support */
 html {
   color-scheme: light;
 }
+
+/* Google Fonts - Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 /* ============================================
    Reset & Base Styles
@@ -42,12 +50,12 @@ html {
 }
 
 body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   background-color: var(--formatho-bg);
   color: var(--formatho-foreground);
   line-height: 1.6;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Global Image Reset */
@@ -61,26 +69,32 @@ img {
    Header & Logo
    ============================================ */
 .site-header {
-  background-color: var(--formatho-bg);
-  border-bottom: 1px solid var(--formatho-border);
-  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+  padding: 0;
 }
 
 .site-header-inner {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1rem;
+  height: 64px;
 }
 
 .site-branding {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .custom-logo-link {
@@ -90,26 +104,30 @@ img {
 
 .site-branding img,
 .custom-logo {
-  height: 48px;
-  width: auto;
+  height: 32px;
+  width: 32px;
   max-width: 100%;
-  border-radius: 0.5rem;
+  border-radius: 8px;
   object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+.site-branding img:hover,
+.custom-logo:hover {
+  transform: scale(1.1);
 }
 
 .site-title-wrapper {
   display: flex;
-  align-items: center;
+  flex-direction: column;
 }
 
 .site-title {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--formatho-foreground);
   margin: 0;
-  /* Monospace font to match logo style */
-  font-family:
-    'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
   letter-spacing: -0.02em;
 }
 
@@ -117,18 +135,31 @@ img {
   color: var(--formatho-foreground);
   text-decoration: none;
   transition: opacity 0.2s;
+  background: linear-gradient(135deg, var(--formatho-foreground), var(--formatho-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .site-title a:hover {
-  opacity: 0.7;
+  opacity: 0.8;
+}
+
+.site-description {
+  font-size: 0.75rem;
+  color: var(--formatho-muted-text);
+  margin: 0;
 }
 
 /* Navigation */
 .main-navigation {
-  border-top: 1px solid var(--formatho-border);
-  margin-top: 1rem;
-  padding-top: 1rem;
-  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  border-top: none;
+  margin-top: 0;
+  padding-top: 0;
+  width: auto;
 }
 
 .nav-menu {
@@ -136,7 +167,7 @@ img {
   margin: 0;
   padding: 0;
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   flex-wrap: wrap;
 }
 
@@ -148,6 +179,7 @@ img {
   color: var(--formatho-muted-text);
   text-decoration: none;
   font-weight: 500;
+  font-size: 0.875rem;
   transition: color 0.2s;
   display: block;
   padding: 0.5rem 0;
@@ -743,4 +775,270 @@ pre code {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
+}
+
+/* ============================================
+   Hero Section (Main Site Style)
+   ============================================ */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  padding: 5rem 0;
+  background: linear-gradient(to bottom, rgba(0, 180, 216, 0.05), var(--formatho-bg));
+  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300b4d8' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+.hero-content {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 0 2rem;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--formatho-foreground), var(--formatho-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@media (min-width: 768px) {
+  .hero-title {
+    font-size: 4rem;
+  }
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--formatho-muted-text);
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .hero-subtitle {
+    font-size: 1.5rem;
+  }
+}
+
+/* ============================================
+   Glass Morphism Cards
+   ============================================ */
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--formatho-border);
+  border-radius: var(--formatho-radius);
+  box-shadow: var(--formatho-shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(0, 180, 216, 0.5);
+  box-shadow: var(--formatho-shadow-md);
+}
+
+/* Post Cards with Glass Effect */
+article.post.glass-card {
+  padding: 1.5rem;
+}
+
+article.post.glass-card:hover {
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   Badges (Main Site Style)
+   ============================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  background: rgba(0, 180, 216, 0.1);
+  color: var(--formatho-primary);
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  transition: all 0.2s ease;
+}
+
+.badge:hover {
+  background: rgba(0, 180, 216, 0.15);
+}
+
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+/* ============================================
+   Accent Links
+   ============================================ */
+a.text-primary {
+  color: var(--formatho-primary);
+}
+
+a:hover .text-primary {
+  opacity: 0.8;
+}
+
+/* Link hover effects */
+article.post a:hover {
+  color: var(--formatho-primary);
+}
+
+/* ============================================
+   Post Grid Layout
+   ============================================ */
+.posts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+@media (min-width: 768px) {
+  .posts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .posts-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .posts-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ============================================
+   Footer Enhanced
+   ============================================ */
+.site-footer {
+  background-color: rgba(241, 245, 249, 0.3);
+  border-top: 1px solid var(--formatho-border);
+  padding: 3rem 0;
+  margin-top: 4rem;
+}
+
+.site-footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .footer-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.footer-bottom {
+  padding-top: 2rem;
+  border-top: 1px solid var(--formatho-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .footer-bottom {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.footer-copyright {
+  font-size: 0.875rem;
+  color: var(--formatho-muted-text);
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.footer-links a {
+  font-size: 0.875rem;
+  color: var(--formatho-muted-text);
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: var(--formatho-primary);
+}
+
+/* ============================================
+   Gradient Text Utility
+   ============================================ */
+.gradient-text {
+  background: linear-gradient(135deg, var(--formatho-foreground), var(--formatho-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   Read More Links
+   ============================================ */
+.read-more-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--formatho-primary);
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-decoration: none;
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+article.post:hover .read-more-link {
+  opacity: 1;
+}
+
+.read-more-link:hover {
+  gap: 0.5rem;
+}
+
+.read-more-link svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+article.post:hover .read-more-link svg {
+  transform: translateX(4px);
 }

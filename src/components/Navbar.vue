@@ -129,6 +129,14 @@ const categories = [
             <Github class="w-4 h-4" />
             GitHub
           </a>
+
+          <!-- Blogs Link -->
+          <RouterLink
+            to="/blogs"
+            class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Blogs
+          </RouterLink>
         </div>
 
         <!-- Search & Mobile Menu Button -->
@@ -203,6 +211,15 @@ const categories = [
               <Github class="w-4 h-4" />
               GitHub
             </a>
+
+            <!-- Blogs Link -->
+            <RouterLink
+              to="/blogs"
+              @click="isMobileMenuOpen = false"
+              class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all"
+            >
+              Blogs
+            </RouterLink>
           </div>
         </div>
       </div>

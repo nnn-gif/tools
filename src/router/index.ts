@@ -32,6 +32,18 @@ export const routes = [
         }
       },
       {
+        path: 'blogs',
+        name: 'blogs',
+        component: () => import('../views/BlogsView.vue'),
+        meta: {
+          title: 'Blog - Formatho',
+          description:
+            'Insights, updates, and stories from the Formatho team. Read about privacy-first development, AI agents, and more.',
+          keywords:
+            'formatho blog, developer tools blog, privacy-first, ai agents, web development'
+        }
+      },
+      {
         path: 'markdown',
         name: 'markdown',
         component: MarkdownView,

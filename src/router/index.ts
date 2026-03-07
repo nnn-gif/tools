@@ -1,6 +1,19 @@
 import AppLayout from '../layouts/AppLayout.vue'
 import HomeView from '../views/HomeView.vue'
 import MarkdownView from '../views/MarkdownView.vue'
+import { blogPosts } from '../data/blogPosts'
+
+// Generate static routes for each blog post
+const blogPostRoutes = blogPosts.map(post => ({
+  path: `blogs/${post.slug}`,
+  name: `blog-post-${post.slug}`,
+  component: () => import('../views/BlogPostView.vue'),
+  meta: {
+    title: post.title,
+    description: post.excerpt,
+    keywords: post.tags.join(', ')
+  }
+}))
 
 export const routes = [
   {
@@ -43,9 +56,10 @@ export const routes = [
             'formatho blog, developer tools blog, privacy-first, ai agents, web development'
         }
       },
+      // Dynamic fallback for blog posts (for client-side navigation)
       {
         path: 'blogs/:slug',
-        name: 'blog-post',
+        name: 'blog-post-dynamic',
         component: () => import('../views/BlogPostView.vue'),
         meta: {
           title: 'Blog Post - Formatho',
@@ -53,6 +67,7 @@ export const routes = [
           keywords: 'formatho blog, developer tools, privacy, ai agents'
         }
       },
+      ...blogPostRoutes,
       {
         path: 'privacy',
         name: 'privacy',

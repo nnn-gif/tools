@@ -1,0 +1,31 @@
+services:
+  kanboard:
+    image: kanboard/kanboard:v1.2.45
+    container_name: kanboard_app
+    restart: unless-stopped
+    volumes:
+      - kanboard_data:/var/www/app/data
+      - kanboard_plugins:/var/www/app/plugins
+      - kanboard_ssl:/etc/nginx/ssl
+    environment:
+      - PLUGIN_INSTALLER=true
+      - DEBUG=true
+    networks:
+      - formatho_app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/healthcheck.php"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  formatho_app-network:
+    external: true
+
+volumes:
+  kanboard_data:
+    driver: local
+  kanboard_plugins:
+    driver: local
+  kanboard_ssl:
+    driver: local

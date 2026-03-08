@@ -163,21 +163,6 @@ const currentYear = new Date().getFullYear()
         </div>
       </div>
 
-      <!-- Brand Disclaimer -->
-      <div class="mt-6 text-center">
-        <p class="text-xs text-muted-foreground/70">
-          Formatho Tools is an independent entity and is not affiliated with
-          <a
-            href="https://formatho.com.br"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="underline hover:text-primary transition-colors"
-          >
-            formatho.com.br
-          </a>
-          .
-        </p>
-      </div>
     </div>
   </footer>
 </template>

@@ -21,7 +21,7 @@ export interface BlogPost {
 export const blogPosts: BlogPost[] = [
   {
     id: 28,
-    title: "India's #1 Privacy-First Developer Toolkit — The 2026 Blueprint for Data Sovereignty by Nitin Gurbani",
+    title: "India's #1 Privacy-First Developer Toolkit — The 2026 Blueprint for Data Sovereignty",
     excerpt:
       "Discover how Formatho became India's leading privacy-first developer toolkit with 100+ tools that run entirely in your browser. Zero data uploads. 100% free. No sign-up ever.",
     date: '2026-03-09',
@@ -71,7 +71,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     id: 29,
-    title: 'Generate UUIDs Without Internet Connection: The 2026 Masterclass by Prateek Sabharwal',
+    title: 'Generate UUIDs Without Internet Connection: The 2026 Masterclass',
     excerpt:
       'Learn why generating UUIDs offline is critical for security. Discover how client-side UUID generation protects your database primary keys from prediction attacks.',
     date: '2026-03-09',
@@ -118,7 +118,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     id: 30,
-    title: 'Generate QR Codes Without Tracking Pixels: The Privacy-First Guide by Nitin Gurbani',
+    title: 'Generate QR Codes Without Tracking Pixels: The Privacy-First Guide',
     excerpt: 'Discover why most free QR generators track your users. Learn how client-side QR code generation protects user privacy and prevents data harvesting.',
     date: '2026-03-09',
     readTime: '7 min',
@@ -154,7 +154,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     id: 31,
-    title: 'Test Regex Patterns — No More Random Websites by Prateek Sabharwal',
+    title: 'Test Regex Patterns — No More Random Websites',
     excerpt: 'Learn why pasting production data into online regex testers is a security breach. Discover client-side regex testing that keeps your sample data private.',
     date: '2026-03-09',
     readTime: '7 min',
@@ -191,7 +191,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     id: 32,
-    title: '100+ Developer Tools — All Free, All Private by Nitin Gurbani',
+    title: '100+ Developer Tools — All Free, All Private',
     excerpt: 'Discover Formatho\'s expanded toolkit with 100+ free developer tools. Every tool runs 100% locally in your browser. No server calls, no sign-ups, zero data tracking.',
     date: '2026-03-09',
     readTime: '7 min',
@@ -230,7 +230,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     id: 33,
-    title: 'Encode\/Decode Base64 — Files Never Leave Your Browser by Prateek Sabharwal',
+    title: 'Encode\/Decode Base64 — Files Never Leave Your Browser',
     excerpt: 'Learn why Base64 is not encryption and why using online decoders for secrets is dangerous. Discover zero-trust, client-side Base64 encoding.',
     date: '2026-03-09',
     readTime: '7 min',
@@ -270,7 +270,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     id: 34,
-    title: 'Format SQL Queries Without Cloud Uploads by Nitin Gurbani',
+    title: 'Format SQL Queries Without Cloud Uploads',
     excerpt: 'Learn why pasting SQL queries into online formatters exposes your database schema. Discover client-side SQL formatting that keeps your queries private.',
     date: '2026-03-09',
     readTime: '7 min',
@@ -307,7 +307,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     id: 35,
-    title: 'Decode JWT Tokens Without Server Exposure by Prateek Sabharwal',
+    title: 'Decode JWT Tokens Without Server Exposure',
     excerpt: 'Learn why pasting JWTs into online decoders exposes your authentication system. Discover client-side JWT decoding that keeps your tokens private.',
     date: '2026-03-09',
     readTime: '7 min',
@@ -348,7 +348,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     id: 36,
-    title: 'Convert JSON to YAML in 1 Second — No Upload by Nitin Gurbani',
+    title: 'Convert JSON to YAML in 1 Second — No Upload',
     excerpt: 'Learn why converting JSON to YAML on cloud servers exposes your infrastructure configuration. Discover client-side conversion that keeps your configs private.',
     date: '2026-03-09',
     readTime: '7 min',
@@ -390,7 +390,7 @@ export const blogPosts: BlogPost[] = [
   },
   {
     id: 37,
-    title: 'Need Developer Tools That Don\'t Spy On You? by Prateek Sabharwal',
+    title: 'Need Developer Tools That Don\'t Spy On You?',
     excerpt: 'Discover why most free developer tools harvest your data. Learn about zero-trust, client-side development and the rise of privacy-first tools.',
     date: '2026-03-09',
     readTime: '7 min',

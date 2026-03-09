@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useMonthlyCounter } from '@/composables/useMonthlyCounter'
 
 // ============================================
-// DATA HOOK - Easy to replace with API call
+// PERSISTENT COUNTER - Uses CountAPI for persistence
 // ============================================
-const INITIAL_VISITORS = 12847 // Starting count
-const VISITOR_INCREMENT_INTERVAL = 5000 // Increment every 5 seconds
+// Monthly visitors counter is now persistent via API
+const { monthlyVisitors, isLoading: _counterLoading } = useMonthlyCounter()
+
+// ============================================
+// LIVE USER SIMULATION (Client-side only, as requested)
+// ============================================
 const LIVE_USER_UPDATE_INTERVAL = 3000 // Update live users every 3 seconds
-
-// State
-const monthlyVisitors = ref(INITIAL_VISITORS)
 const liveUsers = ref(1)
-let visitorInterval: number | undefined
 let liveUserInterval: number | undefined
 
 // Format number with commas
@@ -19,35 +20,22 @@ const formatNumber = (num: number): string => {
   return num.toLocaleString('en-US')
 }
 
-// Smoothly increment visitors (simulating real-time traffic)
-const incrementVisitors = () => {
-  // Increment by random amount (1-3 visitors)
-  const increment = Math.floor(Math.random() * 3) + 1
-  monthlyVisitors.value += increment
-}
-
-// Simulate live users (1-50, fluctuating every 3 seconds)
+// Simulate live users (1-15, fluctuating every 3 seconds as per requirements)
 const updateLiveUsers = () => {
-  // Random fluctuation: +/- 1-5 users, staying within 1-50 range
+  // Random fluctuation: +/- 1-5 users, staying within 1-15 range
   const change = Math.floor(Math.random() * 11) - 5 // -5 to +5
-  liveUsers.value = Math.max(1, Math.min(50, liveUsers.value + change))
+  liveUsers.value = Math.max(1, Math.min(15, liveUsers.value + change))
 }
 
 onMounted(() => {
-  // Initialize live users
-  liveUsers.value = Math.floor(Math.random() * 50) + 1
-
-  // Start continuous increment for visitors
-  visitorInterval = window.setInterval(incrementVisitors, VISITOR_INCREMENT_INTERVAL)
+  // Initialize live users (1-15 as per requirements)
+  liveUsers.value = Math.floor(Math.random() * 15) + 1
 
   // Start live user simulation
   liveUserInterval = window.setInterval(updateLiveUsers, LIVE_USER_UPDATE_INTERVAL)
 })
 
 onUnmounted(() => {
-  if (visitorInterval) {
-    clearInterval(visitorInterval)
-  }
   if (liveUserInterval) {
     clearInterval(liveUserInterval)
   }

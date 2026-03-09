@@ -1,0 +1,28 @@
+name: Increment Monthly Counter
+
+on:
+  schedule:
+    # Run every 5 minutes (adjust to 3-7 minutes as needed)
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  increment-counter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Counter Increment
+        run: |
+          cd scripts
+          node increment-counter.js
+
+      - name: Log Result
+        run: |
+          echo "Counter increment job completed at $(date)"

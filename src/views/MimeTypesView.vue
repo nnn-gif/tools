@@ -3,46 +3,54 @@ import { ref, computed } from 'vue'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 
-
 const inputText = ref('')
 const searchType = ref('extension')
 
 const mimeTypes: Record<string, { mime: string; name: string }> = {
-  'txt': { mime: 'text/plain', name: 'Plain Text' },
-  'html': { mime: 'text/html', name: 'HTML Document' },
-  'css': { mime: 'text/css', name: 'Cascading Style Sheets' },
-  'js': { mime: 'application/javascript', name: 'JavaScript' },
-  'json': { mime: 'application/json', name: 'JSON Data' },
-  'xml': { mime: 'application/xml', name: 'XML Document' },
-  'pdf': { mime: 'application/pdf', name: 'PDF Document' },
-  'zip': { mime: 'application/zip', name: 'ZIP Archive' },
-  'tar': { mime: 'application/x-tar', name: 'TAR Archive' },
-  'gz': { mime: 'application/gzip', name: 'GZIP Archive' },
-  'png': { mime: 'image/png', name: 'PNG Image' },
-  'jpg': { mime: 'image/jpeg', name: 'JPEG Image' },
-  'jpeg': { mime: 'image/jpeg', name: 'JPEG Image' },
-  'gif': { mime: 'image/gif', name: 'GIF Image' },
-  'svg': { mime: 'image/svg+xml', name: 'SVG Image' },
-  'webp': { mime: 'image/webp', name: 'WebP Image' },
-  'ico': { mime: 'image/x-icon', name: 'Icon Image' },
-  'mp3': { mime: 'audio/mpeg', name: 'MP3 Audio' },
-  'wav': { mime: 'audio/wav', name: 'WAV Audio' },
-  'ogg': { mime: 'audio/ogg', name: 'OGG Audio' },
-  'mp4': { mime: 'video/mp4', name: 'MP4 Video' },
-  'webm': { mime: 'video/webm', name: 'WebM Video' },
-  'avi': { mime: 'video/x-msvideo', name: 'AVI Video' },
-  'doc': { mime: 'application/msword', name: 'Word Document' },
-  'docx': { mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', name: 'Word Document (OOXML)' },
-  'xls': { mime: 'application/vnd.ms-excel', name: 'Excel Spreadsheet' },
-  'xlsx': { mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', name: 'Excel Spreadsheet (OOXML)' },
-  'ppt': { mime: 'application/vnd.ms-powerpoint', name: 'PowerPoint Presentation' },
-  'pptx': { mime: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', name: 'PowerPoint (OOXML)' },
+  txt: { mime: 'text/plain', name: 'Plain Text' },
+  html: { mime: 'text/html', name: 'HTML Document' },
+  css: { mime: 'text/css', name: 'Cascading Style Sheets' },
+  js: { mime: 'application/javascript', name: 'JavaScript' },
+  json: { mime: 'application/json', name: 'JSON Data' },
+  xml: { mime: 'application/xml', name: 'XML Document' },
+  pdf: { mime: 'application/pdf', name: 'PDF Document' },
+  zip: { mime: 'application/zip', name: 'ZIP Archive' },
+  tar: { mime: 'application/x-tar', name: 'TAR Archive' },
+  gz: { mime: 'application/gzip', name: 'GZIP Archive' },
+  png: { mime: 'image/png', name: 'PNG Image' },
+  jpg: { mime: 'image/jpeg', name: 'JPEG Image' },
+  jpeg: { mime: 'image/jpeg', name: 'JPEG Image' },
+  gif: { mime: 'image/gif', name: 'GIF Image' },
+  svg: { mime: 'image/svg+xml', name: 'SVG Image' },
+  webp: { mime: 'image/webp', name: 'WebP Image' },
+  ico: { mime: 'image/x-icon', name: 'Icon Image' },
+  mp3: { mime: 'audio/mpeg', name: 'MP3 Audio' },
+  wav: { mime: 'audio/wav', name: 'WAV Audio' },
+  ogg: { mime: 'audio/ogg', name: 'OGG Audio' },
+  mp4: { mime: 'video/mp4', name: 'MP4 Video' },
+  webm: { mime: 'video/webm', name: 'WebM Video' },
+  avi: { mime: 'video/x-msvideo', name: 'AVI Video' },
+  doc: { mime: 'application/msword', name: 'Word Document' },
+  docx: {
+    mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    name: 'Word Document (OOXML)'
+  },
+  xls: { mime: 'application/vnd.ms-excel', name: 'Excel Spreadsheet' },
+  xlsx: {
+    mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    name: 'Excel Spreadsheet (OOXML)'
+  },
+  ppt: { mime: 'application/vnd.ms-powerpoint', name: 'PowerPoint Presentation' },
+  pptx: {
+    mime: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    name: 'PowerPoint (OOXML)'
+  }
 }
 
 const result = computed(() => {
   const query = inputText.value.toLowerCase().trim()
   if (!query) return null
-  
+
   if (searchType.value === 'extension') {
     return mimeTypes[query] || null
   } else {
@@ -82,9 +90,13 @@ const allTypes = computed(() => {
             <span>By MIME Type</span>
           </label>
         </div>
-        <Input 
-          v-model="inputText" 
-          :placeholder="searchType === 'extension' ? 'Enter file extension (e.g., pdf, jpg)...' : 'Enter MIME type (e.g., image/png)...'"
+        <Input
+          v-model="inputText"
+          :placeholder="
+            searchType === 'extension'
+              ? 'Enter file extension (e.g., pdf, jpg)...'
+              : 'Enter MIME type (e.g., image/png)...'
+          "
         />
       </CardContent>
     </Card>
@@ -116,7 +128,11 @@ const allTypes = computed(() => {
       </CardHeader>
       <CardContent>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 text-sm">
-          <div v-for="type in allTypes" :key="type.extension" class="p-2 rounded bg-muted flex justify-between">
+          <div
+            v-for="type in allTypes"
+            :key="type.extension"
+            class="p-2 rounded bg-muted flex justify-between"
+          >
             <span class="font-mono">.{{ type.extension }}</span>
             <span class="text-muted-foreground">{{ type.mime }}</span>
           </div>

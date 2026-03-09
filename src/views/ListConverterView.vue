@@ -4,7 +4,6 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 
-
 const inputList = ref('')
 const outputList = ref('')
 const inputFormat = ref('comma')
@@ -14,20 +13,35 @@ const uniqueOnly = ref(false)
 
 const parseList = (text: string, format: string): string[] => {
   if (!text.trim()) return []
-  
+
   switch (format) {
     case 'comma':
-      return text.split(',').map(s => s.trim()).filter(Boolean)
+      return text
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
     case 'newline':
-      return text.split('\n').map(s => s.trim()).filter(Boolean)
+      return text
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean)
     case 'space':
       return text.split(/\s+/).filter(Boolean)
     case 'semicolon':
-      return text.split(';').map(s => s.trim()).filter(Boolean)
+      return text
+        .split(';')
+        .map((s) => s.trim())
+        .filter(Boolean)
     case 'tab':
-      return text.split('\t').map(s => s.trim()).filter(Boolean)
+      return text
+        .split('\t')
+        .map((s) => s.trim())
+        .filter(Boolean)
     default:
-      return text.split(',').map(s => s.trim()).filter(Boolean)
+      return text
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
   }
 }
 
@@ -52,15 +66,15 @@ const formatList = (items: string[], format: string): string => {
 
 const convert = () => {
   let items = parseList(inputList.value, inputFormat.value)
-  
+
   if (uniqueOnly.value) {
     items = [...new Set(items)]
   }
-  
+
   if (sortList.value) {
     items.sort((a, b) => a.localeCompare(b))
   }
-  
+
   outputList.value = formatList(items, outputFormat.value)
 }
 </script>
@@ -77,7 +91,10 @@ const convert = () => {
           <CardTitle class="text-sm">Input Format</CardTitle>
         </CardHeader>
         <CardContent>
-          <select v-model="inputFormat" class="w-full h-10 rounded-md border border-input bg-background px-3">
+          <select
+            v-model="inputFormat"
+            class="w-full h-10 rounded-md border border-input bg-background px-3"
+          >
             <option value="comma">Comma separated</option>
             <option value="newline">Newline separated</option>
             <option value="space">Space separated</option>
@@ -92,7 +109,10 @@ const convert = () => {
           <CardTitle class="text-sm">Output Format</CardTitle>
         </CardHeader>
         <CardContent>
-          <select v-model="outputFormat" class="w-full h-10 rounded-md border border-input bg-background px-3">
+          <select
+            v-model="outputFormat"
+            class="w-full h-10 rounded-md border border-input bg-background px-3"
+          >
             <option value="comma">Comma separated</option>
             <option value="newline">Newline separated</option>
             <option value="space">Space separated</option>

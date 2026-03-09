@@ -65,8 +65,14 @@ onMounted(() => {
         <CardContent class="space-y-2 text-sm">
           <div><span class="text-muted-foreground">Vendor:</span> {{ deviceInfo.vendor }}</div>
           <div><span class="text-muted-foreground">Language:</span> {{ deviceInfo.language }}</div>
-          <div><span class="text-muted-foreground">Cookies:</span> {{ deviceInfo.cookieEnabled ? 'Enabled' : 'Disabled' }}</div>
-          <div><span class="text-muted-foreground">Online:</span> {{ deviceInfo.onLine ? 'Yes' : 'No' }}</div>
+          <div>
+            <span class="text-muted-foreground">Cookies:</span>
+            {{ deviceInfo.cookieEnabled ? 'Enabled' : 'Disabled' }}
+          </div>
+          <div>
+            <span class="text-muted-foreground">Online:</span>
+            {{ deviceInfo.onLine ? 'Yes' : 'No' }}
+          </div>
         </CardContent>
       </Card>
 
@@ -76,9 +82,16 @@ onMounted(() => {
           <CardTitle class="text-sm">Screen</CardTitle>
         </CardHeader>
         <CardContent class="space-y-2 text-sm">
-          <div><span class="text-muted-foreground">Resolution:</span> {{ deviceInfo.screenWidth }} x {{ deviceInfo.screenHeight }}</div>
-          <div><span class="text-muted-foreground">Color Depth:</span> {{ deviceInfo.colorDepth }}-bit</div>
-          <div><span class="text-muted-foreground">Pixel Ratio:</span> {{ deviceInfo.pixelRatio }}x</div>
+          <div>
+            <span class="text-muted-foreground">Resolution:</span> {{ deviceInfo.screenWidth }} x
+            {{ deviceInfo.screenHeight }}
+          </div>
+          <div>
+            <span class="text-muted-foreground">Color Depth:</span> {{ deviceInfo.colorDepth }}-bit
+          </div>
+          <div>
+            <span class="text-muted-foreground">Pixel Ratio:</span> {{ deviceInfo.pixelRatio }}x
+          </div>
         </CardContent>
       </Card>
 
@@ -89,9 +102,17 @@ onMounted(() => {
         </CardHeader>
         <CardContent class="space-y-2 text-sm">
           <div><span class="text-muted-foreground">Platform:</span> {{ deviceInfo.platform }}</div>
-          <div><span class="text-muted-foreground">CPU Cores:</span> {{ deviceInfo.hardwareConcurrency }}</div>
-          <div><span class="text-muted-foreground">Memory:</span> {{ deviceInfo.deviceMemory || 'Unknown' }} GB</div>
-          <div><span class="text-muted-foreground">Touch Points:</span> {{ deviceInfo.maxTouchPoints }}</div>
+          <div>
+            <span class="text-muted-foreground">CPU Cores:</span>
+            {{ deviceInfo.hardwareConcurrency }}
+          </div>
+          <div>
+            <span class="text-muted-foreground">Memory:</span>
+            {{ deviceInfo.deviceMemory || 'Unknown' }} GB
+          </div>
+          <div>
+            <span class="text-muted-foreground">Touch Points:</span> {{ deviceInfo.maxTouchPoints }}
+          </div>
         </CardContent>
       </Card>
 
@@ -101,9 +122,17 @@ onMounted(() => {
           <CardTitle class="text-sm">Network</CardTitle>
         </CardHeader>
         <CardContent class="space-y-2 text-sm">
-          <div><span class="text-muted-foreground">Type:</span> {{ deviceInfo.connection.effectiveType }}</div>
-          <div><span class="text-muted-foreground">Downlink:</span> {{ deviceInfo.connection.downlink }} Mbps</div>
-          <div><span class="text-muted-foreground">RTT:</span> {{ deviceInfo.connection.rtt }} ms</div>
+          <div>
+            <span class="text-muted-foreground">Type:</span>
+            {{ deviceInfo.connection.effectiveType }}
+          </div>
+          <div>
+            <span class="text-muted-foreground">Downlink:</span>
+            {{ deviceInfo.connection.downlink }} Mbps
+          </div>
+          <div>
+            <span class="text-muted-foreground">RTT:</span> {{ deviceInfo.connection.rtt }} ms
+          </div>
         </CardContent>
       </Card>
 

@@ -33,7 +33,7 @@ const evaluateExpression = (expr: string): string => {
       cosh: Math.cosh,
       tanh: Math.tanh,
       PI: Math.PI,
-      E: Math.E,
+      E: Math.E
     }
 
     // Replace math functions
@@ -42,18 +42,18 @@ const evaluateExpression = (expr: string): string => {
       const regex = new RegExp(name, 'gi')
       processed = processed.replace(regex, `Math.${name}`)
     }
-    
+
     // Replace ^ with **
     processed = processed.replace(/\^/g, '**')
-    
+
     // Evaluate
     const result = Function(`"use strict"; return (${processed})`)()
-    
+
     if (typeof result === 'number' && !isNaN(result)) {
       // Round to avoid floating point issues
       return Number.isInteger(result) ? result.toString() : result.toFixed(10).replace(/\.?0+$/, '')
     }
-    
+
     return 'Error'
   } catch {
     return 'Error'
@@ -80,7 +80,7 @@ const addToHistory = () => {
 const copyResult = () => {
   navigator.clipboard.writeText(result.value)
   copied.value = true
-  setTimeout(() => copied.value = false, 2000)
+  setTimeout(() => (copied.value = false), 2000)
 }
 
 const insertChar = (char: string) => {
@@ -103,14 +103,22 @@ const buttons = [
   ['7', '8', '9', '/', '(', ')'],
   ['4', '5', '6', '*', 'PI', 'E'],
   ['1', '2', '3', '-', 'sqrt(', 'pow('],
-  ['0', '.', '%', '+', '^', 'abs('],
+  ['0', '.', '%', '+', '^', 'abs(']
 ]
 
 const functions = [
-  'sin(', 'cos(', 'tan(', 
-  'log(', 'log10(', 'log2(',
-  'ceil(', 'floor(', 'round(',
-  'exp(', 'cbrt(', 'min(',
+  'sin(',
+  'cos(',
+  'tan(',
+  'log(',
+  'log10(',
+  'log2(',
+  'ceil(',
+  'floor(',
+  'round(',
+  'exp(',
+  'cbrt(',
+  'min('
 ]
 </script>
 
@@ -157,7 +165,12 @@ const functions = [
               <div class="text-sm text-muted-foreground mb-1">Result</div>
               <div class="font-mono text-3xl font-bold flex items-center justify-between">
                 <span>{{ result || '—' }}</span>
-                <Button v-if="result && result !== 'Error'" @click="copyResult" variant="ghost" size="sm">
+                <Button
+                  v-if="result && result !== 'Error'"
+                  @click="copyResult"
+                  variant="ghost"
+                  size="sm"
+                >
                   <component :is="copied ? Check : Copy" class="w-5 h-5" />
                 </Button>
               </div>
@@ -176,9 +189,7 @@ const functions = [
                   {{ btn }}
                 </Button>
               </div>
-              <Button @click="addToHistory" class="w-full h-12">
-                = Calculate
-              </Button>
+              <Button @click="addToHistory" class="w-full h-12"> = Calculate </Button>
             </div>
 
             <!-- Functions -->

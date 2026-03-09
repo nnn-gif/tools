@@ -17,33 +17,33 @@ interface DiffEntry {
 
 const compareJson = (obj1: any, obj2: any, path = ''): DiffEntry[] => {
   const diffs: DiffEntry[] = []
-  
+
   if (typeof obj1 !== typeof obj2) {
     diffs.push({ path, type: 'changed', oldValue: obj1, newValue: obj2 })
     return diffs
   }
-  
+
   if (obj1 === null || obj2 === null) {
     if (obj1 !== obj2) {
       diffs.push({ path, type: 'changed', oldValue: obj1, newValue: obj2 })
     }
     return diffs
   }
-  
+
   if (typeof obj1 !== 'object') {
     if (obj1 !== obj2) {
       diffs.push({ path, type: 'changed', oldValue: obj1, newValue: obj2 })
     }
     return diffs
   }
-  
+
   const keys1 = Object.keys(obj1)
   const keys2 = Object.keys(obj2)
   const allKeys = new Set([...keys1, ...keys2])
-  
+
   for (const key of allKeys) {
     const newPath = path ? `${path}.${key}` : key
-    
+
     if (!(key in obj1)) {
       diffs.push({ path: newPath, type: 'added', newValue: obj2[key] })
     } else if (!(key in obj2)) {
@@ -52,7 +52,7 @@ const compareJson = (obj1: any, obj2: any, path = ''): DiffEntry[] => {
       diffs.push(...compareJson(obj1[key], obj2[key], newPath))
     }
   }
-  
+
   return diffs
 }
 
@@ -61,19 +61,21 @@ const compare = () => {
     const parsed1 = JSON.parse(json1.value)
     const parsed2 = JSON.parse(json2.value)
     const diffs = compareJson(parsed1, parsed2)
-    
+
     if (diffs.length === 0) {
       diffResult.value = '✓ JSON objects are identical'
     } else {
-      diffResult.value = diffs.map(d => {
-        if (d.type === 'added') {
-          return `+ ${d.path}: ${JSON.stringify(d.newValue)}`
-        } else if (d.type === 'removed') {
-          return `- ${d.path}: ${JSON.stringify(d.oldValue)}`
-        } else {
-          return `~ ${d.path}: ${JSON.stringify(d.oldValue)} → ${JSON.stringify(d.newValue)}`
-        }
-      }).join('\n')
+      diffResult.value = diffs
+        .map((d) => {
+          if (d.type === 'added') {
+            return `+ ${d.path}: ${JSON.stringify(d.newValue)}`
+          } else if (d.type === 'removed') {
+            return `- ${d.path}: ${JSON.stringify(d.oldValue)}`
+          } else {
+            return `~ ${d.path}: ${JSON.stringify(d.oldValue)} → ${JSON.stringify(d.newValue)}`
+          }
+        })
+        .join('\n')
     }
   } catch (e: any) {
     diffResult.value = `Error: ${e.message}`
@@ -118,7 +120,10 @@ const compare = () => {
     <Card>
       <CardContent class="pt-6 space-y-4">
         <Button @click="compare" class="w-full md:w-auto">Compare</Button>
-        <div v-if="diffResult" class="p-4 rounded-lg bg-muted font-mono text-sm whitespace-pre-wrap">
+        <div
+          v-if="diffResult"
+          class="p-4 rounded-lg bg-muted font-mono text-sm whitespace-pre-wrap"
+        >
           {{ diffResult }}
         </div>
       </CardContent>

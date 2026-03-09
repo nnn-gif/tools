@@ -18,12 +18,12 @@ const charsets = computed(() => ({
   uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
   lowercase: 'abcdefghijklmnopqrstuvwxyz',
   numbers: '0123456789',
-  symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?',
+  symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?'
 }))
 
 const generateToken = (): string => {
   let chars = ''
-  
+
   if (customChars.value) {
     chars = customChars.value
   } else {
@@ -32,18 +32,18 @@ const generateToken = (): string => {
     if (includeNumbers.value) chars += charsets.value.numbers
     if (includeSymbols.value) chars += charsets.value.symbols
   }
-  
+
   if (!chars) chars = charsets.value.lowercase + charsets.value.numbers
-  
+
   const bytes = new Uint8Array(length.value)
   crypto.getRandomValues(bytes)
-  
+
   let token = ''
   for (let i = 0; i < length.value; i++) {
     const char = chars[bytes[i]! % chars.length]
     token += char ?? ''
   }
-  
+
   return token
 }
 
@@ -56,14 +56,14 @@ const copyToken = (index: number) => {
   if (token) {
     navigator.clipboard.writeText(token)
     copied.value = index
-    setTimeout(() => copied.value = null, 2000)
+    setTimeout(() => (copied.value = null), 2000)
   }
 }
 
 const copyAll = () => {
   navigator.clipboard.writeText(tokens.value.join('\n'))
   copied.value = -1
-  setTimeout(() => copied.value = null, 2000)
+  setTimeout(() => (copied.value = null), 2000)
 }
 
 // Generate initial tokens
@@ -79,9 +79,7 @@ generate()
           <Key class="w-8 h-8" />
           Token Generator
         </h1>
-        <p class="text-muted-foreground mt-2">
-          Generate secure random tokens and API keys.
-        </p>
+        <p class="text-muted-foreground mt-2">Generate secure random tokens and API keys.</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -95,13 +93,7 @@ generate()
             <!-- Length -->
             <div>
               <label class="block text-sm font-medium mb-2">Length: {{ length }}</label>
-              <input
-                v-model.number="length"
-                type="range"
-                min="8"
-                max="128"
-                class="w-full"
-              />
+              <input v-model.number="length" type="range" min="8" max="128" class="w-full" />
               <div class="flex justify-between text-xs text-muted-foreground">
                 <span>8</span>
                 <span>128</span>
@@ -168,7 +160,9 @@ generate()
             <div class="flex items-center justify-between">
               <div>
                 <CardTitle>Generated Tokens</CardTitle>
-                <CardDescription>{{ tokens.length }} token(s) of {{ length }} characters</CardDescription>
+                <CardDescription
+                  >{{ tokens.length }} token(s) of {{ length }} characters</CardDescription
+                >
               </div>
               <Button @click="copyAll" variant="outline" size="sm">
                 <component :is="copied === -1 ? Check : Copy" class="w-4 h-4 mr-2" />

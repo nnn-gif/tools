@@ -9,10 +9,10 @@ const error = ref('')
 
 const toToml = (obj: any, prefix = ''): string => {
   let result = ''
-  
+
   for (const [key, value] of Object.entries(obj)) {
     const fullKey = prefix ? `${prefix}.${key}` : key
-    
+
     if (value === null) {
       continue
     } else if (typeof value === 'string') {
@@ -20,15 +20,15 @@ const toToml = (obj: any, prefix = ''): string => {
     } else if (typeof value === 'number' || typeof value === 'boolean') {
       result += `${fullKey} = ${value}\n`
     } else if (Array.isArray(value)) {
-      result += `${fullKey} = [${value.map(v => 
-        typeof v === 'string' ? `"${v}"` : v
-      ).join(', ')}]\n`
+      result += `${fullKey} = [${value
+        .map((v) => (typeof v === 'string' ? `"${v}"` : v))
+        .join(', ')}]\n`
     } else if (typeof value === 'object') {
       result += `\n[${fullKey}]\n`
       result += toToml(value, '')
     }
   }
-  
+
   return result
 }
 

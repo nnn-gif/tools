@@ -19,21 +19,21 @@ const jsonToXml = (obj: any, rootName = 'root', indent = 2): string => {
 
   const toXml = (data: any, name: string, level: number): string => {
     const indentStr = ' '.repeat(level * indent)
-    
+
     if (data === null || data === undefined) {
       return `${indentStr}<${name}/>\n`
     }
-    
+
     if (typeof data !== 'object') {
       return `${indentStr}<${name}>${escapeXml(String(data))}</${name}>\n`
     }
-    
+
     if (Array.isArray(data)) {
-      return data.map(item => toXml(item, name, level)).join('')
+      return data.map((item) => toXml(item, name, level)).join('')
     }
-    
+
     let xml = `${indentStr}<${name}>\n`
-    
+
     // Handle attributes
     if (data['@attributes']) {
       const attrs = Object.entries(data['@attributes'])
@@ -44,11 +44,11 @@ const jsonToXml = (obj: any, rootName = 'root', indent = 2): string => {
       }
       delete data['@attributes']
     }
-    
+
     for (const [key, value] of Object.entries(data)) {
       xml += toXml(value, key, level + 1)
     }
-    
+
     xml += `${indentStr}</${name}>\n`
     return xml
   }

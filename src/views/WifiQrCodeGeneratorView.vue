@@ -12,10 +12,10 @@ const qrDataUrl = ref('')
 
 const generateQR = async () => {
   if (!ssid.value) return
-  
+
   // WiFi QR code format: WIFI:T:<encryption>;S:<ssid>;P:<password>;;
   const wifiString = `WIFI:T:${encryption.value};S:${ssid.value};P:${password.value};;`
-  
+
   // Use a simple QR code library approach or API
   // For now, we'll use an external QR code API
   const size = 300
@@ -52,7 +52,10 @@ const downloadQR = () => {
           </div>
           <div class="grid gap-2">
             <Label>Encryption</Label>
-            <select v-model="encryption" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+            <select
+              v-model="encryption"
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            >
               <option value="WPA">WPA/WPA2</option>
               <option value="WEP">WEP</option>
               <option value="nopass">No Password</option>

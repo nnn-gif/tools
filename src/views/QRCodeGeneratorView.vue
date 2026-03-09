@@ -18,7 +18,7 @@ const generateQR = async () => {
     qrDataUrl.value = ''
     return
   }
-  
+
   try {
     qrDataUrl.value = await QRCode.toDataURL(text.value, {
       width: size.value,
@@ -35,7 +35,7 @@ const generateQR = async () => {
 
 const downloadQR = () => {
   if (!qrDataUrl.value) return
-  
+
   const link = document.createElement('a')
   link.download = 'qrcode.png'
   link.href = qrDataUrl.value
@@ -44,15 +44,13 @@ const downloadQR = () => {
 
 const copyToClipboard = async () => {
   if (!qrDataUrl.value) return
-  
+
   try {
     const response = await fetch(qrDataUrl.value)
     const blob = await response.blob()
-    await navigator.clipboard.write([
-      new ClipboardItem({ 'image/png': blob })
-    ])
+    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
     copied.value = true
-    setTimeout(() => copied.value = false, 2000)
+    setTimeout(() => (copied.value = false), 2000)
   } catch (err) {
     console.error('Failed to copy:', err)
   }
@@ -63,7 +61,11 @@ const presets = [
   { label: 'Email', value: 'mailto:hello@example.com' },
   { label: 'Phone', value: 'tel:+1234567890' },
   { label: 'WiFi', value: 'WIFI:T:WPA;S:NetworkName;P:Password;;' },
-  { label: 'vCard', value: 'BEGIN:VCARD\nVERSION:3.0\nFN:John Doe\nTEL:+1234567890\nEMAIL:john@example.com\nEND:VCARD' }
+  {
+    label: 'vCard',
+    value:
+      'BEGIN:VCARD\nVERSION:3.0\nFN:John Doe\nTEL:+1234567890\nEMAIL:john@example.com\nEND:VCARD'
+  }
 ]
 
 const applyPreset = (value: string) => {

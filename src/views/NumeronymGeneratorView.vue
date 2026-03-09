@@ -8,18 +8,20 @@ const inputWord = ref('')
 
 const numeronyms = computed(() => {
   if (!inputWord.value) return []
-  
+
   const word = inputWord.value.trim()
   if (word.length < 4) return [{ original: word, numeronym: word }]
-  
+
   const first = word[0] ?? ''
   const last = word[word.length - 1] ?? ''
   const middle = word.length - 2
-  
-  return [{
-    original: word,
-    numeronym: `${first}${middle}${last}`
-  }]
+
+  return [
+    {
+      original: word,
+      numeronym: `${first}${middle}${last}`
+    }
+  ]
 })
 
 const commonNumeronyms = [
@@ -34,7 +36,7 @@ const commonNumeronyms = [
   { numeronym: 'p13n', meaning: 'personalization' },
   { numeronym: 'o11y', meaning: 'observability' },
   { numeronym: 'k9s', meaning: 'Kubernetes CLI' },
-  { numeronym: 'g11n', meaning: 'globalization' },
+  { numeronym: 'g11n', meaning: 'globalization' }
 ]
 </script>
 
@@ -56,7 +58,10 @@ const commonNumeronyms = [
       </CardContent>
     </Card>
 
-    <div v-if="numeronyms.length > 0 && numeronyms[0]" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div
+      v-if="numeronyms.length > 0 && numeronyms[0]"
+      class="grid grid-cols-1 md:grid-cols-2 gap-4"
+    >
       <Card>
         <CardContent class="pt-6 text-center">
           <div class="text-sm text-muted-foreground">Original</div>
@@ -66,7 +71,9 @@ const commonNumeronyms = [
       <Card>
         <CardContent class="pt-6 text-center">
           <div class="text-sm text-muted-foreground">Numeronym</div>
-          <div class="text-3xl font-bold font-mono text-primary">{{ numeronyms[0]!.numeronym }}</div>
+          <div class="text-3xl font-bold font-mono text-primary">
+            {{ numeronyms[0]!.numeronym }}
+          </div>
         </CardContent>
       </Card>
     </div>
@@ -77,8 +84,8 @@ const commonNumeronyms = [
       </CardHeader>
       <CardContent>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-          <div 
-            v-for="item in commonNumeronyms" 
+          <div
+            v-for="item in commonNumeronyms"
             :key="item.numeronym"
             class="p-3 rounded bg-muted flex justify-between items-center"
           >

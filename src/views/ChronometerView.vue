@@ -46,7 +46,7 @@ const formatTime = (ms: number) => {
   const minutes = Math.floor((ms % 3600000) / 60000)
   const seconds = Math.floor((ms % 60000) / 1000)
   const milliseconds = Math.floor((ms % 1000) / 10)
-  
+
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`
 }
 
@@ -73,7 +73,9 @@ onUnmounted(() => {
       <CardContent class="pt-6">
         <div class="flex gap-2 justify-center flex-wrap">
           <Button v-if="!isRunning" @click="start" size="lg">Start</Button>
-          <Button v-if="isRunning && !isPaused" @click="pause" variant="secondary" size="lg">Pause</Button>
+          <Button v-if="isRunning && !isPaused" @click="pause" variant="secondary" size="lg"
+            >Pause</Button
+          >
           <Button v-if="isRunning && isPaused" @click="resume" size="lg">Resume</Button>
           <Button v-if="isRunning" @click="reset" variant="destructive" size="lg">Reset</Button>
         </div>

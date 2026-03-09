@@ -47,7 +47,7 @@ const result4 = computed(() => {
 const copyResult = (id: string, value: number) => {
   navigator.clipboard.writeText(value.toFixed(2))
   copied.value = id
-  setTimeout(() => copied.value = null, 2000)
+  setTimeout(() => (copied.value = null), 2000)
 }
 
 const formatNumber = (num: number) => {
@@ -87,7 +87,9 @@ const formatNumber = (num: number) => {
                     placeholder="25"
                     class="w-full px-3 py-2 border rounded-md pr-8 focus:outline-none focus:ring-2 focus:ring-primary"
                   />
-                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                    >%</span
+                  >
                 </div>
               </div>
               <div class="text-lg font-bold mb-2">of</div>
@@ -101,8 +103,11 @@ const formatNumber = (num: number) => {
                 />
               </div>
             </div>
-            
-            <div v-if="result1 !== null" class="p-4 bg-surface-hover rounded-lg border flex items-center justify-between">
+
+            <div
+              v-if="result1 !== null"
+              class="p-4 bg-surface-hover rounded-lg border flex items-center justify-between"
+            >
               <div>
                 <div class="text-sm text-muted-foreground">Result</div>
                 <div class="text-2xl font-bold">{{ formatNumber(result1) }}</div>
@@ -142,8 +147,11 @@ const formatNumber = (num: number) => {
                 />
               </div>
             </div>
-            
-            <div v-if="result2 !== null" class="p-4 bg-surface-hover rounded-lg border flex items-center justify-between">
+
+            <div
+              v-if="result2 !== null"
+              class="p-4 bg-surface-hover rounded-lg border flex items-center justify-between"
+            >
               <div>
                 <div class="text-sm text-muted-foreground">Result</div>
                 <div class="text-2xl font-bold">{{ formatNumber(result2) }}%</div>
@@ -182,12 +190,17 @@ const formatNumber = (num: number) => {
                     placeholder="25"
                     class="w-full px-3 py-2 border rounded-md pr-8 focus:outline-none focus:ring-2 focus:ring-primary"
                   />
-                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">%</span>
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                    >%</span
+                  >
                 </div>
               </div>
             </div>
-            
-            <div v-if="result3 !== null" class="p-4 bg-surface-hover rounded-lg border flex items-center justify-between">
+
+            <div
+              v-if="result3 !== null"
+              class="p-4 bg-surface-hover rounded-lg border flex items-center justify-between"
+            >
               <div>
                 <div class="text-sm text-muted-foreground">Result</div>
                 <div class="text-2xl font-bold">{{ formatNumber(result3) }}</div>
@@ -227,11 +240,17 @@ const formatNumber = (num: number) => {
                 />
               </div>
             </div>
-            
-            <div v-if="result4 !== null" class="p-4 bg-surface-hover rounded-lg border flex items-center justify-between">
+
+            <div
+              v-if="result4 !== null"
+              class="p-4 bg-surface-hover rounded-lg border flex items-center justify-between"
+            >
               <div>
                 <div class="text-sm text-muted-foreground">Change</div>
-                <div class="text-2xl font-bold" :class="result4 >= 0 ? 'text-green-500' : 'text-red-500'">
+                <div
+                  class="text-2xl font-bold"
+                  :class="result4 >= 0 ? 'text-green-500' : 'text-red-500'"
+                >
                   {{ result4 >= 0 ? '+' : '' }}{{ formatNumber(result4) }}%
                 </div>
               </div>

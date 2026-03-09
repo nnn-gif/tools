@@ -17,10 +17,10 @@ interface ParsedPhone {
 
 const parsePhone = (input: string, country: string): ParsedPhone | null => {
   if (!input) return null
-  
+
   // Remove all non-digit characters except +
   const cleaned = input.replace(/[^\d+]/g, '')
-  
+
   // Simple US phone parser
   if (country === 'US') {
     const digits = cleaned.replace('+1', '').replace(/\D/g, '')
@@ -34,7 +34,7 @@ const parsePhone = (input: string, country: string): ParsedPhone | null => {
       }
     }
   }
-  
+
   // Generic international format
   if (cleaned.startsWith('+') && cleaned.length >= 8) {
     return {
@@ -45,7 +45,7 @@ const parsePhone = (input: string, country: string): ParsedPhone | null => {
       e164: cleaned
     }
   }
-  
+
   return {
     valid: false,
     international: input,
@@ -82,7 +82,10 @@ const copyValue = (value: string) => {
           </div>
           <div class="grid gap-2">
             <Label>Country</Label>
-            <select v-model="countryCode" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+            <select
+              v-model="countryCode"
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            >
               <option value="US">United States</option>
               <option value="UK">United Kingdom</option>
               <option value="DE">Germany</option>
@@ -99,7 +102,9 @@ const copyValue = (value: string) => {
       <Card>
         <CardContent class="pt-6">
           <div class="text-sm text-muted-foreground mb-1">Valid</div>
-          <div :class="['text-2xl font-bold', parsedPhone.valid ? 'text-green-600' : 'text-red-600']">
+          <div
+            :class="['text-2xl font-bold', parsedPhone.valid ? 'text-green-600' : 'text-red-600']"
+          >
             {{ parsedPhone.valid ? '✓ Yes' : '✗ No' }}
           </div>
         </CardContent>
@@ -116,7 +121,9 @@ const copyValue = (value: string) => {
         <CardContent class="pt-6">
           <div class="text-sm text-muted-foreground mb-2">E.164 Format</div>
           <div class="font-mono text-lg">{{ parsedPhone.e164 }}</div>
-          <Button variant="ghost" size="sm" class="mt-2" @click="copyValue(parsedPhone.e164)">Copy</Button>
+          <Button variant="ghost" size="sm" class="mt-2" @click="copyValue(parsedPhone.e164)"
+            >Copy</Button
+          >
         </CardContent>
       </Card>
 
@@ -124,7 +131,9 @@ const copyValue = (value: string) => {
         <CardContent class="pt-6">
           <div class="text-sm text-muted-foreground mb-2">National Format</div>
           <div class="font-mono text-lg">{{ parsedPhone.national }}</div>
-          <Button variant="ghost" size="sm" class="mt-2" @click="copyValue(parsedPhone.national)">Copy</Button>
+          <Button variant="ghost" size="sm" class="mt-2" @click="copyValue(parsedPhone.national)"
+            >Copy</Button
+          >
         </CardContent>
       </Card>
 
@@ -132,7 +141,13 @@ const copyValue = (value: string) => {
         <CardContent class="pt-6">
           <div class="text-sm text-muted-foreground mb-2">International Format</div>
           <div class="font-mono text-lg">{{ parsedPhone.international }}</div>
-          <Button variant="ghost" size="sm" class="mt-2" @click="copyValue(parsedPhone.international)">Copy</Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            class="mt-2"
+            @click="copyValue(parsedPhone.international)"
+            >Copy</Button
+          >
         </CardContent>
       </Card>
     </div>

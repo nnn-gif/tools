@@ -21,7 +21,7 @@ const etaInfo = computed<EtaInfo>(() => {
   const totalMinutes = (dist / spd) * 60
   const hours = Math.floor(totalMinutes / 60)
   const minutes = Math.round(totalMinutes % 60)
-  
+
   let arrivalTime: string | null = null
   if (startTime.value) {
     const parts = startTime.value.split(':')
@@ -31,14 +31,14 @@ const etaInfo = computed<EtaInfo>(() => {
       const startDate = new Date()
       startDate.setHours(h, m, 0, 0)
       startDate.setMinutes(startDate.getMinutes() + totalMinutes)
-      arrivalTime = startDate.toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
+      arrivalTime = startDate.toLocaleTimeString('en-US', {
+        hour: '2-digit',
         minute: '2-digit',
-        hour12: true 
+        hour12: true
       })
     }
   }
-  
+
   return { hours, minutes, totalMinutes: Math.round(totalMinutes), arrivalTime }
 })
 </script>
@@ -75,9 +75,7 @@ const etaInfo = computed<EtaInfo>(() => {
       <Card>
         <CardContent class="pt-6 text-center">
           <div class="text-sm text-muted-foreground">Travel Time</div>
-          <div class="text-3xl font-bold">
-            {{ etaInfo.hours }}h {{ etaInfo.minutes }}m
-          </div>
+          <div class="text-3xl font-bold">{{ etaInfo.hours }}h {{ etaInfo.minutes }}m</div>
           <div class="text-sm text-muted-foreground">{{ etaInfo.totalMinutes }} minutes total</div>
         </CardContent>
       </Card>

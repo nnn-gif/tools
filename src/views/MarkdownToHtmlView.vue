@@ -29,7 +29,7 @@ const convertToHtml = async () => {
       .use(rehypeHighlight)
       .use(rehypeStringify)
       .process(markdownInput.value)
-    
+
     htmlOutput.value = String(file)
   } catch (e: any) {
     error.value = e.message || 'Failed to convert markdown'

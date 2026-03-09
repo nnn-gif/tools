@@ -17,18 +17,27 @@ const cronExpression = computed(() => {
 
 const humanReadable = computed(() => {
   const parts = []
-  
+
   if (minute.value !== '*') parts.push(`at minute ${minute.value}`)
   if (hour.value !== '*') parts.push(`at hour ${hour.value}`)
   if (dayOfMonth.value !== '*') parts.push(`on day ${dayOfMonth.value} of the month`)
   if (month.value !== '*') parts.push(`in month ${month.value}`)
-  if (dayOfWeek.value !== '*') parts.push(`on ${['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][parseInt(dayOfWeek.value)]}`)
-  
+  if (dayOfWeek.value !== '*')
+    parts.push(
+      `on ${['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][parseInt(dayOfWeek.value)]}`
+    )
+
   if (parts.length === 0) return 'Every minute'
-  if (minute.value === '*' && hour.value === '*' && dayOfMonth.value === '*' && month.value === '*' && dayOfWeek.value === '*') {
+  if (
+    minute.value === '*' &&
+    hour.value === '*' &&
+    dayOfMonth.value === '*' &&
+    month.value === '*' &&
+    dayOfWeek.value === '*'
+  ) {
     return 'Every minute'
   }
-  
+
   return parts.join(', ')
 })
 
@@ -44,7 +53,7 @@ const presets = [
   { label: 'Every 30 minutes', cron: '*/30 * * * *' },
   { label: 'Every 6 hours', cron: '0 */6 * * *' },
   { label: 'Weekdays (9 AM)', cron: '0 9 * * 1-5' },
-  { label: 'Weekends (10 AM)', cron: '0 10 * * 0,6' },
+  { label: 'Weekends (10 AM)', cron: '0 10 * * 0,6' }
 ]
 
 const applyPreset = (cron: string) => {
@@ -59,14 +68,14 @@ const applyPreset = (cron: string) => {
 const copyCron = () => {
   navigator.clipboard.writeText(cronExpression.value)
   copied.value = true
-  setTimeout(() => copied.value = false, 2000)
+  setTimeout(() => (copied.value = false), 2000)
 }
 
 const specialChars = [
   { char: '*', desc: 'Any value' },
   { char: ',', desc: 'List separator' },
   { char: '-', desc: 'Range' },
-  { char: '/', desc: 'Step values' },
+  { char: '/', desc: 'Step values' }
 ]
 </script>
 
@@ -79,9 +88,7 @@ const specialChars = [
           <Clock class="w-8 h-8" />
           Crontab Generator
         </h1>
-        <p class="text-muted-foreground mt-2">
-          Generate and understand cron expressions.
-        </p>
+        <p class="text-muted-foreground mt-2">Generate and understand cron expressions.</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

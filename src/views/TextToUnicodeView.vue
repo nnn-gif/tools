@@ -10,7 +10,7 @@ const conversionType = ref<'unicode' | 'html'>('unicode')
 const unicodeOutput = computed(() => {
   return inputText.value
     .split('')
-    .map(char => {
+    .map((char) => {
       const code = char.charCodeAt(0)
       return `U+${code.toString(16).toUpperCase().padStart(4, '0')}`
     })
@@ -20,7 +20,7 @@ const unicodeOutput = computed(() => {
 const htmlOutput = computed(() => {
   return inputText.value
     .split('')
-    .map(char => {
+    .map((char) => {
       const code = char.charCodeAt(0)
       return `&#${code};`
     })

@@ -20,25 +20,25 @@ interface Stats {
 
 const stats = computed<Stats>(() => {
   const text = inputText.value
-  
+
   const characters = text.length
   const charactersNoSpaces = text.replace(/\s/g, '').length
   const words = text.trim() ? text.trim().split(/\s+/).length : 0
-  const sentences = text.split(/[.!?]+/).filter(s => s.trim()).length
-  const paragraphs = text.split(/\n\n+/).filter(p => p.trim()).length
+  const sentences = text.split(/[.!?]+/).filter((s) => s.trim()).length
+  const paragraphs = text.split(/\n\n+/).filter((p) => p.trim()).length
   const lines = text.split('\n').length
-  
+
   const wordList = text.trim() ? text.trim().split(/\s+/) : []
   const totalWordLength = wordList.reduce((sum, word) => sum + word.length, 0)
   const averageWordLength = words > 0 ? totalWordLength / words : 0
-  
+
   const averageSentenceLength = sentences > 0 ? words / sentences : 0
-  
+
   // Average reading speed: 200 words per minute
   const readingTime = Math.ceil(words / 200)
   // Average speaking speed: 150 words per minute
   const speakingTime = Math.ceil(words / 150)
-  
+
   return {
     characters,
     charactersNoSpaces,
@@ -110,7 +110,9 @@ const stats = computed<Stats>(() => {
             </div>
             <div class="p-4 rounded-lg bg-muted">
               <div class="text-sm text-muted-foreground">Avg Sentence Length</div>
-              <div class="text-2xl font-bold">{{ stats.averageSentenceLength.toFixed(1) }} words</div>
+              <div class="text-2xl font-bold">
+                {{ stats.averageSentenceLength.toFixed(1) }} words
+              </div>
             </div>
             <div class="p-4 rounded-lg bg-muted col-span-2">
               <div class="text-sm text-muted-foreground">Reading Time</div>

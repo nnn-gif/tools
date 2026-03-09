@@ -27,7 +27,7 @@ const startCamera = async () => {
 
 const stopCamera = () => {
   if (stream.value) {
-    stream.value.getTracks().forEach(track => track.stop())
+    stream.value.getTracks().forEach((track) => track.stop())
     stream.value = null
   }
 }
@@ -40,21 +40,21 @@ const toggleCamera = async () => {
 
 const startRecording = () => {
   if (!stream.value) return
-  
+
   recordedChunks.value = []
   mediaRecorder.value = new MediaRecorder(stream.value)
-  
+
   mediaRecorder.value.ondataavailable = (e) => {
     if (e.data.size > 0) {
       recordedChunks.value.push(e.data)
     }
   }
-  
+
   mediaRecorder.value.onstop = () => {
     const blob = new Blob(recordedChunks.value, { type: 'video/webm' })
     recordedVideoUrl.value = URL.createObjectURL(blob)
   }
-  
+
   mediaRecorder.value.start()
   isRecording.value = true
 }
@@ -94,31 +94,25 @@ onUnmounted(() => {
           <CardTitle>Camera</CardTitle>
         </CardHeader>
         <CardContent class="flex-1 min-h-0 space-y-4">
-          <video 
-            ref="videoRef" 
-            autoplay 
+          <video
+            ref="videoRef"
+            autoplay
             playsinline
             class="w-full rounded-lg bg-black"
-            style="max-height: 400px;"
+            style="max-height: 400px"
           ></video>
           <div class="flex gap-2 flex-wrap">
             <Button @click="startCamera" variant="outline" size="sm">Start Camera</Button>
             <Button @click="toggleCamera" variant="outline" size="sm">Toggle Camera</Button>
-            <Button 
-              v-if="!isRecording" 
-              @click="startRecording" 
+            <Button
+              v-if="!isRecording"
+              @click="startRecording"
               size="sm"
               class="bg-red-500 hover:bg-red-600"
             >
               Start Recording
             </Button>
-            <Button 
-              v-else 
-              @click="stopRecording" 
-              size="sm"
-            >
-              Stop Recording
-            </Button>
+            <Button v-else @click="stopRecording" size="sm"> Stop Recording </Button>
           </div>
         </CardContent>
       </Card>
@@ -129,11 +123,11 @@ onUnmounted(() => {
           <Button variant="outline" size="sm" @click="downloadRecording">Download</Button>
         </CardHeader>
         <CardContent class="flex-1 min-h-0">
-          <video 
-            :src="recordedVideoUrl" 
+          <video
+            :src="recordedVideoUrl"
             controls
             class="w-full rounded-lg"
-            style="max-height: 400px;"
+            style="max-height: 400px"
           ></video>
         </CardContent>
       </Card>

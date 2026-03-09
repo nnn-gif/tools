@@ -29,7 +29,14 @@ const analysis = computed<AnalysisResult>(() => {
       score: 0,
       level: 'None',
       color: 'bg-gray-400',
-      checks: { length: false, uppercase: false, lowercase: false, numbers: false, symbols: false, noCommon: true },
+      checks: {
+        length: false,
+        uppercase: false,
+        lowercase: false,
+        numbers: false,
+        symbols: false,
+        noCommon: true
+      },
       entropy: 0,
       crackTime: 'Instant'
     }
@@ -51,7 +58,7 @@ const analysis = computed<AnalysisResult>(() => {
   if (checks.symbols) poolSize += 32
 
   const entropy = pwd.length * Math.log2(poolSize || 1)
-  
+
   let score = 0
   if (checks.length) score++
   if (checks.uppercase) score++
@@ -61,7 +68,14 @@ const analysis = computed<AnalysisResult>(() => {
   if (checks.noCommon) score++
 
   const levels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong', 'Very Strong']
-  const colors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-blue-500', 'bg-green-500', 'bg-emerald-500']
+  const colors = [
+    'bg-red-500',
+    'bg-orange-500',
+    'bg-yellow-500',
+    'bg-blue-500',
+    'bg-green-500',
+    'bg-emerald-500'
+  ]
   const levelIndex = Math.min(Math.floor(score), 5)
   const level = levels[levelIndex] ?? 'Very Weak'
   const color = colors[levelIndex] ?? 'bg-red-500'
@@ -76,7 +90,8 @@ const analysis = computed<AnalysisResult>(() => {
   else if (seconds < 86400) crackTime = `${Math.round(seconds / 3600)} hours`
   else if (seconds < 31536000) crackTime = `${Math.round(seconds / 86400)} days`
   else if (seconds < 31536000 * 100) crackTime = `${Math.round(seconds / 31536000)} years`
-  else if (seconds < 31536000 * 1000000) crackTime = `${Math.round(seconds / 31536000 / 1000)} thousand years`
+  else if (seconds < 31536000 * 1000000)
+    crackTime = `${Math.round(seconds / 31536000 / 1000)} thousand years`
   else crackTime = 'Millions of years+'
 
   return {
@@ -114,7 +129,10 @@ const analysis = computed<AnalysisResult>(() => {
               <span>{{ analysis.score }}/6 checks passed</span>
             </div>
             <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
-              <div :class="[analysis.color, 'h-full transition-all duration-300']" :style="{ width: `${(analysis.score / 6) * 100}%` }"></div>
+              <div
+                :class="[analysis.color, 'h-full transition-all duration-300']"
+                :style="{ width: `${(analysis.score / 6) * 100}%` }"
+              ></div>
             </div>
           </div>
 
@@ -132,27 +150,69 @@ const analysis = computed<AnalysisResult>(() => {
 
           <!-- Checks -->
           <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-            <div :class="['p-3 rounded-lg flex items-center gap-2', analysis.checks.length ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600']">
+            <div
+              :class="[
+                'p-3 rounded-lg flex items-center gap-2',
+                analysis.checks.length
+                  ? 'bg-green-500/10 text-green-600'
+                  : 'bg-red-500/10 text-red-600'
+              ]"
+            >
               <span>{{ analysis.checks.length ? '✓' : '✗' }}</span>
               <span class="text-sm">12+ characters</span>
             </div>
-            <div :class="['p-3 rounded-lg flex items-center gap-2', analysis.checks.uppercase ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600']">
+            <div
+              :class="[
+                'p-3 rounded-lg flex items-center gap-2',
+                analysis.checks.uppercase
+                  ? 'bg-green-500/10 text-green-600'
+                  : 'bg-red-500/10 text-red-600'
+              ]"
+            >
               <span>{{ analysis.checks.uppercase ? '✓' : '✗' }}</span>
               <span class="text-sm">Uppercase</span>
             </div>
-            <div :class="['p-3 rounded-lg flex items-center gap-2', analysis.checks.lowercase ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600']">
+            <div
+              :class="[
+                'p-3 rounded-lg flex items-center gap-2',
+                analysis.checks.lowercase
+                  ? 'bg-green-500/10 text-green-600'
+                  : 'bg-red-500/10 text-red-600'
+              ]"
+            >
               <span>{{ analysis.checks.lowercase ? '✓' : '✗' }}</span>
               <span class="text-sm">Lowercase</span>
             </div>
-            <div :class="['p-3 rounded-lg flex items-center gap-2', analysis.checks.numbers ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600']">
+            <div
+              :class="[
+                'p-3 rounded-lg flex items-center gap-2',
+                analysis.checks.numbers
+                  ? 'bg-green-500/10 text-green-600'
+                  : 'bg-red-500/10 text-red-600'
+              ]"
+            >
               <span>{{ analysis.checks.numbers ? '✓' : '✗' }}</span>
               <span class="text-sm">Numbers</span>
             </div>
-            <div :class="['p-3 rounded-lg flex items-center gap-2', analysis.checks.symbols ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600']">
+            <div
+              :class="[
+                'p-3 rounded-lg flex items-center gap-2',
+                analysis.checks.symbols
+                  ? 'bg-green-500/10 text-green-600'
+                  : 'bg-red-500/10 text-red-600'
+              ]"
+            >
               <span>{{ analysis.checks.symbols ? '✓' : '✗' }}</span>
               <span class="text-sm">Symbols</span>
             </div>
-            <div :class="['p-3 rounded-lg flex items-center gap-2', analysis.checks.noCommon ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600']">
+            <div
+              :class="[
+                'p-3 rounded-lg flex items-center gap-2',
+                analysis.checks.noCommon
+                  ? 'bg-green-500/10 text-green-600'
+                  : 'bg-red-500/10 text-red-600'
+              ]"
+            >
               <span>{{ analysis.checks.noCommon ? '✓' : '✗' }}</span>
               <span class="text-sm">Not common</span>
             </div>

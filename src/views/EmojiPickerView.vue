@@ -28,7 +28,7 @@ const emojiCategories = [
       { emoji: '😎', name: 'Smiling Face with Sunglasses' },
       { emoji: '🤔', name: 'Thinking Face' },
       { emoji: '😴', name: 'Sleeping Face' },
-      { emoji: '🥺', name: 'Pleading Face' },
+      { emoji: '🥺', name: 'Pleading Face' }
     ]
   },
   {
@@ -45,7 +45,7 @@ const emojiCategories = [
       { emoji: '🤙', name: 'Call Me Hand' },
       { emoji: '💪', name: 'Flexed Biceps' },
       { emoji: '✋', name: 'Raised Hand' },
-      { emoji: '👋', name: 'Waving Hand' },
+      { emoji: '👋', name: 'Waving Hand' }
     ]
   },
   {
@@ -62,7 +62,7 @@ const emojiCategories = [
       { emoji: '💔', name: 'Broken Heart' },
       { emoji: '❣️', name: 'Heart Exclamation' },
       { emoji: '💕', name: 'Two Hearts' },
-      { emoji: '💖', name: 'Sparkling Heart' },
+      { emoji: '💖', name: 'Sparkling Heart' }
     ]
   },
   {
@@ -79,7 +79,7 @@ const emojiCategories = [
       { emoji: '🦁', name: 'Lion' },
       { emoji: '🐯', name: 'Tiger Face' },
       { emoji: '🦄', name: 'Unicorn' },
-      { emoji: '🐸', name: 'Frog' },
+      { emoji: '🐸', name: 'Frog' }
     ]
   },
   {
@@ -96,27 +96,31 @@ const emojiCategories = [
       { emoji: '📝', name: 'Memo' },
       { emoji: '📎', name: 'Paperclip' },
       { emoji: '✂️', name: 'Scissors' },
-      { emoji: '📦', name: 'Package' },
+      { emoji: '📦', name: 'Package' }
     ]
-  },
+  }
 ]
 
 const filteredCategories = computed(() => {
   if (!searchQuery.value) return emojiCategories
-  
-  return emojiCategories.map(cat => ({
-    ...cat,
-    emojis: cat.emojis.filter(e => 
-      e.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-    )
-  })).filter(cat => cat.emojis.length > 0)
+
+  return emojiCategories
+    .map((cat) => ({
+      ...cat,
+      emojis: cat.emojis.filter((e) =>
+        e.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+      )
+    }))
+    .filter((cat) => cat.emojis.length > 0)
 })
 
 const copyEmoji = (emoji: string) => {
   navigator.clipboard.writeText(emoji)
   selectedEmoji.value = emoji
   copied.value = true
-  setTimeout(() => { copied.value = false }, 2000)
+  setTimeout(() => {
+    copied.value = false
+  }, 2000)
 }
 </script>
 
@@ -129,11 +133,7 @@ const copyEmoji = (emoji: string) => {
 
     <Card>
       <CardContent class="pt-6">
-        <Input 
-          v-model="searchQuery" 
-          placeholder="Search emojis..." 
-          class="w-full"
-        />
+        <Input v-model="searchQuery" placeholder="Search emojis..." class="w-full" />
       </CardContent>
     </Card>
 

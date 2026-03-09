@@ -11,8 +11,8 @@ const generateMac = () => {
   const bytes = Array.from({ length: 6 }, () => Math.floor(Math.random() * 256))
   // Set locally administered bit (bit 1 of first octet)
   const firstByte = bytes[0] ?? 0
-  bytes[0] = (firstByte & 0xFE) | 0x02
-  macAddress.value = bytes.map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(':')
+  bytes[0] = (firstByte & 0xfe) | 0x02
+  macAddress.value = bytes.map((b) => b.toString(16).toUpperCase().padStart(2, '0')).join(':')
 }
 
 const copyMac = () => {
@@ -54,8 +54,13 @@ generateMac()
         <CardTitle>About MAC Addresses</CardTitle>
       </CardHeader>
       <CardContent class="text-sm text-muted-foreground space-y-2">
-        <p>Generated MAC addresses have the locally administered bit set (bit 1 of the first octet).</p>
-        <p>This means they are suitable for virtual machines, testing, and other non-hardware use cases.</p>
+        <p>
+          Generated MAC addresses have the locally administered bit set (bit 1 of the first octet).
+        </p>
+        <p>
+          This means they are suitable for virtual machines, testing, and other non-hardware use
+          cases.
+        </p>
         <p>Format: XX:XX:XX:XX:XX:XX (hexadecimal)</p>
       </CardContent>
     </Card>

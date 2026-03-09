@@ -20,7 +20,7 @@ const encrypt = () => {
   try {
     error.value = ''
     if (!plaintext.value || !secretKey.value) return
-    
+
     switch (algorithm.value) {
       case 'AES':
         ciphertext.value = CryptoJS.AES.encrypt(plaintext.value, secretKey.value).toString()
@@ -47,25 +47,36 @@ const decrypt = () => {
   try {
     error.value = ''
     if (!decryptText.value || !decryptKey.value) return
-    
+
     switch (algorithm.value) {
       case 'AES':
-        decryptResult.value = CryptoJS.AES.decrypt(decryptText.value, decryptKey.value).toString(CryptoJS.enc.Utf8)
+        decryptResult.value = CryptoJS.AES.decrypt(decryptText.value, decryptKey.value).toString(
+          CryptoJS.enc.Utf8
+        )
         break
       case 'DES':
-        decryptResult.value = CryptoJS.DES.decrypt(decryptText.value, decryptKey.value).toString(CryptoJS.enc.Utf8)
+        decryptResult.value = CryptoJS.DES.decrypt(decryptText.value, decryptKey.value).toString(
+          CryptoJS.enc.Utf8
+        )
         break
       case 'TripleDES':
-        decryptResult.value = CryptoJS.TripleDES.decrypt(decryptText.value, decryptKey.value).toString(CryptoJS.enc.Utf8)
+        decryptResult.value = CryptoJS.TripleDES.decrypt(
+          decryptText.value,
+          decryptKey.value
+        ).toString(CryptoJS.enc.Utf8)
         break
       case 'Rabbit':
-        decryptResult.value = CryptoJS.Rabbit.decrypt(decryptText.value, decryptKey.value).toString(CryptoJS.enc.Utf8)
+        decryptResult.value = CryptoJS.Rabbit.decrypt(decryptText.value, decryptKey.value).toString(
+          CryptoJS.enc.Utf8
+        )
         break
       case 'RC4':
-        decryptResult.value = CryptoJS.RC4.decrypt(decryptText.value, decryptKey.value).toString(CryptoJS.enc.Utf8)
+        decryptResult.value = CryptoJS.RC4.decrypt(decryptText.value, decryptKey.value).toString(
+          CryptoJS.enc.Utf8
+        )
         break
     }
-    
+
     if (!decryptResult.value) {
       error.value = 'Decryption failed - wrong key or invalid ciphertext'
     }
@@ -90,7 +101,10 @@ const decrypt = () => {
         <CardContent class="flex-1 space-y-4">
           <div class="grid gap-2">
             <Label>Algorithm</Label>
-            <select v-model="algorithm" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+            <select
+              v-model="algorithm"
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            >
               <option value="AES">AES</option>
               <option value="DES">DES</option>
               <option value="TripleDES">TripleDES</option>
@@ -126,7 +140,12 @@ const decrypt = () => {
           </div>
           <div class="grid gap-2">
             <Label>Ciphertext</Label>
-            <Textarea v-model="decryptText" placeholder="Enter ciphertext to decrypt..." rows="4" class="font-mono text-sm" />
+            <Textarea
+              v-model="decryptText"
+              placeholder="Enter ciphertext to decrypt..."
+              rows="4"
+              class="font-mono text-sm"
+            />
           </div>
           <Button @click="decrypt" class="w-full">Decrypt</Button>
           <div v-if="decryptResult" class="space-y-2">

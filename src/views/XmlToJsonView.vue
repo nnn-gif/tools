@@ -10,18 +10,18 @@ const error = ref('')
 const xmlToJson = (xml: string): any => {
   const parser = new DOMParser()
   const doc = parser.parseFromString(xml, 'text/xml')
-  
+
   const parseNode = (node: Node): any => {
     const obj: any = {}
-    
+
     if (node.nodeType === Node.TEXT_NODE) {
       const text = node.textContent?.trim()
       return text || null
     }
-    
+
     if (node.nodeType === Node.ELEMENT_NODE) {
       const element = node as Element
-      
+
       // Handle attributes
       if (element.attributes.length > 0) {
         obj['@attributes'] = {}
@@ -32,28 +32,29 @@ const xmlToJson = (xml: string): any => {
           }
         }
       }
-      
+
       // Handle child nodes
-      const childNodes = Array.from(element.childNodes).filter(n => 
-        n.nodeType === Node.ELEMENT_NODE || 
-        (n.nodeType === Node.TEXT_NODE && n.textContent?.trim())
+      const childNodes = Array.from(element.childNodes).filter(
+        (n) =>
+          n.nodeType === Node.ELEMENT_NODE ||
+          (n.nodeType === Node.TEXT_NODE && n.textContent?.trim())
       )
-      
+
       if (childNodes.length === 0) {
         return obj['@attributes'] || ''
       }
-      
+
       const firstChild = childNodes[0]
       if (childNodes.length === 1 && firstChild?.nodeType === Node.TEXT_NODE) {
         return firstChild.textContent?.trim() || ''
       }
-      
+
       for (const child of childNodes) {
         if (child.nodeType === Node.ELEMENT_NODE) {
           const childElement = child as Element
           const childName = childElement.nodeName
           const childValue = parseNode(child)
-          
+
           if (obj[childName] !== undefined) {
             if (!Array.isArray(obj[childName])) {
               obj[childName] = [obj[childName]]
@@ -65,10 +66,10 @@ const xmlToJson = (xml: string): any => {
         }
       }
     }
-    
+
     return obj
   }
-  
+
   const result = parseNode(doc.documentElement)
   return { [doc.documentElement.nodeName]: result }
 }

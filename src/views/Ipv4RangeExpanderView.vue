@@ -14,14 +14,14 @@ interface ExpandedIp {
 
 const expandedIps = computed<ExpandedIp[]>(() => {
   if (!startIp.value || !endIp.value) return []
-  
-  const startParts = startIp.value.split('.').map(p => parseInt(p, 10))
-  const endParts = endIp.value.split('.').map(p => parseInt(p, 10))
-  
+
+  const startParts = startIp.value.split('.').map((p) => parseInt(p, 10))
+  const endParts = endIp.value.split('.').map((p) => parseInt(p, 10))
+
   if (startParts.length !== 4 || endParts.length !== 4) return []
-  if (startParts.some(p => isNaN(p) || p < 0 || p > 255)) return []
-  if (endParts.some(p => isNaN(p) || p < 0 || p > 255)) return []
-  
+  if (startParts.some((p) => isNaN(p) || p < 0 || p > 255)) return []
+  if (endParts.some((p) => isNaN(p) || p < 0 || p > 255)) return []
+
   const s0 = startParts[0] ?? 0
   const s1 = startParts[1] ?? 0
   const s2 = startParts[2] ?? 0
@@ -30,24 +30,20 @@ const expandedIps = computed<ExpandedIp[]>(() => {
   const e1 = endParts[1] ?? 0
   const e2 = endParts[2] ?? 0
   const e3 = endParts[3] ?? 0
-  
+
   const startNum = (s0 << 24) + (s1 << 16) + (s2 << 8) + s3
   const endNum = (e0 << 24) + (e1 << 16) + (e2 << 8) + e3
-  
+
   if (endNum < startNum) return []
-  
-  const numToIp = (num: number) => [
-    (num >>> 24) & 255,
-    (num >>> 16) & 255,
-    (num >>> 8) & 255,
-    num & 255
-  ].join('.')
-  
+
+  const numToIp = (num: number) =>
+    [(num >>> 24) & 255, (num >>> 16) & 255, (num >>> 8) & 255, num & 255].join('.')
+
   const count = endNum - startNum + 1
   if (count > 256) {
     return [{ ip: `Too many IPs (${count.toLocaleString()}). Max 256.`, index: 0 }]
   }
-  
+
   return Array.from({ length: count }, (_, i) => ({
     ip: numToIp(startNum + i),
     index: i + 1
@@ -55,7 +51,7 @@ const expandedIps = computed<ExpandedIp[]>(() => {
 })
 
 const copyAll = () => {
-  const ips = expandedIps.value.map(e => e.ip).join('\n')
+  const ips = expandedIps.value.map((e) => e.ip).join('\n')
   if (ips) navigator.clipboard.writeText(ips)
 }
 </script>
@@ -91,8 +87,8 @@ const copyAll = () => {
       </CardHeader>
       <CardContent class="flex-1 min-h-0 overflow-y-auto">
         <div class="space-y-1">
-          <div 
-            v-for="item in expandedIps" 
+          <div
+            v-for="item in expandedIps"
             :key="item.index"
             class="flex items-center gap-4 p-2 rounded hover:bg-muted transition-colors"
           >

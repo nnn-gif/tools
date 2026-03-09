@@ -14,12 +14,12 @@ const normalizedEmail = computed(() => {
 const analysis = computed(() => {
   const email = normalizedEmail.value
   if (!email) return null
-  
+
   const validFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   const parts = email.split('@')
   const localPart = parts[0] || ''
   const domain = parts[1] || ''
-  
+
   return {
     normalized: email,
     validFormat,
@@ -61,7 +61,12 @@ const analysis = computed(() => {
       <Card>
         <CardContent class="pt-6 text-center">
           <div class="text-sm text-muted-foreground">Valid Format</div>
-          <div :class="['text-2xl font-bold', analysis.validFormat ? 'text-green-600' : 'text-red-600']">
+          <div
+            :class="[
+              'text-2xl font-bold',
+              analysis.validFormat ? 'text-green-600' : 'text-red-600'
+            ]"
+          >
             {{ analysis.validFormat ? '✓ Yes' : '✗ No' }}
           </div>
         </CardContent>
@@ -85,13 +90,21 @@ const analysis = computed(() => {
         <CardContent class="pt-6">
           <div class="text-sm text-muted-foreground mb-3">Analysis</div>
           <div class="grid grid-cols-2 gap-2 text-sm">
-            <div class="p-2 rounded bg-muted">
-              Length: {{ analysis.length }} chars
-            </div>
-            <div :class="['p-2 rounded', analysis.hasPlus ? 'bg-blue-500/10 text-blue-600' : 'bg-muted']">
+            <div class="p-2 rounded bg-muted">Length: {{ analysis.length }} chars</div>
+            <div
+              :class="[
+                'p-2 rounded',
+                analysis.hasPlus ? 'bg-blue-500/10 text-blue-600' : 'bg-muted'
+              ]"
+            >
               Has +: {{ analysis.hasPlus ? 'Yes' : 'No' }}
             </div>
-            <div :class="['p-2 rounded', analysis.hasDot ? 'bg-blue-500/10 text-blue-600' : 'bg-muted']">
+            <div
+              :class="[
+                'p-2 rounded',
+                analysis.hasDot ? 'bg-blue-500/10 text-blue-600' : 'bg-muted'
+              ]"
+            >
               Has dot: {{ analysis.hasDot ? 'Yes' : 'No' }}
             </div>
           </div>

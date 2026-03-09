@@ -14,7 +14,16 @@ const passphrase = ref('')
 const entropy = ref('')
 
 const generateMnemonic = () => {
-  const strength = wordCount.value === 12 ? 128 : wordCount.value === 15 ? 160 : wordCount.value === 18 ? 192 : wordCount.value === 21 ? 224 : 256
+  const strength =
+    wordCount.value === 12
+      ? 128
+      : wordCount.value === 15
+        ? 160
+        : wordCount.value === 18
+          ? 192
+          : wordCount.value === 21
+            ? 224
+            : 256
   mnemonic.value = bip39.generateMnemonic(strength)
   updateSeed()
 }
@@ -47,7 +56,10 @@ generateMnemonic()
         <CardContent class="flex-1 space-y-4">
           <div class="grid gap-2">
             <Label>Word Count</Label>
-            <select v-model.number="wordCount" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+            <select
+              v-model.number="wordCount"
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            >
               <option :value="12">12 words</option>
               <option :value="15">15 words</option>
               <option :value="18">18 words</option>
@@ -56,11 +68,20 @@ generateMnemonic()
             </select>
           </div>
           <Button @click="generateMnemonic" class="w-full">Generate New Mnemonic</Button>
-          
+
           <div class="space-y-2">
             <Label>Mnemonic Phrase</Label>
-            <Textarea v-model="mnemonic" @input="updateSeed" rows="4" class="font-mono" placeholder="Enter or generate mnemonic..." />
-            <div v-if="mnemonic" :class="['text-sm', validateMnemonic() ? 'text-green-600' : 'text-red-600']">
+            <Textarea
+              v-model="mnemonic"
+              @input="updateSeed"
+              rows="4"
+              class="font-mono"
+              placeholder="Enter or generate mnemonic..."
+            />
+            <div
+              v-if="mnemonic"
+              :class="['text-sm', validateMnemonic() ? 'text-green-600' : 'text-red-600']"
+            >
               {{ validateMnemonic() ? '✓ Valid BIP39 mnemonic' : '✗ Invalid mnemonic' }}
             </div>
           </div>
@@ -75,7 +96,12 @@ generateMnemonic()
         <CardContent class="flex-1 space-y-4">
           <div class="grid gap-2">
             <Label>Passphrase (optional)</Label>
-            <Input v-model="passphrase" @input="updateSeed" type="password" placeholder="Enter passphrase..." />
+            <Input
+              v-model="passphrase"
+              @input="updateSeed"
+              type="password"
+              placeholder="Enter passphrase..."
+            />
           </div>
           <div class="space-y-2">
             <Label>Seed (hex)</Label>

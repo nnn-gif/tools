@@ -162,7 +162,6 @@ const currentYear = new Date().getFullYear()
           </a>
         </div>
       </div>
-
     </div>
   </footer>
 </template>

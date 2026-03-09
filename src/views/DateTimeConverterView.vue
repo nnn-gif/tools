@@ -16,7 +16,7 @@ const setCurrentTime = () => {
 
 const parsedDate = computed(() => {
   if (!inputDate.value) return null
-  
+
   try {
     if (inputFormat.value === 'unix') {
       return new Date(parseInt(inputDate.value) * 1000)
@@ -32,12 +32,12 @@ const parsedDate = computed(() => {
 
 const formats = computed(() => {
   if (!parsedDate.value) return {}
-  
+
   const d = parsedDate.value
-  
+
   return {
     'ISO 8601': d.toISOString(),
-    'UTC': d.toUTCString(),
+    UTC: d.toUTCString(),
     'Local Date': d.toLocaleDateString(),
     'Local Time': d.toLocaleTimeString(),
     'Local DateTime': d.toLocaleString(),
@@ -45,20 +45,22 @@ const formats = computed(() => {
     'Time String': d.toTimeString(),
     'Unix Timestamp (seconds)': Math.floor(d.getTime() / 1000).toString(),
     'Unix Timestamp (ms)': d.getTime().toString(),
-    'Year': d.getFullYear().toString(),
+    Year: d.getFullYear().toString(),
     'Month (1-12)': (d.getMonth() + 1).toString(),
-    'Day': d.getDate().toString(),
-    'Day of Week': ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][d.getDay()],
+    Day: d.getDate().toString(),
+    'Day of Week': ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][
+      d.getDay()
+    ],
     'Hours (0-23)': d.getHours().toString(),
-    'Minutes': d.getMinutes().toString(),
-    'Seconds': d.getSeconds().toString(),
-    'Milliseconds': d.getMilliseconds().toString(),
+    Minutes: d.getMinutes().toString(),
+    Seconds: d.getSeconds().toString(),
+    Milliseconds: d.getMilliseconds().toString(),
     'Timezone Offset (min)': d.getTimezoneOffset().toString(),
     'Custom (YYYY-MM-DD)': `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`,
     'Custom (DD/MM/YYYY)': `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`,
     'Custom (MM/DD/YYYY)': `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}/${d.getFullYear()}`,
     'ISO Date': d.toISOString().split('T')[0],
-    'ISO Time': d.toISOString().split('T')[1]?.split('.')[0] ?? '',
+    'ISO Time': d.toISOString().split('T')[1]?.split('.')[0] ?? ''
   }
 })
 
@@ -68,7 +70,7 @@ const copyFormat = (type: string) => {
     navigator.clipboard.writeText(value)
   }
   copied.value = type
-  setTimeout(() => copied.value = null, 2000)
+  setTimeout(() => (copied.value = null), 2000)
 }
 
 const presets = [
@@ -76,7 +78,7 @@ const presets = [
   { label: 'Today 00:00', value: () => new Date(new Date().setHours(0, 0, 0, 0)).toISOString() },
   { label: 'Tomorrow', value: () => new Date(Date.now() + 86400000).toISOString() },
   { label: 'Yesterday', value: () => new Date(Date.now() - 86400000).toISOString() },
-  { label: 'Week from now', value: () => new Date(Date.now() + 7 * 86400000).toISOString() },
+  { label: 'Week from now', value: () => new Date(Date.now() + 7 * 86400000).toISOString() }
 ]
 </script>
 
@@ -89,9 +91,7 @@ const presets = [
           <Calendar class="w-8 h-8" />
           Date Time Converter
         </h1>
-        <p class="text-muted-foreground mt-2">
-          Convert dates and times between different formats.
-        </p>
+        <p class="text-muted-foreground mt-2">Convert dates and times between different formats.</p>
       </div>
 
       <!-- Input -->
@@ -161,9 +161,7 @@ const presets = [
       </Card>
 
       <Card v-else-if="inputDate && !parsedDate" class="border-red-500">
-        <CardContent class="py-8 text-center text-red-500">
-          Invalid date format
-        </CardContent>
+        <CardContent class="py-8 text-center text-red-500"> Invalid date format </CardContent>
       </Card>
 
       <div v-else class="text-center py-16 text-muted-foreground">

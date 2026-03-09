@@ -17,24 +17,80 @@ interface IbanInfo {
 }
 
 const countryLengths: Record<string, number> = {
-  'AL': 28, 'AD': 24, 'AT': 20, 'AZ': 28, 'BE': 16, 'BH': 22, 'BA': 20,
-  'BR': 29, 'BG': 22, 'CR': 21, 'HR': 21, 'CY': 28, 'CZ': 24, 'DK': 18,
-  'DO': 28, 'EE': 20, 'FO': 18, 'FI': 18, 'FR': 27, 'GE': 22, 'DE': 22,
-  'GI': 23, 'GR': 27, 'GL': 18, 'GT': 28, 'HU': 28, 'IS': 26, 'IE': 22,
-  'IL': 23, 'IT': 27, 'JO': 30, 'KZ': 20, 'KW': 30, 'LV': 21, 'LB': 28,
-  'LI': 21, 'LT': 20, 'LU': 20, 'MK': 19, 'MT': 31, 'MR': 27, 'MU': 30,
-  'MC': 27, 'MD': 24, 'ME': 22, 'NL': 18, 'NO': 15, 'PK': 24, 'PS': 29,
-  'PL': 28, 'PT': 25, 'QA': 29, 'RO': 24, 'SM': 27, 'SA': 24, 'RS': 22,
-  'SK': 24, 'SI': 19, 'ES': 24, 'SE': 24, 'CH': 21, 'TN': 24, 'TR': 26,
-  'AE': 23, 'GB': 22, 'VG': 24
+  AL: 28,
+  AD: 24,
+  AT: 20,
+  AZ: 28,
+  BE: 16,
+  BH: 22,
+  BA: 20,
+  BR: 29,
+  BG: 22,
+  CR: 21,
+  HR: 21,
+  CY: 28,
+  CZ: 24,
+  DK: 18,
+  DO: 28,
+  EE: 20,
+  FO: 18,
+  FI: 18,
+  FR: 27,
+  GE: 22,
+  DE: 22,
+  GI: 23,
+  GR: 27,
+  GL: 18,
+  GT: 28,
+  HU: 28,
+  IS: 26,
+  IE: 22,
+  IL: 23,
+  IT: 27,
+  JO: 30,
+  KZ: 20,
+  KW: 30,
+  LV: 21,
+  LB: 28,
+  LI: 21,
+  LT: 20,
+  LU: 20,
+  MK: 19,
+  MT: 31,
+  MR: 27,
+  MU: 30,
+  MC: 27,
+  MD: 24,
+  ME: 22,
+  NL: 18,
+  NO: 15,
+  PK: 24,
+  PS: 29,
+  PL: 28,
+  PT: 25,
+  QA: 29,
+  RO: 24,
+  SM: 27,
+  SA: 24,
+  RS: 22,
+  SK: 24,
+  SI: 19,
+  ES: 24,
+  SE: 24,
+  CH: 21,
+  TN: 24,
+  TR: 26,
+  AE: 23,
+  GB: 22,
+  VG: 24
 }
 
 const validateIban = (iban: string): IbanInfo | null => {
   if (!iban) return null
-  
+
   // Remove spaces and convert to uppercase
   const cleaned = iban.replace(/\s/g, '').toUpperCase()
-  
+
   // Basic format check
   if (!/^[A-Z]{2}[0-9]{2}[A-Z0-9]+$/.test(cleaned)) {
     return {
@@ -45,11 +101,11 @@ const validateIban = (iban: string): IbanInfo | null => {
       formatted: cleaned
     }
   }
-  
+
   const countryCode = cleaned.slice(0, 2)
   const checkDigits = cleaned.slice(2, 4)
   const bban = cleaned.slice(4)
-  
+
   // Check length
   const expectedLength = countryLengths[countryCode]
   if (expectedLength && cleaned.length !== expectedLength) {
@@ -61,22 +117,25 @@ const validateIban = (iban: string): IbanInfo | null => {
       formatted: formatIban(cleaned)
     }
   }
-  
+
   // Check digit validation (mod-97)
   const rearranged = bban + countryCode + checkDigits
-  const numeric = rearranged.split('').map(c => {
-    const code = c.charCodeAt(0)
-    return code >= 65 && code <= 90 ? (code - 55).toString() : c
-  }).join('')
-  
+  const numeric = rearranged
+    .split('')
+    .map((c) => {
+      const code = c.charCodeAt(0)
+      return code >= 65 && code <= 90 ? (code - 55).toString() : c
+    })
+    .join('')
+
   let remainder = 0
   for (let i = 0; i < numeric.length; i++) {
     const char = numeric[i]
     remainder = (remainder * 10 + parseInt(char ?? '0')) % 97
   }
-  
+
   const valid = remainder === 1
-  
+
   return {
     valid,
     countryCode,
@@ -116,9 +175,9 @@ const copyIban = () => {
       <CardContent class="space-y-4">
         <div class="grid gap-2">
           <Label>IBAN</Label>
-          <Input 
-            v-model="ibanInput" 
-            placeholder="DE89 3704 0044 0532 0130 00" 
+          <Input
+            v-model="ibanInput"
+            placeholder="DE89 3704 0044 0532 0130 00"
             class="font-mono uppercase"
           />
         </div>
@@ -160,10 +219,10 @@ const copyIban = () => {
         <CardContent class="pt-6 text-center">
           <div class="text-sm text-muted-foreground">Formatted</div>
           <div class="text-xl font-mono">{{ ibanInfo.formatted }}</div>
-          <Button 
-            v-if="ibanInfo.formatted" 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            v-if="ibanInfo.formatted"
+            variant="ghost"
+            size="sm"
             class="mt-2"
             @click="copyIban"
           >

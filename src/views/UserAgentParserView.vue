@@ -15,9 +15,9 @@ const parsedInfo = computed(() => {
     { name: 'Chrome', pattern: /Chrome\/(\d+)/ },
     { name: 'Firefox', pattern: /Firefox\/(\d+)/ },
     { name: 'Safari', pattern: /Version\/(\d+).*Safari/ },
-    { name: 'IE', pattern: /MSIE (\d+)/ },
+    { name: 'IE', pattern: /MSIE (\d+)/ }
   ]
-  
+
   const osPatterns = [
     { name: 'Windows 11', pattern: /Windows NT 11/ },
     { name: 'Windows 10', pattern: /Windows NT 10/ },
@@ -25,15 +25,15 @@ const parsedInfo = computed(() => {
     { name: 'macOS', pattern: /Mac OS X/ },
     { name: 'Linux', pattern: /Linux/ },
     { name: 'Android', pattern: /Android/ },
-    { name: 'iOS', pattern: /iPhone|iPad/ },
+    { name: 'iOS', pattern: /iPhone|iPad/ }
   ]
-  
+
   const devicePatterns = [
     { name: 'Mobile', pattern: /Mobile/ },
     { name: 'Tablet', pattern: /Tablet|iPad/ },
-    { name: 'Desktop', pattern: /./ },
+    { name: 'Desktop', pattern: /./ }
   ]
-  
+
   let browser = 'Unknown'
   let browserVersion = ''
   for (const { name, pattern } of browserPatterns) {
@@ -44,7 +44,7 @@ const parsedInfo = computed(() => {
       break
     }
   }
-  
+
   let os = 'Unknown'
   for (const { name, pattern } of osPatterns) {
     if (pattern.test(ua)) {
@@ -52,7 +52,7 @@ const parsedInfo = computed(() => {
       break
     }
   }
-  
+
   let device = 'Unknown'
   for (const { name, pattern } of devicePatterns) {
     if (pattern.test(ua)) {
@@ -60,7 +60,7 @@ const parsedInfo = computed(() => {
       break
     }
   }
-  
+
   return {
     browser,
     browserVersion,
@@ -84,9 +84,9 @@ const parsedInfo = computed(() => {
       <CardContent class="space-y-4">
         <div class="grid gap-2">
           <Label>User Agent String</Label>
-          <Input 
-            v-model="userAgent" 
-            placeholder="Enter user agent or leave empty to use your browser's..." 
+          <Input
+            v-model="userAgent"
+            placeholder="Enter user agent or leave empty to use your browser's..."
           />
         </div>
       </CardContent>

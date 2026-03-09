@@ -21,9 +21,7 @@ const formatDate = (dateString: string) => {
       <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
         Developer guides, tutorials, and insights from the Formatho team
       </p>
-      <p class="text-sm text-muted-foreground mt-2">
-        {{ blogPosts.length }} articles
-      </p>
+      <p class="text-sm text-muted-foreground mt-2">{{ blogPosts.length }} articles</p>
     </div>
 
     <!-- Blog Posts Grid -->
@@ -46,7 +44,7 @@ const formatDate = (dateString: string) => {
                 />
               </RouterLink>
             </div>
-            
+
             <!-- Content -->
             <div class="flex-1 p-6">
               <!-- Meta -->

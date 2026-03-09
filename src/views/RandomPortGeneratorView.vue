@@ -11,18 +11,18 @@ const maxPort = ref(65535)
 
 const generatePort = () => {
   const availablePorts: number[] = []
-  
+
   for (let i = minPort.value; i <= maxPort.value; i++) {
     if (!excludedPorts.value.includes(i)) {
       availablePorts.push(i)
     }
   }
-  
+
   if (availablePorts.length === 0) {
     port.value = 0
     return
   }
-  
+
   const randomIndex = Math.floor(Math.random() * availablePorts.length)
   port.value = availablePorts[randomIndex] ?? 0
 }
@@ -50,20 +50,20 @@ generatePort()
           <div class="grid grid-cols-2 gap-4">
             <div class="grid gap-2">
               <Label>Min Port</Label>
-              <input 
-                v-model.number="minPort" 
-                type="number" 
-                min="1" 
+              <input
+                v-model.number="minPort"
+                type="number"
+                min="1"
                 max="65535"
                 class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
               />
             </div>
             <div class="grid gap-2">
               <Label>Max Port</Label>
-              <input 
-                v-model.number="maxPort" 
-                type="number" 
-                min="1" 
+              <input
+                v-model.number="maxPort"
+                type="number"
+                min="1"
                 max="65535"
                 class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
               />

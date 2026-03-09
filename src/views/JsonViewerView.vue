@@ -71,7 +71,9 @@ watch(jsonInput, formatJson)
       <Card class="flex flex-col min-h-0">
         <CardHeader class="flex-row items-center justify-between">
           <CardTitle>Output</CardTitle>
-          <Button variant="outline" size="sm" @click="copyOutput" :disabled="!jsonOutput">Copy</Button>
+          <Button variant="outline" size="sm" @click="copyOutput" :disabled="!jsonOutput"
+            >Copy</Button
+          >
         </CardHeader>
         <CardContent class="flex-1 min-h-0">
           <Textarea

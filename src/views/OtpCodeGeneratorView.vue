@@ -15,7 +15,10 @@ let interval: number | null = null
 const base32Decode = (base32: string): Uint8Array => {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
   const cleaned = base32.toUpperCase().replace(/[^A-Z2-7]/g, '')
-  const bits = cleaned.split('').map(c => alphabet.indexOf(c).toString(2).padStart(5, '0')).join('')
+  const bits = cleaned
+    .split('')
+    .map((c) => alphabet.indexOf(c).toString(2).padStart(5, '0'))
+    .join('')
   const bytes = new Uint8Array(Math.floor(bits.length / 8))
   for (let i = 0; i < bytes.length; i++) {
     bytes[i] = parseInt(bits.substr(i * 8, 8), 2)
@@ -36,14 +39,14 @@ const hmacSha1 = async (key: Uint8Array, message: Uint8Array): Promise<ArrayBuff
 
 const generateTOTP = async () => {
   if (!secret.value) return
-  
+
   try {
     const key = base32Decode(secret.value)
     const counter = Math.floor(Date.now() / 1000 / period.value)
     const counterBuffer = new ArrayBuffer(8)
     const counterView = new DataView(counterBuffer)
     counterView.setUint32(4, counter, false)
-    
+
     const hmac = await hmacSha1(key, new Uint8Array(counterBuffer))
     const hmacArray = new Uint8Array(hmac)
     const lastByte = hmacArray[hmacArray.length - 1] ?? 0
@@ -52,13 +55,10 @@ const generateTOTP = async () => {
     const o1 = hmacArray[offset + 1] ?? 0
     const o2 = hmacArray[offset + 2] ?? 0
     const o3 = hmacArray[offset + 3] ?? 0
-    const code = (
-      ((o0 & 0x7f) << 24) |
-      ((o1 & 0xff) << 16) |
-      ((o2 & 0xff) << 8) |
-      (o3 & 0xff)
-    ) % Math.pow(10, digits.value)
-    
+    const code =
+      (((o0 & 0x7f) << 24) | ((o1 & 0xff) << 16) | ((o2 & 0xff) << 8) | (o3 & 0xff)) %
+      Math.pow(10, digits.value)
+
     otpCode.value = code.toString().padStart(digits.value, '0')
   } catch (e) {
     otpCode.value = 'Invalid secret'
@@ -101,20 +101,26 @@ onUnmounted(() => {
           </div>
           <div class="grid gap-2">
             <Label>Digits</Label>
-            <select v-model.number="digits" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+            <select
+              v-model.number="digits"
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            >
               <option :value="6">6 digits</option>
               <option :value="8">8 digits</option>
             </select>
           </div>
           <div class="grid gap-2">
             <Label>Period (seconds)</Label>
-            <select v-model.number="period" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+            <select
+              v-model.number="period"
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            >
               <option :value="30">30 seconds</option>
               <option :value="60">60 seconds</option>
             </select>
           </div>
         </div>
-        
+
         <Button @click="generateTOTP" class="w-full md:w-auto">Generate Code</Button>
       </CardContent>
     </Card>
@@ -126,8 +132,8 @@ onUnmounted(() => {
           <div class="text-5xl font-mono font-bold tracking-widest">{{ otpCode }}</div>
           <div class="mt-4">
             <div class="h-2 bg-muted rounded-full overflow-hidden">
-              <div 
-                class="h-full bg-primary transition-all duration-1000" 
+              <div
+                class="h-full bg-primary transition-all duration-1000"
                 :style="{ width: `${(remainingTime / period) * 100}%` }"
               ></div>
             </div>

@@ -26,9 +26,10 @@ const decode = () => {
 
 const encodeAll = () => {
   try {
-    encodedText.value = inputText.value.split('').map(c => 
-      '%' + c.charCodeAt(0).toString(16).padStart(2, '0')
-    ).join('')
+    encodedText.value = inputText.value
+      .split('')
+      .map((c) => '%' + c.charCodeAt(0).toString(16).padStart(2, '0'))
+      .join('')
   } catch (e) {
     encodedText.value = 'Encoding error'
   }
@@ -46,11 +47,7 @@ const encodeAll = () => {
         <CardTitle>Input</CardTitle>
       </CardHeader>
       <CardContent class="space-y-4">
-        <Textarea
-          v-model="inputText"
-          rows="4"
-          placeholder="Enter text to encode or decode..."
-        />
+        <Textarea v-model="inputText" rows="4" placeholder="Enter text to encode or decode..." />
         <div class="flex gap-2 flex-wrap">
           <Button @click="encode">Encode</Button>
           <Button @click="encodeAll" variant="outline">Encode All Characters</Button>

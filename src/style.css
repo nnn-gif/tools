@@ -289,7 +289,7 @@
 
 /* Link styling - keep original text color, no underlines */
 @layer base {
-  a:not(.router-link-active):not([class*="text-primary"]) {
+  a:not(.router-link-active):not([class*='text-primary']) {
     /* Removed blue color and underline - text uses original color */
     text-decoration: none;
   }
@@ -315,4 +315,3 @@
 .skip-to-main:focus {
   top: 0;
 }
-

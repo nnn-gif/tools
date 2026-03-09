@@ -19,18 +19,18 @@ const route = useRoute()
 const slug = computed(() => {
   // 1. Check route meta.slug (set by static routes)
   if (route.meta?.slug) return route.meta.slug as string
-  
+
   // 2. Props (for static routes with explicit props)
   if (props.slug) return props.slug
-  
+
   // 3. Route params (for dynamic routes with :slug)
   if (route.params.slug) return route.params.slug as string
-  
+
   // 4. Extract slug from route name (e.g., 'blog-post-uuid-v1-vs-v4' -> 'uuid-v1-vs-v4')
   if (route.name && typeof route.name === 'string' && route.name.startsWith('blog-post-')) {
     return route.name.replace('blog-post-', '')
   }
-  
+
   // 5. Fallback: parse from URL path (e.g., '/blogs/uuid-v1-vs-v4' -> 'uuid-v1-vs-v4')
   if (route.path) {
     const pathParts = route.path.split('/').filter(Boolean)
@@ -39,17 +39,17 @@ const slug = computed(() => {
       return pathParts.slice(1).join('/')
     }
   }
-  
+
   return ''
 })
 
 const post = computed(() => {
   // First check if postData was injected into meta during SSR
   if (route.meta?.postData) {
-    return route.meta.postData as typeof blogPosts[0]
+    return route.meta.postData as (typeof blogPosts)[0]
   }
   // Otherwise look up by slug
-  return blogPosts.find(p => p.slug === slug.value)
+  return blogPosts.find((p) => p.slug === slug.value)
 })
 
 const formatDate = (dateString: string) => {
@@ -158,14 +158,18 @@ const formatDate = (dateString: string) => {
             :to="tool.link"
             class="p-4 glass-card hover:border-primary/50 transition-all group"
           >
-            <h4 class="font-semibold group-hover:text-primary transition-colors">{{ tool.name }}</h4>
+            <h4 class="font-semibold group-hover:text-primary transition-colors">
+              {{ tool.name }}
+            </h4>
             <p class="text-sm text-muted-foreground">{{ tool.description }}</p>
           </RouterLink>
         </div>
       </div>
 
       <!-- Share & Navigation -->
-      <div class="mt-12 pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div
+        class="mt-12 pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+      >
         <RouterLink
           to="/blogs"
           class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
@@ -188,7 +192,8 @@ const formatDate = (dateString: string) => {
 .prose :deep(p) {
   @apply mb-4 leading-relaxed text-muted-foreground;
 }
-.prose :deep(ul), .prose :deep(ol) {
+.prose :deep(ul),
+.prose :deep(ol) {
   @apply my-4 pl-6;
 }
 .prose :deep(li) {
@@ -212,7 +217,8 @@ const formatDate = (dateString: string) => {
 .prose :deep(table) {
   @apply w-full border-collapse my-4;
 }
-.prose :deep(th), .prose :deep(td) {
+.prose :deep(th),
+.prose :deep(td) {
   @apply border border-border p-2 text-left;
 }
 .prose :deep(th) {

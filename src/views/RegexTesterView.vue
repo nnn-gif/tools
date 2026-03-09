@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watchEffect } from 'vue'
 import { Code, Check, X, Copy } from 'lucide-vue-next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -22,16 +22,15 @@ interface Match {
   groups?: Record<string, string>
 }
 
+// Use a watcher to set errors instead of side effects in computed
 const matches = computed<Match[]>(() => {
   if (!pattern.value || !testString.value) {
     return []
   }
 
-  error.value = ''
-
   try {
     const flagString = Object.entries(flags.value)
-      .filter(([_, enabled]) => enabled)
+      .filter(([, enabled]) => enabled)
       .map(([flag]) => flag)
       .join('')
 
@@ -60,8 +59,26 @@ const matches = computed<Match[]>(() => {
 
     return results
   } catch (e: any) {
-    error.value = e.message
+    // Return empty and let the error be caught by watchEffect
     return []
+  }
+})
+
+// Watch for pattern changes and update error state
+watchEffect(() => {
+  if (!pattern.value || !testString.value) {
+    error.value = ''
+    return
+  }
+  try {
+    const flagString = Object.entries(flags.value)
+      .filter(([, enabled]) => enabled)
+      .map(([flag]) => flag)
+      .join('')
+    new RegExp(pattern.value, flagString)
+    error.value = ''
+  } catch (e: any) {
+    error.value = e.message
   }
 })
 
@@ -91,17 +108,25 @@ const copyRegex = () => {
     .filter(([_, enabled]) => enabled)
     .map(([flag]) => flag)
     .join('')
-  
+
   const regexString = `/${pattern.value}/${flagString}`
   navigator.clipboard.writeText(regexString)
 }
 
 const examples = [
   { label: 'Email', pattern: '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}' },
-  { label: 'URL', pattern: 'https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)' },
-  { label: 'Phone', pattern: '\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}' },
+  {
+    label: 'URL',
+    pattern:
+      'https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)'
+  },
+  {
+    label: 'Phone',
+    pattern:
+      '\\+?\\d{1,4}?[-.\\s]?\\(?\\d{1,3}?\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}'
+  },
   { label: 'IP Address', pattern: '\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b' },
-  { label: 'Hex Color', pattern: '#[0-9a-fA-F]{6}\\b|#[0-9a-fA-F]{3}\\b' },
+  { label: 'Hex Color', pattern: '#[0-9a-fA-F]{6}\\b|#[0-9a-fA-F]{3}\\b' }
 ]
 
 const applyExample = (examplePattern: string) => {
@@ -146,7 +171,11 @@ const applyExample = (examplePattern: string) => {
             <div>
               <label class="block text-sm font-medium mb-2">Flags</label>
               <div class="space-y-2">
-                <label v-for="(_enabled, flag) in flags" :key="flag" class="flex items-center gap-2">
+                <label
+                  v-for="(_enabled, flag) in flags"
+                  :key="flag"
+                  class="flex items-center gap-2"
+                >
                   <input
                     v-model="flags[flag as keyof typeof flags]"
                     type="checkbox"
@@ -241,7 +270,9 @@ const applyExample = (examplePattern: string) => {
                   :key="index"
                   class="flex items-start gap-3 p-3 bg-surface-hover rounded border"
                 >
-                  <div class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm">
+                  <div
+                    class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm"
+                  >
                     {{ index + 1 }}
                   </div>
                   <div class="flex-1">

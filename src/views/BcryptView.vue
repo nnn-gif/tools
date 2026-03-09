@@ -21,7 +21,9 @@ const generateHash = () => {
 
 const verifyHash = () => {
   if (!hashToVerify.value || !passwordToVerify.value) return
-  verifyResult.value = bcrypt.compareSync(passwordToVerify.value, hashToVerify.value) ? 'valid' : 'invalid'
+  verifyResult.value = bcrypt.compareSync(passwordToVerify.value, hashToVerify.value)
+    ? 'valid'
+    : 'invalid'
 }
 </script>
 
@@ -62,15 +64,36 @@ const verifyHash = () => {
         <CardContent class="flex-1 space-y-4">
           <div class="grid gap-2">
             <Label>Password</Label>
-            <Input v-model="passwordToVerify" type="password" placeholder="Enter password to verify..." />
+            <Input
+              v-model="passwordToVerify"
+              type="password"
+              placeholder="Enter password to verify..."
+            />
           </div>
           <div class="grid gap-2">
             <Label>Hash</Label>
-            <Textarea v-model="hashToVerify" placeholder="Enter bcrypt hash..." rows="3" class="font-mono text-sm" />
+            <Textarea
+              v-model="hashToVerify"
+              placeholder="Enter bcrypt hash..."
+              rows="3"
+              class="font-mono text-sm"
+            />
           </div>
           <Button @click="verifyHash" class="w-full">Verify</Button>
-          <div v-if="verifyResult" :class="['p-4 rounded-md text-center font-medium', verifyResult === 'valid' ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600']">
-            {{ verifyResult === 'valid' ? '✓ Password matches hash' : '✗ Password does not match hash' }}
+          <div
+            v-if="verifyResult"
+            :class="[
+              'p-4 rounded-md text-center font-medium',
+              verifyResult === 'valid'
+                ? 'bg-green-500/10 text-green-600'
+                : 'bg-red-500/10 text-red-600'
+            ]"
+          >
+            {{
+              verifyResult === 'valid'
+                ? '✓ Password matches hash'
+                : '✗ Password does not match hash'
+            }}
           </div>
         </CardContent>
       </Card>

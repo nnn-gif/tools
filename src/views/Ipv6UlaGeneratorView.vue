@@ -11,20 +11,20 @@ const generateULA = () => {
   // ULA prefix is fd00::/8 with 40 random bits
   const randomBytes = new Uint8Array(5)
   crypto.getRandomValues(randomBytes)
-  
+
   // ULA prefix starts with fd
   const b0 = randomBytes[0] ?? 0
   const b1 = randomBytes[1] ?? 0
   const b2 = randomBytes[2] ?? 0
   const b3 = randomBytes[3] ?? 0
   const b4 = randomBytes[4] ?? 0
-  
+
   const parts = [
     'fd' + b0.toString(16).padStart(2, '0'),
     b1.toString(16).padStart(2, '0') + b2.toString(16).padStart(2, '0'),
     b3.toString(16).padStart(2, '0') + b4.toString(16).padStart(2, '0')
   ]
-  
+
   generatedUla.value = parts.join(':') + '::/48'
 }
 
@@ -67,8 +67,13 @@ generateULA()
         <CardTitle>About IPv6 ULA</CardTitle>
       </CardHeader>
       <CardContent class="text-sm text-muted-foreground space-y-2">
-        <p><strong>Unique Local Addresses (ULA)</strong> are IPv6 addresses for local communications.</p>
-        <p>Prefix: <code class="bg-muted px-1 rounded">fc00::/7</code> (currently <code class="bg-muted px-1 rounded">fd00::/8</code>)</p>
+        <p>
+          <strong>Unique Local Addresses (ULA)</strong> are IPv6 addresses for local communications.
+        </p>
+        <p>
+          Prefix: <code class="bg-muted px-1 rounded">fc00::/7</code> (currently
+          <code class="bg-muted px-1 rounded">fd00::/8</code>)
+        </p>
         <p>They are not routable on the global internet, similar to IPv4 private addresses.</p>
         <p>Useful for internal networks, testing, and private communications.</p>
       </CardContent>

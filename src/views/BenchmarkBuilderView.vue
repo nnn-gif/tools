@@ -11,18 +11,21 @@ const iterations = ref(1000)
 
 const runBenchmark = async () => {
   results.value = []
-  
+
   if (!codeInput.value.trim()) return
-  
+
   try {
     // Create a function from the code
-    const fn = new Function('iterations', `
+    const fn = new Function(
+      'iterations',
+      `
       const start = performance.now();
       ${codeInput.value}
       const end = performance.now();
       return end - start;
-    `)
-    
+    `
+    )
+
     // Run the benchmark
     const time = fn(iterations) as number
     results.value.push({
@@ -40,32 +43,35 @@ const runBenchmark = async () => {
 
 const runComparison = async () => {
   results.value = []
-  
+
   // Split by "// ---" for multiple implementations
-  const implementations = codeInput.value.split(/\/\/\s*---+\s*/).filter(s => s.trim())
-  
+  const implementations = codeInput.value.split(/\/\/\s*---+\s*/).filter((s) => s.trim())
+
   if (implementations.length === 0) return
-  
+
   for (let i = 0; i < implementations.length; i++) {
     const code = implementations[i]
     const nameMatch = code?.match(/\/\/\s*name:\s*(.+)/i)
     const name = nameMatch?.[1]?.trim() ?? `Implementation ${i + 1}`
-    
+
     try {
-      const fn = new Function('iterations', `
+      const fn = new Function(
+        'iterations',
+        `
         const start = performance.now();
         ${code}
         const end = performance.now();
         return end - start;
-      `)
-      
+      `
+      )
+
       const time = fn(iterations) as number
       results.value.push({ name, time })
     } catch (e: any) {
       results.value.push({ name, time: 0, error: e.message })
     }
   }
-  
+
   // Sort by time
   results.value.sort((a, b) => a.time - b.time)
 }
@@ -84,14 +90,14 @@ const runComparison = async () => {
       <CardContent class="space-y-4">
         <div class="grid gap-2">
           <Label>Iterations</Label>
-          <input 
-            v-model.number="iterations" 
-            type="number" 
+          <input
+            v-model.number="iterations"
+            type="number"
             min="1"
             class="flex h-10 w-32 rounded-md border border-input bg-background px-3 py-2 text-sm"
           />
         </div>
-        
+
         <div class="grid gap-2">
           <Label>JavaScript Code</Label>
           <Textarea
@@ -107,7 +113,7 @@ for (let i = 0; i < iterations; i++) {
             class="font-mono text-sm"
           />
         </div>
-        
+
         <div class="flex gap-2">
           <Button @click="runBenchmark">Run Benchmark</Button>
           <Button variant="outline" @click="runComparison">Compare Implementations</Button>
@@ -132,7 +138,7 @@ for (let i = 0; i < iterations; i++) {
           </div>
           <div v-if="!result.error && results.length > 1" class="mt-2">
             <div class="h-2 bg-muted rounded-full overflow-hidden">
-              <div 
+              <div
                 class="h-full bg-primary transition-all"
                 :style="{ width: `${(result.time / (results[0]?.time ?? 1)) * 100}%` }"
               ></div>

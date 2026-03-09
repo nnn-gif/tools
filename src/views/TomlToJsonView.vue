@@ -16,10 +16,10 @@ const parseToml = (toml: string): any => {
 
   for (const line of lines) {
     const trimmed = line.trim()
-    
+
     // Skip empty lines and comments
     if (!trimmed || trimmed.startsWith('#')) continue
-    
+
     // Section header
     const sectionMatch = trimmed.match(/^\[([^\]]+)\]$/)
     if (sectionMatch && sectionMatch[1]) {
@@ -34,15 +34,15 @@ const parseToml = (toml: string): any => {
       }
       continue
     }
-    
+
     // Key-value pair
     const kvMatch = trimmed.match(/^([^=]+)=(.+)$/)
     if (kvMatch && kvMatch[1] && kvMatch[2]) {
       const key = kvMatch[1].trim()
       const rawValue = kvMatch[2].trim()
-      
+
       let value: any = rawValue
-      
+
       // Parse value
       if (rawValue.startsWith('"') && rawValue.endsWith('"')) {
         value = rawValue.slice(1, -1).replace(/\\"/g, '"')
@@ -55,11 +55,11 @@ const parseToml = (toml: string): any => {
       } else if (!isNaN(Number(rawValue))) {
         value = Number(rawValue)
       }
-      
+
       currentSection[key] = value
     }
   }
-  
+
   return result
 }
 

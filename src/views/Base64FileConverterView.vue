@@ -14,7 +14,7 @@ const handleFileUpload = async (event: Event) => {
   const target = event.target as HTMLInputElement
   error.value = ''
   base64Output.value = ''
-  
+
   if (target.files && target.files[0]) {
     const file = target.files[0]
     fileInput.value = file
@@ -25,7 +25,7 @@ const handleFileUpload = async (event: Event) => {
 
 const convertToBase64 = async () => {
   if (!fileInput.value) return
-  
+
   try {
     const reader = new FileReader()
     reader.onload = () => {
@@ -76,9 +76,7 @@ const downloadAsText = () => {
           </label>
         </div>
 
-        <div v-if="fileName" class="text-sm text-muted-foreground">
-          Selected: {{ fileName }}
-        </div>
+        <div v-if="fileName" class="text-sm text-muted-foreground">Selected: {{ fileName }}</div>
 
         <div v-if="error" class="p-4 text-sm text-destructive bg-destructive/10 rounded-md">
           {{ error }}

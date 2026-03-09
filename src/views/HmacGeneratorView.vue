@@ -14,7 +14,7 @@ const hmacResult = ref('')
 
 const generateHMAC = () => {
   if (!message.value || !secretKey.value) return
-  
+
   let hash
   switch (algorithm.value) {
     case 'MD5':
@@ -38,7 +38,7 @@ const generateHMAC = () => {
     default:
       return
   }
-  
+
   hmacResult.value = hash.toString()
 }
 </script>
@@ -57,7 +57,10 @@ const generateHMAC = () => {
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div class="grid gap-2">
             <Label>Algorithm</Label>
-            <select v-model="algorithm" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+            <select
+              v-model="algorithm"
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            >
               <option value="MD5">HMAC-MD5</option>
               <option value="SHA1">HMAC-SHA1</option>
               <option value="SHA256">HMAC-SHA256</option>
@@ -71,14 +74,14 @@ const generateHMAC = () => {
             <Input v-model="secretKey" type="password" placeholder="Enter secret key..." />
           </div>
         </div>
-        
+
         <div class="grid gap-2">
           <Label>Message</Label>
           <Textarea v-model="message" placeholder="Enter message to hash..." rows="4" />
         </div>
-        
+
         <Button @click="generateHMAC" class="w-full md:w-auto">Generate HMAC</Button>
-        
+
         <div v-if="hmacResult" class="space-y-2">
           <Label>HMAC Result (hex)</Label>
           <Textarea :model-value="hmacResult" readonly class="font-mono text-sm" rows="3" />

@@ -14,7 +14,7 @@ import Breadcrumb from '@/components/Breadcrumb.vue'
       <RouterView />
     </main>
     <Footer />
-    
+
     <!-- Live Analytics Widget -->
     <LiveSiteAnalytics />
   </div>

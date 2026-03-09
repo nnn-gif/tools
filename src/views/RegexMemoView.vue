@@ -6,55 +6,73 @@ import { Input } from '@/components/ui/input'
 const searchQuery = ref('')
 
 const regexPatterns = [
-  { category: 'Character Classes', patterns: [
-    { pattern: '.', desc: 'Any character except newline' },
-    { pattern: '\\d', desc: 'Digit (0-9)' },
-    { pattern: '\\D', desc: 'Non-digit' },
-    { pattern: '\\w', desc: 'Word character (a-z, A-Z, 0-9, _)' },
-    { pattern: '\\W', desc: 'Non-word character' },
-    { pattern: '\\s', desc: 'Whitespace (space, tab, newline)' },
-    { pattern: '\\S', desc: 'Non-whitespace' },
-  ]},
-  { category: 'Anchors', patterns: [
-    { pattern: '^', desc: 'Start of string' },
-    { pattern: '$', desc: 'End of string' },
-    { pattern: '\\b', desc: 'Word boundary' },
-    { pattern: '\\B', desc: 'Non-word boundary' },
-  ]},
-  { category: 'Quantifiers', patterns: [
-    { pattern: '*', desc: 'Zero or more' },
-    { pattern: '+', desc: 'One or more' },
-    { pattern: '?', desc: 'Zero or one (optional)' },
-    { pattern: '{n}', desc: 'Exactly n times' },
-    { pattern: '{n,}', desc: 'n or more times' },
-    { pattern: '{n,m}', desc: 'Between n and m times' },
-  ]},
-  { category: 'Groups', patterns: [
-    { pattern: '(...)', desc: 'Capturing group' },
-    { pattern: '(?:...)', desc: 'Non-capturing group' },
-    { pattern: '(?=...)', desc: 'Positive lookahead' },
-    { pattern: '(?!...)', desc: 'Negative lookahead' },
-  ]},
-  { category: 'Common Patterns', patterns: [
-    { pattern: '[a-zA-Z]', desc: 'Any letter' },
-    { pattern: '[0-9]', desc: 'Any digit' },
-    { pattern: '[a-zA-Z0-9]', desc: 'Alphanumeric' },
-    { pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$', desc: 'Email' },
-    { pattern: '^https?:\\/\\/[\\S]+$', desc: 'URL' },
-    { pattern: '^\\d{4}-\\d{2}-\\d{2}$', desc: 'Date (YYYY-MM-DD)' },
-  ]},
+  {
+    category: 'Character Classes',
+    patterns: [
+      { pattern: '.', desc: 'Any character except newline' },
+      { pattern: '\\d', desc: 'Digit (0-9)' },
+      { pattern: '\\D', desc: 'Non-digit' },
+      { pattern: '\\w', desc: 'Word character (a-z, A-Z, 0-9, _)' },
+      { pattern: '\\W', desc: 'Non-word character' },
+      { pattern: '\\s', desc: 'Whitespace (space, tab, newline)' },
+      { pattern: '\\S', desc: 'Non-whitespace' }
+    ]
+  },
+  {
+    category: 'Anchors',
+    patterns: [
+      { pattern: '^', desc: 'Start of string' },
+      { pattern: '$', desc: 'End of string' },
+      { pattern: '\\b', desc: 'Word boundary' },
+      { pattern: '\\B', desc: 'Non-word boundary' }
+    ]
+  },
+  {
+    category: 'Quantifiers',
+    patterns: [
+      { pattern: '*', desc: 'Zero or more' },
+      { pattern: '+', desc: 'One or more' },
+      { pattern: '?', desc: 'Zero or one (optional)' },
+      { pattern: '{n}', desc: 'Exactly n times' },
+      { pattern: '{n,}', desc: 'n or more times' },
+      { pattern: '{n,m}', desc: 'Between n and m times' }
+    ]
+  },
+  {
+    category: 'Groups',
+    patterns: [
+      { pattern: '(...)', desc: 'Capturing group' },
+      { pattern: '(?:...)', desc: 'Non-capturing group' },
+      { pattern: '(?=...)', desc: 'Positive lookahead' },
+      { pattern: '(?!...)', desc: 'Negative lookahead' }
+    ]
+  },
+  {
+    category: 'Common Patterns',
+    patterns: [
+      { pattern: '[a-zA-Z]', desc: 'Any letter' },
+      { pattern: '[0-9]', desc: 'Any digit' },
+      { pattern: '[a-zA-Z0-9]', desc: 'Alphanumeric' },
+      { pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$', desc: 'Email' },
+      { pattern: '^https?:\\/\\/[\\S]+$', desc: 'URL' },
+      { pattern: '^\\d{4}-\\d{2}-\\d{2}$', desc: 'Date (YYYY-MM-DD)' }
+    ]
+  }
 ]
 
 const filteredPatterns = computed(() => {
   if (!searchQuery.value) return regexPatterns
-  
-  return regexPatterns.map(cat => ({
-    ...cat,
-    patterns: cat.patterns.filter(p => 
-      p.pattern.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      p.desc.toLowerCase().includes(searchQuery.value.toLowerCase())
-    )
-  })).filter(cat => cat.patterns.length > 0)
+
+  return regexPatterns
+    .map((cat) => ({
+      ...cat,
+      patterns: cat.patterns.filter(
+        (p) =>
+          p.pattern.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+          p.desc.toLowerCase().includes(searchQuery.value.toLowerCase())
+      )
+    }))
+    .filter((cat) => cat.patterns.length > 0)
 })
 
 const copyPattern = (pattern: string) => {
@@ -70,11 +88,7 @@ const copyPattern = (pattern: string) => {
 
     <Card>
       <CardContent class="pt-6">
-        <Input 
-          v-model="searchQuery" 
-          placeholder="Search patterns..." 
-          class="w-full"
-        />
+        <Input v-model="searchQuery" placeholder="Search patterns..." class="w-full" />
       </CardContent>
     </Card>
 
@@ -84,8 +98,8 @@ const copyPattern = (pattern: string) => {
           <CardTitle class="text-lg">{{ category.category }}</CardTitle>
         </CardHeader>
         <CardContent class="space-y-2">
-          <div 
-            v-for="(item, idx) in category.patterns" 
+          <div
+            v-for="(item, idx) in category.patterns"
             :key="idx"
             class="p-2 rounded bg-muted hover:bg-muted/80 transition-colors cursor-pointer group"
             @click="copyPattern(item.pattern)"

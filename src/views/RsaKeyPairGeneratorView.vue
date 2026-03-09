@@ -56,7 +56,10 @@ const arrayBufferToPem = (buffer: ArrayBuffer, label: string): string => {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="grid gap-2">
             <Label>Key Size (bits)</Label>
-            <select v-model.number="keySize" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+            <select
+              v-model.number="keySize"
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            >
               <option :value="2048">2048 bits</option>
               <option :value="3072">3072 bits</option>
               <option :value="4096">4096 bits</option>
@@ -77,7 +80,12 @@ const arrayBufferToPem = (buffer: ArrayBuffer, label: string): string => {
           <CardTitle>Public Key (PEM)</CardTitle>
         </CardHeader>
         <CardContent class="flex-1 min-h-0">
-          <Textarea :model-value="publicKey" readonly class="h-full resize-none font-mono text-xs" placeholder="Public key will appear here..." />
+          <Textarea
+            :model-value="publicKey"
+            readonly
+            class="h-full resize-none font-mono text-xs"
+            placeholder="Public key will appear here..."
+          />
         </CardContent>
       </Card>
 
@@ -86,7 +94,12 @@ const arrayBufferToPem = (buffer: ArrayBuffer, label: string): string => {
           <CardTitle>Private Key (PEM)</CardTitle>
         </CardHeader>
         <CardContent class="flex-1 min-h-0">
-          <Textarea :model-value="privateKey" readonly class="h-full resize-none font-mono text-xs" placeholder="Private key will appear here..." />
+          <Textarea
+            :model-value="privateKey"
+            readonly
+            class="h-full resize-none font-mono text-xs"
+            placeholder="Private key will appear here..."
+          />
         </CardContent>
       </Card>
     </div>

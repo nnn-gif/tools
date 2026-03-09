@@ -13,7 +13,7 @@ const ENCODING = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'
 
 const generateUlid = (): string => {
   const now = Date.now()
-  
+
   // Time component (10 characters)
   const time: string[] = []
   let timestamp = now
@@ -22,31 +22,31 @@ const generateUlid = (): string => {
     time.unshift(char ?? '0')
     timestamp = Math.floor(timestamp / 32)
   }
-  
+
   // Random component (16 characters)
   const random: string[] = []
   const randomBytes = new Uint8Array(16)
   crypto.getRandomValues(randomBytes)
-  
+
   for (let i = 0; i < 16; i++) {
     const byte = randomBytes[i]
     const char = byte !== undefined ? ENCODING[byte % 32] : '0'
     random.push(char ?? '0')
   }
-  
+
   return time.join('') + random.join('')
 }
 
 const parseUlid = (ulid: string): { timestamp: number; date: string } => {
   const timeComponent = ulid.slice(0, 10)
   let timestamp = 0
-  
+
   for (let i = 0; i < timeComponent.length; i++) {
     const char = timeComponent[i] ?? '0'
     const value = ENCODING.indexOf(char)
     timestamp = timestamp * 32 + value
   }
-  
+
   return {
     timestamp,
     date: new Date(timestamp).toISOString()
@@ -70,14 +70,14 @@ const copyUlid = (index: number) => {
   if (ulid) {
     navigator.clipboard.writeText(ulid)
     copied.value = index
-    setTimeout(() => copied.value = null, 2000)
+    setTimeout(() => (copied.value = null), 2000)
   }
 }
 
 const copyAll = () => {
   navigator.clipboard.writeText(ulids.value.join('\n'))
   copied.value = -1
-  setTimeout(() => copied.value = null, 2000)
+  setTimeout(() => (copied.value = null), 2000)
 }
 
 // Generate initial ULIDs
@@ -119,9 +119,7 @@ generate()
               <RefreshCw class="w-4 h-4 mr-2" />
               Generate {{ count }}
             </Button>
-            <Button @click="generateOne" variant="outline" class="flex-1">
-              + Generate One
-            </Button>
+            <Button @click="generateOne" variant="outline" class="flex-1"> + Generate One </Button>
           </div>
         </CardContent>
       </Card>

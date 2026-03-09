@@ -34,7 +34,7 @@ const generate = () => {
             <Input v-model="password" type="password" placeholder="Enter password..." />
           </div>
         </div>
-        
+
         <Button @click="generate" class="w-full md:w-auto">Generate</Button>
 
         <div v-if="header" class="space-y-2">

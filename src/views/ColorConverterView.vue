@@ -10,11 +10,13 @@ const copied = ref<string | null>(null)
 // Parse HEX to RGB
 const hexToRgb = (hexStr: string) => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexStr)
-  return result ? {
-    r: parseInt(result[1] ?? '0', 16),
-    g: parseInt(result[2] ?? '0', 16),
-    b: parseInt(result[3] ?? '0', 16)
-  } : null
+  return result
+    ? {
+        r: parseInt(result[1] ?? '0', 16),
+        g: parseInt(result[2] ?? '0', 16),
+        b: parseInt(result[3] ?? '0', 16)
+      }
+    : null
 }
 
 // RGB to HSL
@@ -24,16 +26,23 @@ const rgbToHsl = (r: number, g: number, b: number) => {
   b /= 255
   const max = Math.max(r, g, b)
   const min = Math.min(r, g, b)
-  let h = 0, s = 0
+  let h = 0,
+    s = 0
   const l = (max + min) / 2
 
   if (max !== min) {
     const d = max - min
     s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
     switch (max) {
-      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break
-      case g: h = ((b - r) / d + 2) / 6; break
-      case b: h = ((r - g) / d + 4) / 6; break
+      case r:
+        h = ((g - b) / d + (g < b ? 6 : 0)) / 6
+        break
+      case g:
+        h = ((b - r) / d + 2) / 6
+        break
+      case b:
+        h = ((r - g) / d + 4) / 6
+        break
     }
   }
 
@@ -49,7 +58,7 @@ const rgbToCmyk = (r: number, g: number, b: number) => {
   if (r === 0 && g === 0 && b === 0) {
     return { c: 0, m: 0, y: 0, k: 100 }
   }
-  
+
   const rr = r / 255
   const gg = g / 255
   const bb = b / 255
@@ -71,15 +80,15 @@ const hsl = computed(() => rgbToHsl(rgb.value.r, rgb.value.g, rgb.value.b))
 const cmyk = computed(() => rgbToCmyk(rgb.value.r, rgb.value.g, rgb.value.b))
 
 const formats = computed(() => ({
-  'HEX': hex.value.toUpperCase(),
+  HEX: hex.value.toUpperCase(),
   'HEX (no #)': hex.value.replace('#', '').toUpperCase(),
-  'RGB': `rgb(${rgb.value.r}, ${rgb.value.g}, ${rgb.value.b})`,
-  'RGBA': `rgba(${rgb.value.r}, ${rgb.value.g}, ${rgb.value.b}, 1)`,
-  'HSL': `hsl(${hsl.value.h}, ${hsl.value.s}%, ${hsl.value.l}%)`,
-  'HSLA': `hsla(${hsl.value.h}, ${hsl.value.s}%, ${hsl.value.l}%, 1)`,
-  'CMYK': `cmyk(${cmyk.value.c}%, ${cmyk.value.m}%, ${cmyk.value.y}%, ${cmyk.value.k}%)`,
+  RGB: `rgb(${rgb.value.r}, ${rgb.value.g}, ${rgb.value.b})`,
+  RGBA: `rgba(${rgb.value.r}, ${rgb.value.g}, ${rgb.value.b}, 1)`,
+  HSL: `hsl(${hsl.value.h}, ${hsl.value.s}%, ${hsl.value.l}%)`,
+  HSLA: `hsla(${hsl.value.h}, ${hsl.value.s}%, ${hsl.value.l}%, 1)`,
+  CMYK: `cmyk(${cmyk.value.c}%, ${cmyk.value.m}%, ${cmyk.value.y}%, ${cmyk.value.k}%)`,
   'CSS Variable': `--color: ${hex.value};`,
-  'Tailwind Class': `bg-[${hex.value}]`,
+  'Tailwind Class': `bg-[${hex.value}]`
 }))
 
 const presets = [
@@ -94,7 +103,7 @@ const presets = [
   { name: 'Orange', color: '#FF5733' },
   { name: 'Purple', color: '#800080' },
   { name: 'Pink', color: '#FFC0CB' },
-  { name: 'Brown', color: '#8B4513' },
+  { name: 'Brown', color: '#8B4513' }
 ]
 
 const copyFormat = (type: string) => {
@@ -103,11 +112,15 @@ const copyFormat = (type: string) => {
     navigator.clipboard.writeText(value)
   }
   copied.value = type
-  setTimeout(() => copied.value = null, 2000)
+  setTimeout(() => (copied.value = null), 2000)
 }
 
 const randomColor = () => {
-  hex.value = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')
+  hex.value =
+    '#' +
+    Math.floor(Math.random() * 16777215)
+      .toString(16)
+      .padStart(6, '0')
 }
 </script>
 

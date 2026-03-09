@@ -9,7 +9,7 @@ const copied = ref<string | null>(null)
 
 const parsedUrl = computed(() => {
   if (!urlInput.value) return null
-  
+
   try {
     const url = new URL(urlInput.value)
     return url
@@ -20,27 +20,27 @@ const parsedUrl = computed(() => {
 
 const params = computed(() => {
   if (!parsedUrl.value) return []
-  
+
   const searchParams = new URLSearchParams(parsedUrl.value.search)
   return Array.from(searchParams.entries())
 })
 
 const components = computed(() => {
   if (!parsedUrl.value) return {}
-  
+
   const url = parsedUrl.value
-  
+
   return {
-    'Protocol': url.protocol.replace(':', ''),
-    'Hostname': url.hostname,
-    'Port': url.port || '(default)',
-    'Pathname': url.pathname || '/',
-    'Search': url.search || '(none)',
-    'Hash': url.hash || '(none)',
-    'Origin': url.origin,
+    Protocol: url.protocol.replace(':', ''),
+    Hostname: url.hostname,
+    Port: url.port || '(default)',
+    Pathname: url.pathname || '/',
+    Search: url.search || '(none)',
+    Hash: url.hash || '(none)',
+    Origin: url.origin,
     'Full URL': url.href,
-    'Username': url.username || '(none)',
-    'Password': url.password ? '•••••' : '(none)',
+    Username: url.username || '(none)',
+    Password: url.password ? '•••••' : '(none)'
   }
 })
 
@@ -50,7 +50,7 @@ const examples = [
   'https://example.com/search?q=hello&page=1',
   'https://user:pass@example.com/api/v1',
   'https://example.com/page#section-1',
-  'http://localhost:3000/api?key=123&callback=func',
+  'http://localhost:3000/api?key=123&callback=func'
 ]
 
 const copyComponent = (type: string) => {
@@ -58,7 +58,7 @@ const copyComponent = (type: string) => {
   if (value !== undefined) {
     navigator.clipboard.writeText(value)
     copied.value = type
-    setTimeout(() => copied.value = null, 2000)
+    setTimeout(() => (copied.value = null), 2000)
   }
 }
 
@@ -71,7 +71,7 @@ const openUrl = () => {
 const copyParam = (value: string, key: string) => {
   navigator.clipboard.writeText(value)
   copied.value = key
-  setTimeout(() => copied.value = null, 2000)
+  setTimeout(() => (copied.value = null), 2000)
 }
 </script>
 
@@ -103,11 +103,7 @@ const copyParam = (value: string, key: string) => {
               placeholder="https://example.com/path?query=value"
               class="flex-1 px-3 py-2 border rounded-md font-mono focus:outline-none focus:ring-2 focus:ring-primary"
             />
-            <Button
-              v-if="parsedUrl"
-              @click="openUrl"
-              variant="outline"
-            >
+            <Button v-if="parsedUrl" @click="openUrl" variant="outline">
               <ExternalLink class="w-4 h-4 mr-2" />
               Open
             </Button>
@@ -170,27 +166,19 @@ const copyParam = (value: string, key: string) => {
                     <div class="font-semibold text-primary">{{ key }}</div>
                     <div class="font-mono text-sm mt-1 break-all">{{ value || '(empty)' }}</div>
                   </div>
-                  <Button
-                    @click="copyParam(value, key)"
-                    variant="ghost"
-                    size="sm"
-                  >
+                  <Button @click="copyParam(value, key)" variant="ghost" size="sm">
                     <component :is="copied === key ? Check : Copy" class="w-4 h-4" />
                   </Button>
                 </div>
               </div>
             </div>
-            <div v-else class="text-center py-8 text-muted-foreground">
-              No query parameters
-            </div>
+            <div v-else class="text-center py-8 text-muted-foreground">No query parameters</div>
           </CardContent>
         </Card>
       </div>
 
       <Card v-else-if="urlInput" class="border-red-500">
-        <CardContent class="py-8 text-center text-red-500">
-          Invalid URL format
-        </CardContent>
+        <CardContent class="py-8 text-center text-red-500"> Invalid URL format </CardContent>
       </Card>
 
       <div v-else class="text-center py-16 text-muted-foreground">

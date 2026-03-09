@@ -50,8 +50,8 @@ onUnmounted(() => {
         <CardTitle>Press Any Key</CardTitle>
       </CardHeader>
       <CardContent>
-        <Input 
-          placeholder="Click here and press any key..." 
+        <Input
+          placeholder="Click here and press any key..."
           class="text-center text-xl h-16"
           readonly
           :model-value="keyInfo?.key || ''"
@@ -93,7 +93,15 @@ onUnmounted(() => {
           <div class="text-sm text-muted-foreground">Location</div>
           <div class="text-3xl font-mono font-bold">{{ keyInfo.location }}</div>
           <div class="text-xs text-muted-foreground mt-1">
-            {{ keyInfo.location === 0 ? 'Standard' : keyInfo.location === 1 ? 'Left' : keyInfo.location === 2 ? 'Right' : 'Numpad' }}
+            {{
+              keyInfo.location === 0
+                ? 'Standard'
+                : keyInfo.location === 1
+                  ? 'Left'
+                  : keyInfo.location === 2
+                    ? 'Right'
+                    : 'Numpad'
+            }}
           </div>
         </CardContent>
       </Card>
@@ -102,16 +110,36 @@ onUnmounted(() => {
         <CardContent class="pt-6">
           <div class="text-sm text-muted-foreground mb-3">Modifiers</div>
           <div class="grid grid-cols-2 gap-2 text-sm">
-            <div :class="['p-2 rounded text-center', keyInfo.ctrlKey ? 'bg-green-500/10 text-green-600' : 'bg-muted']">
+            <div
+              :class="[
+                'p-2 rounded text-center',
+                keyInfo.ctrlKey ? 'bg-green-500/10 text-green-600' : 'bg-muted'
+              ]"
+            >
               Ctrl: {{ keyInfo.ctrlKey ? 'Yes' : 'No' }}
             </div>
-            <div :class="['p-2 rounded text-center', keyInfo.altKey ? 'bg-green-500/10 text-green-600' : 'bg-muted']">
+            <div
+              :class="[
+                'p-2 rounded text-center',
+                keyInfo.altKey ? 'bg-green-500/10 text-green-600' : 'bg-muted'
+              ]"
+            >
               Alt: {{ keyInfo.altKey ? 'Yes' : 'No' }}
             </div>
-            <div :class="['p-2 rounded text-center', keyInfo.shiftKey ? 'bg-green-500/10 text-green-600' : 'bg-muted']">
+            <div
+              :class="[
+                'p-2 rounded text-center',
+                keyInfo.shiftKey ? 'bg-green-500/10 text-green-600' : 'bg-muted'
+              ]"
+            >
               Shift: {{ keyInfo.shiftKey ? 'Yes' : 'No' }}
             </div>
-            <div :class="['p-2 rounded text-center', keyInfo.metaKey ? 'bg-green-500/10 text-green-600' : 'bg-muted']">
+            <div
+              :class="[
+                'p-2 rounded text-center',
+                keyInfo.metaKey ? 'bg-green-500/10 text-green-600' : 'bg-muted'
+              ]"
+            >
               Meta: {{ keyInfo.metaKey ? 'Yes' : 'No' }}
             </div>
           </div>

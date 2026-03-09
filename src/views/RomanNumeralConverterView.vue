@@ -29,8 +29,13 @@ const intToRoman = (num: number): string => {
 
 const romanToInt = (s: string): number => {
   const map: Record<string, number> = {
-    'I': 1, 'V': 5, 'X': 10, 'L': 50,
-    'C': 100, 'D': 500, 'M': 1000
+    I: 1,
+    V: 5,
+    X: 10,
+    L: 50,
+    C: 100,
+    D: 500,
+    M: 1000
   }
   let result = 0
   for (let i = 0; i < s.length; i++) {
@@ -88,7 +93,13 @@ const convertToNumber = () => {
         <CardContent class="flex-1 space-y-4">
           <div class="grid gap-2">
             <Label>Number (1-3999)</Label>
-            <Input v-model="numberInput" type="number" min="1" max="3999" placeholder="Enter number..." />
+            <Input
+              v-model="numberInput"
+              type="number"
+              min="1"
+              max="3999"
+              placeholder="Enter number..."
+            />
           </div>
           <Button @click="convertToRoman" class="w-full">Convert</Button>
           <div v-if="romanOutput" class="p-4 rounded-lg bg-muted">
@@ -105,7 +116,11 @@ const convertToNumber = () => {
         <CardContent class="flex-1 space-y-4">
           <div class="grid gap-2">
             <Label>Roman Numeral</Label>
-            <Input v-model="romanInput" placeholder="Enter Roman numeral (e.g., XIV)..." class="uppercase" />
+            <Input
+              v-model="romanInput"
+              placeholder="Enter Roman numeral (e.g., XIV)..."
+              class="uppercase"
+            />
           </div>
           <Button @click="convertToNumber" class="w-full">Convert</Button>
           <div v-if="numberOutput !== null" class="p-4 rounded-lg bg-muted">

@@ -9,22 +9,26 @@ const outputText = ref('')
 
 const obfuscate = () => {
   if (!inputText.value) return
-  
+
   // Use zero-width characters to obfuscate
   const zeroWidthChars = ['\u200B', '\u200C', '\u200D', '\uFEFF']
-  
-  outputText.value = inputText.value.split('').map(char => {
-    // Add random zero-width characters around each character
-    const prefix = zeroWidthChars[Math.floor(Math.random() * zeroWidthChars.length)]
-    const suffix = zeroWidthChars[Math.floor(Math.random() * zeroWidthChars.length)]
-    return prefix + char + suffix
-  }).join('')
+
+  outputText.value = inputText.value
+    .split('')
+    .map((char) => {
+      // Add random zero-width characters around each character
+      const prefix = zeroWidthChars[Math.floor(Math.random() * zeroWidthChars.length)]
+      const suffix = zeroWidthChars[Math.floor(Math.random() * zeroWidthChars.length)]
+      return prefix + char + suffix
+    })
+    .join('')
 }
 
 const deobfuscate = () => {
   if (!inputText.value) return
-  
-  // Remove zero-width characters
+
+  // Remove zero-width characters (eslint-disable for intentional unicode chars)
+  // eslint-disable-next-line no-misleading-character-class
   outputText.value = inputText.value.replace(/[\u200B\u200C\u200D\uFEFF]/g, '')
 }
 
@@ -48,7 +52,7 @@ const copyOutput = () => {
           <Label>Input</Label>
           <Input v-model="inputText" placeholder="Enter text..." />
         </div>
-        
+
         <div class="flex gap-2">
           <Button @click="obfuscate">Obfuscate</Button>
           <Button variant="outline" @click="deobfuscate">Deobfuscate</Button>
@@ -66,7 +70,8 @@ const copyOutput = () => {
           {{ outputText }}
         </div>
         <div class="mt-2 text-sm text-muted-foreground">
-          Length: {{ outputText.length }} characters (visible: {{ outputText.replace(/[\u200B\u200C\u200D\uFEFF]/g, '').length }})
+          Length: {{ outputText.length }} characters (visible:
+          {{ outputText.replace(/[\u200B\u200C\u200D\uFEFF]/g, '').length }})
         </div>
       </CardContent>
     </Card>

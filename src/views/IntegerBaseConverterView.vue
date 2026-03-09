@@ -76,19 +76,39 @@ const updateFromHex = () => {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="grid gap-2">
             <Label>Decimal (base 10)</Label>
-            <Input v-model="decimalValue" @input="updateFromDecimal" placeholder="Enter decimal number..." class="font-mono" />
+            <Input
+              v-model="decimalValue"
+              @input="updateFromDecimal"
+              placeholder="Enter decimal number..."
+              class="font-mono"
+            />
           </div>
           <div class="grid gap-2">
             <Label>Binary (base 2)</Label>
-            <Input v-model="binaryValue" @input="updateFromBinary" placeholder="Enter binary number..." class="font-mono" />
+            <Input
+              v-model="binaryValue"
+              @input="updateFromBinary"
+              placeholder="Enter binary number..."
+              class="font-mono"
+            />
           </div>
           <div class="grid gap-2">
             <Label>Octal (base 8)</Label>
-            <Input v-model="octalValue" @input="updateFromOctal" placeholder="Enter octal number..." class="font-mono" />
+            <Input
+              v-model="octalValue"
+              @input="updateFromOctal"
+              placeholder="Enter octal number..."
+              class="font-mono"
+            />
           </div>
           <div class="grid gap-2">
             <Label>Hexadecimal (base 16)</Label>
-            <Input v-model="hexadecimalValue" @input="updateFromHex" placeholder="Enter hex number..." class="font-mono" />
+            <Input
+              v-model="hexadecimalValue"
+              @input="updateFromHex"
+              placeholder="Enter hex number..."
+              class="font-mono"
+            />
           </div>
         </div>
       </CardContent>

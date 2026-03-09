@@ -8,10 +8,10 @@ const safelinkUrl = ref('')
 
 const decodedUrl = computed(() => {
   if (!safelinkUrl.value) return null
-  
+
   try {
     const url = new URL(safelinkUrl.value)
-    
+
     // Outlook safelink format: https://safelink.protection.outlook.com/?url=...
     if (url.hostname.includes('safelink.protection.outlook.com')) {
       const encodedUrl = url.searchParams.get('url')
@@ -19,7 +19,7 @@ const decodedUrl = computed(() => {
         return decodeURIComponent(encodedUrl)
       }
     }
-    
+
     return null
   } catch (e) {
     return null
@@ -40,9 +40,9 @@ const decodedUrl = computed(() => {
       <CardContent class="space-y-4">
         <div class="grid gap-2">
           <Label>Outlook Safelink URL</Label>
-          <Input 
-            v-model="safelinkUrl" 
-            placeholder="Paste Outlook safelink URL here..." 
+          <Input
+            v-model="safelinkUrl"
+            placeholder="Paste Outlook safelink URL here..."
             class="font-mono text-sm"
           />
         </div>
@@ -55,7 +55,12 @@ const decodedUrl = computed(() => {
       </CardHeader>
       <CardContent>
         <div class="p-4 rounded-lg bg-muted font-mono text-sm break-all">
-          <a :href="decodedUrl" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">
+          <a
+            :href="decodedUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-primary hover:underline"
+          >
             {{ decodedUrl }}
           </a>
         </div>

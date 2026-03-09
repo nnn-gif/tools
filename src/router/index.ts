@@ -5,7 +5,7 @@ import { blogPosts } from '../data/blogPosts'
 
 // Generate static routes for each blog post (for SSG pre-rendering)
 // Store slug in meta since props don't work reliably during SSR
-const blogPostRoutes = blogPosts.map(post => ({
+const blogPostRoutes = blogPosts.map((post) => ({
   path: `blogs/${post.slug}`,
   name: `blog-post-${post.slug}`,
   component: () => import('../views/BlogPostView.vue'),
@@ -13,7 +13,7 @@ const blogPostRoutes = blogPosts.map(post => ({
     title: post.title,
     description: post.excerpt,
     keywords: post.tags.join(', '),
-    slug: post.slug  // Store slug in meta for SSR access
+    slug: post.slug // Store slug in meta for SSR access
   }
 }))
 
@@ -54,8 +54,7 @@ export const routes = [
           title: 'Blog - Formatho',
           description:
             'Insights, updates, and stories from the Formatho team. Read about privacy-first development, AI agents, and more.',
-          keywords:
-            'formatho blog, developer tools blog, privacy-first, ai agents, web development'
+          keywords: 'formatho blog, developer tools blog, privacy-first, ai agents, web development'
         }
       },
       // Static blog post routes (MUST come before dynamic route for proper matching)
@@ -67,7 +66,8 @@ export const routes = [
         component: () => import('../views/BlogPostView.vue'),
         meta: {
           title: 'Blog Post - Formatho',
-          description: 'Read technical articles about developer tools, privacy-first development, and AI agents.',
+          description:
+            'Read technical articles about developer tools, privacy-first development, and AI agents.',
           keywords: 'formatho blog, developer tools, privacy, ai agents'
         }
       },
@@ -77,7 +77,8 @@ export const routes = [
         component: () => import('../views/PrivacyPolicyView.vue'),
         meta: {
           title: 'Privacy Policy - Formatho',
-          description: 'Learn about Formatho privacy practices. All data processing happens locally in your browser.',
+          description:
+            'Learn about Formatho privacy practices. All data processing happens locally in your browser.',
           keywords: 'privacy policy, data protection, client-side processing'
         }
       },
@@ -97,7 +98,8 @@ export const routes = [
         component: () => import('../views/ContactView.vue'),
         meta: {
           title: 'Contact Us - Formatho',
-          description: 'Get in touch with the Formatho team. Report bugs, request features, or join our community.',
+          description:
+            'Get in touch with the Formatho team. Report bugs, request features, or join our community.',
           keywords: 'contact, support, feedback, github'
         }
       },
@@ -380,80 +382,122 @@ export const routes = [
         path: 'bcrypt',
         name: 'bcrypt',
         component: () => import('../views/BcryptView.vue'),
-        meta: { title: 'Bcrypt Hash Generator', description: 'Generate and verify bcrypt password hashes. Privacy-first tool that runs entirely in your browser.' }
+        meta: {
+          title: 'Bcrypt Hash Generator',
+          description:
+            'Generate and verify bcrypt password hashes. Privacy-first tool that runs entirely in your browser.'
+        }
       },
       {
         path: 'encryption',
         name: 'encryption',
         component: () => import('../views/EncryptionView.vue'),
-        meta: { title: 'Text Encryption/Decryption', description: 'Encrypt and decrypt text using AES, DES, and other algorithms. Privacy-first tool.' }
+        meta: {
+          title: 'Text Encryption/Decryption',
+          description:
+            'Encrypt and decrypt text using AES, DES, and other algorithms. Privacy-first tool.'
+        }
       },
       {
         path: 'bip39-generator',
         name: 'bip39-generator',
         component: () => import('../views/Bip39GeneratorView.vue'),
-        meta: { title: 'BIP39 Mnemonic Generator', description: 'Generate BIP39 mnemonic phrases and derive seeds. Privacy-first crypto tool.' }
+        meta: {
+          title: 'BIP39 Mnemonic Generator',
+          description:
+            'Generate BIP39 mnemonic phrases and derive seeds. Privacy-first crypto tool.'
+        }
       },
       {
         path: 'hmac-generator',
         name: 'hmac-generator',
         component: () => import('../views/HmacGeneratorView.vue'),
-        meta: { title: 'HMAC Generator', description: 'Generate HMAC hashes using various algorithms. Privacy-first tool.' }
+        meta: {
+          title: 'HMAC Generator',
+          description: 'Generate HMAC hashes using various algorithms. Privacy-first tool.'
+        }
       },
       {
         path: 'rsa-key-pair-generator',
         name: 'rsa-key-pair-generator',
         component: () => import('../views/RsaKeyPairGeneratorView.vue'),
-        meta: { title: 'RSA Key Pair Generator', description: 'Generate RSA public/private key pairs. Privacy-first crypto tool.' }
+        meta: {
+          title: 'RSA Key Pair Generator',
+          description: 'Generate RSA public/private key pairs. Privacy-first crypto tool.'
+        }
       },
       {
         path: 'password-strength-analyser',
         name: 'password-strength-analyser',
         component: () => import('../views/PasswordStrengthAnalyserView.vue'),
-        meta: { title: 'Password Strength Analyzer', description: 'Analyze password strength and security. Privacy-first tool.' }
+        meta: {
+          title: 'Password Strength Analyzer',
+          description: 'Analyze password strength and security. Privacy-first tool.'
+        }
       },
       {
         path: 'pdf-signature-checker',
         name: 'pdf-signature-checker',
         component: () => import('../views/PdfSignatureCheckerView.vue'),
-        meta: { title: 'PDF Signature Checker', description: 'Check and validate digital signatures in PDF files. Privacy-first tool.' }
+        meta: {
+          title: 'PDF Signature Checker',
+          description: 'Check and validate digital signatures in PDF files. Privacy-first tool.'
+        }
       },
       // Converter Tools
       {
         path: 'integer-base-converter',
         name: 'integer-base-converter',
         component: () => import('../views/IntegerBaseConverterView.vue'),
-        meta: { title: 'Integer Base Converter', description: 'Convert numbers between binary, octal, decimal, and hexadecimal.' }
+        meta: {
+          title: 'Integer Base Converter',
+          description: 'Convert numbers between binary, octal, decimal, and hexadecimal.'
+        }
       },
       {
         path: 'roman-numeral-converter',
         name: 'roman-numeral-converter',
         component: () => import('../views/RomanNumeralConverterView.vue'),
-        meta: { title: 'Roman Numeral Converter', description: 'Convert between Roman numerals and numbers.' }
+        meta: {
+          title: 'Roman Numeral Converter',
+          description: 'Convert between Roman numerals and numbers.'
+        }
       },
       {
         path: 'base64-file-converter',
         name: 'base64-file-converter',
         component: () => import('../views/Base64FileConverterView.vue'),
-        meta: { title: 'Base64 File Converter', description: 'Convert files to and from Base64 format. Privacy-first tool.' }
+        meta: {
+          title: 'Base64 File Converter',
+          description: 'Convert files to and from Base64 format. Privacy-first tool.'
+        }
       },
       {
         path: 'text-to-nato-alphabet',
         name: 'text-to-nato-alphabet',
         component: () => import('../views/TextToNatoAlphabetView.vue'),
-        meta: { title: 'Text to NATO Alphabet', description: 'Convert text to NATO phonetic alphabet.' }
+        meta: {
+          title: 'Text to NATO Alphabet',
+          description: 'Convert text to NATO phonetic alphabet.'
+        }
       },
       {
         path: 'text-to-unicode',
         name: 'text-to-unicode',
         component: () => import('../views/TextToUnicodeView.vue'),
-        meta: { title: 'Text to Unicode Converter', description: 'Convert text to Unicode code points and HTML entities.' }
+        meta: {
+          title: 'Text to Unicode Converter',
+          description: 'Convert text to Unicode code points and HTML entities.'
+        }
       },
       {
         path: 'yaml-to-toml',
         name: 'yaml-to-toml',
         component: () => import('../views/YamlToTomlView.vue'),
-        meta: { title: 'YAML to TOML Converter', description: 'Convert YAML configuration files to TOML format.' }
+        meta: {
+          title: 'YAML to TOML Converter',
+          description: 'Convert YAML configuration files to TOML format.'
+        }
       },
       {
         path: 'json-to-toml',
@@ -465,25 +509,37 @@ export const routes = [
         path: 'list-converter',
         name: 'list-converter',
         component: () => import('../views/ListConverterView.vue'),
-        meta: { title: 'List Converter', description: 'Convert lists between different formats (comma, newline, JSON, etc).' }
+        meta: {
+          title: 'List Converter',
+          description: 'Convert lists between different formats (comma, newline, JSON, etc).'
+        }
       },
       {
         path: 'toml-to-json',
         name: 'toml-to-json',
         component: () => import('../views/TomlToJsonView.vue'),
-        meta: { title: 'TOML to JSON Converter', description: 'Convert TOML configuration files to JSON format.' }
+        meta: {
+          title: 'TOML to JSON Converter',
+          description: 'Convert TOML configuration files to JSON format.'
+        }
       },
       {
         path: 'toml-to-yaml',
         name: 'toml-to-yaml',
         component: () => import('../views/TomlToYamlView.vue'),
-        meta: { title: 'TOML to YAML Converter', description: 'Convert TOML configuration files to YAML format.' }
+        meta: {
+          title: 'TOML to YAML Converter',
+          description: 'Convert TOML configuration files to YAML format.'
+        }
       },
       {
         path: 'xml-to-json',
         name: 'xml-to-json',
         component: () => import('../views/XmlToJsonView.vue'),
-        meta: { title: 'XML to JSON Converter', description: 'Convert XML documents to JSON format.' }
+        meta: {
+          title: 'XML to JSON Converter',
+          description: 'Convert XML documents to JSON format.'
+        }
       },
       {
         path: 'json-to-xml',
@@ -495,20 +551,29 @@ export const routes = [
         path: 'markdown-to-html',
         name: 'markdown-to-html',
         component: () => import('../views/MarkdownToHtmlView.vue'),
-        meta: { title: 'Markdown to HTML Converter', description: 'Convert Markdown to HTML with syntax highlighting.' }
+        meta: {
+          title: 'Markdown to HTML Converter',
+          description: 'Convert Markdown to HTML with syntax highlighting.'
+        }
       },
       // Web Tools
       {
         path: 'url-encoder',
         name: 'url-encoder',
         component: () => import('../views/UrlEncoderView.vue'),
-        meta: { title: 'URL Encoder/Decoder', description: 'Encode and decode URL strings. Privacy-first tool.' }
+        meta: {
+          title: 'URL Encoder/Decoder',
+          description: 'Encode and decode URL strings. Privacy-first tool.'
+        }
       },
       {
         path: 'html-entities',
         name: 'html-entities',
         component: () => import('../views/HtmlEntitiesView.vue'),
-        meta: { title: 'HTML Entities Encoder/Decoder', description: 'Encode and decode HTML entities.' }
+        meta: {
+          title: 'HTML Entities Encoder/Decoder',
+          description: 'Encode and decode HTML entities.'
+        }
       },
       {
         path: 'device-information',
@@ -520,19 +585,28 @@ export const routes = [
         path: 'basic-auth-generator',
         name: 'basic-auth-generator',
         component: () => import('../views/BasicAuthGeneratorView.vue'),
-        meta: { title: 'HTTP Basic Auth Generator', description: 'Generate HTTP Basic Authentication headers.' }
+        meta: {
+          title: 'HTTP Basic Auth Generator',
+          description: 'Generate HTTP Basic Authentication headers.'
+        }
       },
       {
         path: 'meta-tag-generator',
         name: 'meta-tag-generator',
         component: () => import('../views/MetaTagGeneratorView.vue'),
-        meta: { title: 'Meta Tag Generator', description: 'Generate HTML meta tags for SEO and social sharing.' }
+        meta: {
+          title: 'Meta Tag Generator',
+          description: 'Generate HTML meta tags for SEO and social sharing.'
+        }
       },
       {
         path: 'otp-code-generator',
         name: 'otp-code-generator',
         component: () => import('../views/OtpCodeGeneratorView.vue'),
-        meta: { title: 'OTP/TOTP Generator', description: 'Generate TOTP codes from secrets. Privacy-first tool.' }
+        meta: {
+          title: 'OTP/TOTP Generator',
+          description: 'Generate TOTP codes from secrets. Privacy-first tool.'
+        }
       },
       {
         path: 'mime-types',
@@ -568,7 +642,10 @@ export const routes = [
         path: 'json-diff',
         name: 'json-diff',
         component: () => import('../views/JsonDiffView.vue'),
-        meta: { title: 'JSON Diff', description: 'Compare and find differences between JSON objects.' }
+        meta: {
+          title: 'JSON Diff',
+          description: 'Compare and find differences between JSON objects.'
+        }
       },
       {
         path: 'safelink-decoder',
@@ -581,19 +658,28 @@ export const routes = [
         path: 'wifi-qr-code-generator',
         name: 'wifi-qr-code-generator',
         component: () => import('../views/WifiQrCodeGeneratorView.vue'),
-        meta: { title: 'WiFi QR Code Generator', description: 'Generate QR codes for WiFi network credentials.' }
+        meta: {
+          title: 'WiFi QR Code Generator',
+          description: 'Generate QR codes for WiFi network credentials.'
+        }
       },
       {
         path: 'svg-placeholder-generator',
         name: 'svg-placeholder-generator',
         component: () => import('../views/SvgPlaceholderGeneratorView.vue'),
-        meta: { title: 'SVG Placeholder Generator', description: 'Generate SVG placeholder images.' }
+        meta: {
+          title: 'SVG Placeholder Generator',
+          description: 'Generate SVG placeholder images.'
+        }
       },
       {
         path: 'camera-recorder',
         name: 'camera-recorder',
         component: () => import('../views/CameraRecorderView.vue'),
-        meta: { title: 'Camera Recorder', description: 'Record video from your camera in the browser.' }
+        meta: {
+          title: 'Camera Recorder',
+          description: 'Record video from your camera in the browser.'
+        }
       },
       // Development Tools
       {
@@ -606,7 +692,10 @@ export const routes = [
         path: 'random-port-generator',
         name: 'random-port-generator',
         component: () => import('../views/RandomPortGeneratorView.vue'),
-        meta: { title: 'Random Port Generator', description: 'Generate random port numbers for development.' }
+        meta: {
+          title: 'Random Port Generator',
+          description: 'Generate random port numbers for development.'
+        }
       },
       {
         path: 'json-viewer',
@@ -630,7 +719,10 @@ export const routes = [
         path: 'docker-run-to-compose',
         name: 'docker-run-to-compose',
         component: () => import('../views/DockerRunToComposeView.vue'),
-        meta: { title: 'Docker Run to Compose', description: 'Convert docker run commands to docker-compose.yml.' }
+        meta: {
+          title: 'Docker Run to Compose',
+          description: 'Convert docker run commands to docker-compose.yml.'
+        }
       },
       {
         path: 'xml-formatter',
@@ -654,7 +746,10 @@ export const routes = [
         path: 'regex-memo',
         name: 'regex-memo',
         component: () => import('../views/RegexMemoView.vue'),
-        meta: { title: 'Regex Cheat Sheet', description: 'Regular expression patterns and syntax reference.' }
+        meta: {
+          title: 'Regex Cheat Sheet',
+          description: 'Regular expression patterns and syntax reference.'
+        }
       },
       // Network Tools
       {
@@ -667,19 +762,28 @@ export const routes = [
         path: 'ipv4-address-converter',
         name: 'ipv4-address-converter',
         component: () => import('../views/Ipv4AddressConverterView.vue'),
-        meta: { title: 'IPv4 Address Converter', description: 'Convert IPv4 addresses to different formats.' }
+        meta: {
+          title: 'IPv4 Address Converter',
+          description: 'Convert IPv4 addresses to different formats.'
+        }
       },
       {
         path: 'ipv4-range-expander',
         name: 'ipv4-range-expander',
         component: () => import('../views/Ipv4RangeExpanderView.vue'),
-        meta: { title: 'IPv4 Range Expander', description: 'Expand IPv4 address ranges to individual IPs.' }
+        meta: {
+          title: 'IPv4 Range Expander',
+          description: 'Expand IPv4 address ranges to individual IPs.'
+        }
       },
       {
         path: 'mac-address-lookup',
         name: 'mac-address-lookup',
         component: () => import('../views/MacAddressLookupView.vue'),
-        meta: { title: 'MAC Address Lookup', description: 'Look up MAC address vendor information.' }
+        meta: {
+          title: 'MAC Address Lookup',
+          description: 'Look up MAC address vendor information.'
+        }
       },
       {
         path: 'mac-address-generator',
@@ -724,7 +828,10 @@ export const routes = [
         path: 'text-statistics',
         name: 'text-statistics',
         component: () => import('../views/TextStatisticsView.vue'),
-        meta: { title: 'Text Statistics', description: 'Analyze text statistics (characters, words, etc).' }
+        meta: {
+          title: 'Text Statistics',
+          description: 'Analyze text statistics (characters, words, etc).'
+        }
       },
       {
         path: 'emoji-picker',
@@ -774,7 +881,10 @@ export const routes = [
         path: 'crontab-generator',
         name: 'crontab-generator',
         component: () => import('../views/CrontabGeneratorView.vue'),
-        meta: { title: 'Crontab Generator', description: 'Generate cron expressions with visual builder.' }
+        meta: {
+          title: 'Crontab Generator',
+          description: 'Generate cron expressions with visual builder.'
+        }
       },
       {
         path: 'regex-tester',
@@ -792,7 +902,10 @@ export const routes = [
         path: 'percentage-calculator',
         name: 'percentage-calculator',
         component: () => import('../views/PercentageCalculatorView.vue'),
-        meta: { title: 'Percentage Calculator', description: 'Calculate percentages, increases, and decreases.' }
+        meta: {
+          title: 'Percentage Calculator',
+          description: 'Calculate percentages, increases, and decreases.'
+        }
       },
       {
         path: 'token-generator',
@@ -810,37 +923,55 @@ export const routes = [
         path: 'ulid-generator',
         name: 'ulid-generator',
         component: () => import('../views/ULIDGeneratorView.vue'),
-        meta: { title: 'ULID Generator', description: 'Generate Universally Unique Lexicographically Sortable Identifiers.' }
+        meta: {
+          title: 'ULID Generator',
+          description: 'Generate Universally Unique Lexicographically Sortable Identifiers.'
+        }
       },
       {
         path: 'case-converter',
         name: 'case-converter',
         component: () => import('../views/CaseConverterView.vue'),
-        meta: { title: 'Case Converter', description: 'Convert text between camelCase, snake_case, kebab-case, etc.' }
+        meta: {
+          title: 'Case Converter',
+          description: 'Convert text between camelCase, snake_case, kebab-case, etc.'
+        }
       },
       {
         path: 'date-time-converter',
         name: 'date-time-converter',
         component: () => import('../views/DateTimeConverterView.vue'),
-        meta: { title: 'Date-Time Converter', description: 'Convert dates and times between formats.' }
+        meta: {
+          title: 'Date-Time Converter',
+          description: 'Convert dates and times between formats.'
+        }
       },
       {
         path: 'color-converter',
         name: 'color-converter',
         component: () => import('../views/ColorConverterView.vue'),
-        meta: { title: 'Color Converter', description: 'Convert colors between HEX, RGB, HSL formats.' }
+        meta: {
+          title: 'Color Converter',
+          description: 'Convert colors between HEX, RGB, HSL formats.'
+        }
       },
       {
         path: 'text-to-binary',
         name: 'text-to-binary',
         component: () => import('../views/TextToBinaryView.vue'),
-        meta: { title: 'Text to Binary Converter', description: 'Convert text to binary and vice versa.' }
+        meta: {
+          title: 'Text to Binary Converter',
+          description: 'Convert text to binary and vice versa.'
+        }
       },
       {
         path: 'http-status-codes',
         name: 'http-status-codes',
         component: () => import('../views/HTTPStatusCodesView.vue'),
-        meta: { title: 'HTTP Status Codes', description: 'Reference for HTTP status codes and meanings.' }
+        meta: {
+          title: 'HTTP Status Codes',
+          description: 'Reference for HTTP status codes and meanings.'
+        }
       },
       {
         path: 'url-parser',

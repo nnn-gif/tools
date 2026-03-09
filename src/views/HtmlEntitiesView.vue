@@ -26,7 +26,7 @@ const htmlEntities: Record<string, string> = {
   '°': '&deg;',
   '±': '&plusmn;',
   '×': '&times;',
-  '÷': '&divide;',
+  '÷': '&divide;'
 }
 
 const encode = () => {
@@ -35,6 +35,7 @@ const encode = () => {
     result = result.split(char).join(entity)
   }
   // Also encode other non-ASCII characters
+  // eslint-disable-next-line no-control-regex
   result = result.replace(/[^\x00-\x7F]/g, (char) => {
     return `&#${char.charCodeAt(0)};`
   })
@@ -58,11 +59,7 @@ const decode = () => {
         <CardTitle>Input</CardTitle>
       </CardHeader>
       <CardContent class="space-y-4">
-        <Textarea
-          v-model="inputText"
-          rows="4"
-          placeholder="Enter text to encode or decode..."
-        />
+        <Textarea v-model="inputText" rows="4" placeholder="Enter text to encode or decode..." />
         <div class="flex gap-2">
           <Button @click="encode">Encode</Button>
           <Button @click="decode" variant="secondary">Decode</Button>

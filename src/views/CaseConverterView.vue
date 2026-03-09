@@ -16,31 +16,33 @@ const cases = computed(() => {
     .replace(/[_\-\s]+/g, ' ')
     .trim()
     .split(' ')
-    .filter(w => w.length > 0)
+    .filter((w) => w.length > 0)
 
-  const upperWords = words.map(w => w.toUpperCase())
-  const lowerWords = words.map(w => w.toLowerCase())
-  const titleWords = words.map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-  const sentenceWords = words.map((w, i) => 
+  const upperWords = words.map((w) => w.toUpperCase())
+  const lowerWords = words.map((w) => w.toLowerCase())
+  const titleWords = words.map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+  const sentenceWords = words.map((w, i) =>
     i === 0 ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : w.toLowerCase()
   )
 
   return {
-    'UPPERCASE': upperWords.join(' '),
-    'lowercase': lowerWords.join(' '),
+    UPPERCASE: upperWords.join(' '),
+    lowercase: lowerWords.join(' '),
     'Title Case': titleWords.join(' '),
     'Sentence case': sentenceWords.join(' '),
-    'camelCase': words.map((w, i) => 
-      i === 0 ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
-    ).join(''),
-    'PascalCase': titleWords.join(''),
-    'snake_case': lowerWords.join('_'),
-    'SCREAMING_SNAKE': upperWords.join('_'),
+    camelCase: words
+      .map((w, i) =>
+        i === 0 ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
+      )
+      .join(''),
+    PascalCase: titleWords.join(''),
+    snake_case: lowerWords.join('_'),
+    SCREAMING_SNAKE: upperWords.join('_'),
     'kebab-case': lowerWords.join('-'),
     'COBOL-CASE': upperWords.join('-'),
     'Train-Case': titleWords.join('-'),
     'dot.case': lowerWords.join('.'),
-    'path/case': lowerWords.join('/'),
+    'path/case': lowerWords.join('/')
   }
 })
 
@@ -50,13 +52,13 @@ const copyCase = (type: string) => {
     navigator.clipboard.writeText(value)
   }
   copied.value = type
-  setTimeout(() => copied.value = null, 2000)
+  setTimeout(() => (copied.value = null), 2000)
 }
 
 const swapCase = () => {
   input.value = input.value
     .split('')
-    .map(c => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase())
+    .map((c) => (c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()))
     .join('')
 }
 
@@ -66,7 +68,7 @@ const examples = [
   'HelloWorld',
   'hello_world',
   'hello-world',
-  'user_id',
+  'user_id'
 ]
 </script>
 

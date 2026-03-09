@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 const domain = 'https://formatho.com/tools'
 const siteName = 'Formatho'
 const defaultImage = `${domain}/logo.png`
+const twitterHandle = '@heyformatho'
 
 // Check if running in browser environment
 const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined'
@@ -73,10 +74,16 @@ function updateMetaTags(meta: MetaTags) {
   updateMetaTag('meta[property="og:image"]', 'content', meta.image || defaultImage)
 
   // Twitter Card tags
+  updateMetaTag('meta[name="twitter:card"]', 'content', 'summary_large_image')
+  updateMetaTag('meta[name="twitter:site"]', 'content', twitterHandle)
   updateMetaTag('meta[name="twitter:title"]', 'content', fullTitle)
   updateMetaTag('meta[name="twitter:description"]', 'content', meta.description)
   updateMetaTag('meta[name="twitter:url"]', 'content', url)
   updateMetaTag('meta[name="twitter:image"]', 'content', meta.image || defaultImage)
+
+  // Open Graph additional tags
+  updateMetaTag('meta[property="og:type"]', 'content', 'website')
+  updateMetaTag('meta[property="og:site_name"]', 'content', siteName)
 }
 
 export function useMeta() {

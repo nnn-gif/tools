@@ -32,7 +32,7 @@ const breadcrumbs = computed<BreadcrumbItem[]>(() => {
     // Format segment name
     let name = segment
       .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ')
 
     // Use route meta title for last segment if available
@@ -52,17 +52,9 @@ const breadcrumbs = computed<BreadcrumbItem[]>(() => {
 </script>
 
 <template>
-  <nav
-    v-if="breadcrumbs.length > 1"
-    aria-label="Breadcrumb"
-    class="container mx-auto px-4 py-3"
-  >
+  <nav v-if="breadcrumbs.length > 1" aria-label="Breadcrumb" class="container mx-auto px-4 py-3">
     <ol class="flex items-center gap-2 text-sm flex-wrap" role="list">
-      <li
-        v-for="(item, index) in breadcrumbs"
-        :key="item.path"
-        class="flex items-center gap-2"
-      >
+      <li v-for="(item, index) in breadcrumbs" :key="item.path" class="flex items-center gap-2">
         <!-- Separator -->
         <ChevronRight
           v-if="index > 0"

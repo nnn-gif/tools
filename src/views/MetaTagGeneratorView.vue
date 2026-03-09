@@ -19,12 +19,12 @@ const twitterCard = ref('summary_large_image')
 
 const generatedTags = computed(() => {
   let tags = ''
-  
+
   // Basic meta tags
   tags += `<meta charset="${charset.value}">\n`
   tags += `<meta name="viewport" content="${viewport.value}">\n`
   tags += `<title>${title.value}</title>\n`
-  
+
   if (description.value) {
     tags += `<meta name="description" content="${description.value}">\n`
   }
@@ -34,7 +34,7 @@ const generatedTags = computed(() => {
   if (author.value) {
     tags += `<meta name="author" content="${author.value}">\n`
   }
-  
+
   // Open Graph tags
   tags += '\n<!-- Open Graph / Facebook -->\n'
   tags += `<meta property="og:type" content="website">\n`
@@ -47,7 +47,7 @@ const generatedTags = computed(() => {
   if (ogImage.value) {
     tags += `<meta property="og:image" content="${ogImage.value}">\n`
   }
-  
+
   // Twitter tags
   tags += '\n<!-- Twitter -->\n'
   tags += `<meta name="twitter:card" content="${twitterCard.value}">\n`
@@ -60,7 +60,7 @@ const generatedTags = computed(() => {
   if (ogImage.value) {
     tags += `<meta name="twitter:image" content="${ogImage.value}">\n`
   }
-  
+
   return tags
 })
 
@@ -119,7 +119,10 @@ const copyTags = () => {
           </div>
           <div class="grid gap-2">
             <Label>Twitter Card Type</Label>
-            <select v-model="twitterCard" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+            <select
+              v-model="twitterCard"
+              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            >
               <option value="summary">Summary</option>
               <option value="summary_large_image">Summary Large Image</option>
             </select>

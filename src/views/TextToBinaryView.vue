@@ -5,20 +5,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 
 const textInput = ref('Hello World')
-const binaryInput = ref('01001000 01100101 01101100 01101100 01101111 00100000 01010111 01101111 01110010 01101100 01100100')
+const binaryInput = ref(
+  '01001000 01100101 01101100 01101100 01101111 00100000 01010111 01101111 01110010 01101100 01100100'
+)
 const mode = ref<'text-to-binary' | 'binary-to-text'>('text-to-binary')
 const copied = ref(false)
 
 const textToBinary = (text: string): string => {
   return text
     .split('')
-    .map(char => char.charCodeAt(0).toString(2).padStart(8, '0'))
+    .map((char) => char.charCodeAt(0).toString(2).padStart(8, '0'))
     .join(' ')
 }
 
 const binaryToText = (binary: string): string => {
   const bytes = binary.replace(/[^01]/g, '').match(/.{8}/g) || []
-  return bytes.map(byte => String.fromCharCode(parseInt(byte, 2))).join('')
+  return bytes.map((byte) => String.fromCharCode(parseInt(byte, 2))).join('')
 }
 
 const binaryOutput = computed(() => {
@@ -35,7 +37,7 @@ const copyOutput = () => {
   const output = mode.value === 'text-to-binary' ? binaryOutput.value : textOutput.value
   navigator.clipboard.writeText(output)
   copied.value = true
-  setTimeout(() => copied.value = false, 2000)
+  setTimeout(() => (copied.value = false), 2000)
 }
 
 const swapMode = () => {
@@ -60,9 +62,7 @@ const swapMode = () => {
           <Binary class="w-8 h-8" />
           Text to Binary
         </h1>
-        <p class="text-muted-foreground mt-2">
-          Convert text to binary and binary to text.
-        </p>
+        <p class="text-muted-foreground mt-2">Convert text to binary and binary to text.</p>
       </div>
 
       <!-- Mode Toggle -->
@@ -145,7 +145,9 @@ const swapMode = () => {
                       {{ char === ' ' ? '␣' : char }}
                     </td>
                     <td class="py-2 px-4 font-mono">{{ char.charCodeAt(0) }}</td>
-                    <td class="py-2 px-4 font-mono">{{ char.charCodeAt(0).toString(2).padStart(8, '0') }}</td>
+                    <td class="py-2 px-4 font-mono">
+                      {{ char.charCodeAt(0).toString(2).padStart(8, '0') }}
+                    </td>
                   </tr>
                 </tbody>
               </table>

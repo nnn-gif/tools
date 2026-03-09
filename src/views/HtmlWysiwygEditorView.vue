@@ -40,7 +40,9 @@ const copyHtml = () => {
       <Button variant="outline" size="sm" @click="execCommand('justifyCenter')">Center</Button>
       <Button variant="outline" size="sm" @click="execCommand('justifyRight')">Right</Button>
       <div class="w-px h-8 bg-border mx-1"></div>
-      <Button variant="outline" size="sm" @click="execCommand('insertUnorderedList')">• List</Button>
+      <Button variant="outline" size="sm" @click="execCommand('insertUnorderedList')"
+        >• List</Button
+      >
       <Button variant="outline" size="sm" @click="execCommand('insertOrderedList')">1. List</Button>
       <div class="w-px h-8 bg-border mx-1"></div>
       <Button variant="outline" size="sm" @click="execCommand('formatBlock', 'h1')">H1</Button>
@@ -72,7 +74,9 @@ const copyHtml = () => {
       <Card class="flex flex-col min-h-0">
         <CardHeader class="flex-row items-center justify-between">
           <CardTitle>HTML Output</CardTitle>
-          <Button variant="outline" size="sm" @click="copyHtml" :disabled="!htmlContent">Copy</Button>
+          <Button variant="outline" size="sm" @click="copyHtml" :disabled="!htmlContent"
+            >Copy</Button
+          >
         </CardHeader>
         <CardContent class="flex-1 min-h-0">
           <Textarea

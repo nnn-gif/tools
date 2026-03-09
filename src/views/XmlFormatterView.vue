@@ -16,34 +16,35 @@ const formatXml = () => {
       formattedOutput.value = ''
       return
     }
-    
+
     const parser = new DOMParser()
     const doc = parser.parseFromString(xmlInput.value, 'text/xml')
-    
+
     const errorNode = doc.querySelector('parsererror')
     if (errorNode) {
       error.value = 'Invalid XML'
       formattedOutput.value = ''
       return
     }
-    
+
     const serialize = (node: Node, indent: number): string => {
       const indentStr = ' '.repeat(indent)
       let result = ''
-      
+
       if (node.nodeType === Node.DOCUMENT_NODE) {
         for (const child of Array.from(node.childNodes)) {
           result += serialize(child, indent)
         }
       } else if (node.nodeType === Node.ELEMENT_NODE) {
         const element = node as Element
-        const children = Array.from(element.childNodes).filter(n => 
-          n.nodeType === Node.ELEMENT_NODE || 
-          (n.nodeType === Node.TEXT_NODE && n.textContent?.trim())
+        const children = Array.from(element.childNodes).filter(
+          (n) =>
+            n.nodeType === Node.ELEMENT_NODE ||
+            (n.nodeType === Node.TEXT_NODE && n.textContent?.trim())
         )
-        
+
         result += `${indentStr}<${element.tagName}`
-        
+
         // Add attributes
         for (let i = 0; i < element.attributes.length; i++) {
           const attr = element.attributes[i]
@@ -51,7 +52,7 @@ const formatXml = () => {
             result += ` ${attr.name}="${attr.value}"`
           }
         }
-        
+
         if (children.length === 0) {
           result += '/>\n'
         } else if (children.length === 1 && children[0]?.nodeType === Node.TEXT_NODE) {
@@ -70,10 +71,10 @@ const formatXml = () => {
           result += `${indentStr}${text}\n`
         }
       }
-      
+
       return result
     }
-    
+
     formattedOutput.value = serialize(doc, 0)
   } catch (e: any) {
     error.value = e.message || 'Failed to format XML'
@@ -97,10 +98,10 @@ watch([xmlInput, indentSize], formatXml)
     <div class="flex items-center gap-4">
       <label class="flex items-center gap-2 text-sm">
         Indent:
-        <input 
-          v-model.number="indentSize" 
-          type="number" 
-          min="1" 
+        <input
+          v-model.number="indentSize"
+          type="number"
+          min="1"
           max="8"
           class="w-16 h-10 rounded-md border border-input bg-background px-3 py-2"
         />
@@ -125,7 +126,9 @@ watch([xmlInput, indentSize], formatXml)
       <Card class="flex flex-col min-h-0">
         <CardHeader class="flex-row items-center justify-between">
           <CardTitle>Formatted XML</CardTitle>
-          <Button variant="outline" size="sm" @click="copyOutput" :disabled="!formattedOutput">Copy</Button>
+          <Button variant="outline" size="sm" @click="copyOutput" :disabled="!formattedOutput"
+            >Copy</Button
+          >
         </CardHeader>
         <CardContent class="flex-1 min-h-0">
           <Textarea

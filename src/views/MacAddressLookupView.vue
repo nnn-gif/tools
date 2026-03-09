@@ -64,7 +64,7 @@ const macVendors: Record<string, string> = {
   '00:18:AF': 'Samsung Electronics',
   '00:1A:8A': 'Samsung Electronics',
   '00:1E:7D': 'Samsung Electronics',
-  '00:1F:27': 'Samsung Electronics',
+  '00:1F:27': 'Samsung Electronics'
 }
 
 const macInfo = ref<MacInfo | null>(null)
@@ -74,17 +74,17 @@ const lookupMac = () => {
     macInfo.value = null
     return
   }
-  
+
   // Normalize MAC address
-  const clean = macAddress.value.replace(/[:\-\.]/g, '').toUpperCase()
+  const clean = macAddress.value.replace(/[:\-.]/g, '').toUpperCase()
   if (clean.length !== 12) {
     macInfo.value = null
     return
   }
-  
+
   const formatted = clean.match(/.{2}/g)?.join(':') || ''
   const oui = formatted.substring(0, 8)
-  
+
   macInfo.value = {
     formatted,
     vendor: macVendors[oui] || 'Unknown vendor'
@@ -105,11 +105,11 @@ const lookupMac = () => {
       <CardContent class="space-y-4">
         <div class="grid gap-2">
           <Label>MAC Address</Label>
-          <Input 
-            v-model="macAddress" 
+          <Input
+            v-model="macAddress"
             @input="lookupMac"
-            placeholder="00:1A:2B:3C:4D:5E" 
-            class="font-mono uppercase" 
+            placeholder="00:1A:2B:3C:4D:5E"
+            class="font-mono uppercase"
           />
         </div>
       </CardContent>

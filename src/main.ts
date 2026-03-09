@@ -5,55 +5,103 @@ import './style.css'
 import App from './App.vue'
 import { routes } from './router'
 
+const baseUrl = 'https://formatho.com/tools'
+const siteName = 'Formatho'
+const defaultImage = `${baseUrl}/logo.png`
+const twitterHandle = '@heyformatho'
+
+function updateOrCreateMeta(
+  selector: string,
+  attribute: string,
+  value: string,
+  tagName: 'meta' | 'link' = 'meta'
+) {
+  if (typeof document === 'undefined') return
+
+  let element = document.querySelector(selector) as HTMLElement
+  if (!element) {
+    element = document.createElement(tagName)
+    if (tagName === 'meta') {
+      const nameMatch = selector.match(/name="([^"]+)"/)
+      const propertyMatch = selector.match(/property="([^"]+)"/)
+      if (nameMatch && nameMatch[1]) {
+        element.setAttribute('name', nameMatch[1])
+      }
+      if (propertyMatch && propertyMatch[1]) {
+        element.setAttribute('property', propertyMatch[1])
+      }
+    } else if (tagName === 'link') {
+      const relMatch = selector.match(/rel="([^"]+)"/)
+      if (relMatch && relMatch[1]) {
+        element.setAttribute('rel', relMatch[1])
+      }
+    }
+    document.head.appendChild(element)
+  }
+  element.setAttribute(attribute, value)
+}
+
 export const createApp = ViteSSG(
-  App, 
-  { 
-    routes, 
+  App,
+  {
+    routes,
     base: '/tools/'
   },
   ({ router }) => {
     router.afterEach((to) => {
       if (typeof document === 'undefined') return
 
-      // 1. Update Title
-      const title = to.meta.title as string
-      if (title) {
-        document.title = `${title} | Formatho`
-      }
+      const title = to.meta.title as string | undefined
+      const description = to.meta.description as string | undefined
+      const keywords = to.meta.keywords as string | undefined
 
-      // 2. Update Description
-      const description = to.meta.description as string
-      let metaDescription = document.querySelector('meta[name="description"]')
-      if (description) {
-        if (!metaDescription) {
-          metaDescription = document.createElement('meta')
-          metaDescription.setAttribute('name', 'description')
-          document.head.appendChild(metaDescription)
-        }
-        metaDescription.setAttribute('content', description)
-      }
+      // Build the full title
+      const fullTitle =
+        title && !title.includes(siteName)
+          ? `${title} - ${siteName}`
+          : title || `${siteName} - Privacy-First Developer Tools`
 
-      // 3. Update Canonical
-      let canonical = document.querySelector('link[rel="canonical"]')
-      if (!canonical) {
-        canonical = document.createElement('link')
-        canonical.setAttribute('rel', 'canonical')
-        document.head.appendChild(canonical)
-      }
-
-      const baseUrl = 'https://formatho.com/tools'
+      // Clean path for URLs
       let cleanPath = to.path
       if (cleanPath.endsWith('/') && cleanPath.length > 1) {
         cleanPath = cleanPath.slice(0, -1)
       }
       const finalUrl = `${baseUrl}${cleanPath}`
-      canonical.setAttribute('href', finalUrl)
 
-      // 4. Update OG URL
-      const ogUrl = document.querySelector('meta[property="og:url"]')
-      if (ogUrl) {
-        ogUrl.setAttribute('content', finalUrl)
+      // 1. Update Title
+      document.title = fullTitle
+
+      // 2. Update Primary Meta Tags
+      updateOrCreateMeta('meta[name="title"]', 'content', fullTitle)
+      if (description) {
+        updateOrCreateMeta('meta[name="description"]', 'content', description)
       }
+      if (keywords) {
+        updateOrCreateMeta('meta[name="keywords"]', 'content', keywords)
+      }
+
+      // 3. Update Canonical URL
+      updateOrCreateMeta('link[rel="canonical"]', 'href', finalUrl, 'link')
+
+      // 4. Update Open Graph Tags
+      updateOrCreateMeta('meta[property="og:type"]', 'content', 'website')
+      updateOrCreateMeta('meta[property="og:url"]', 'content', finalUrl)
+      updateOrCreateMeta('meta[property="og:title"]', 'content', fullTitle)
+      if (description) {
+        updateOrCreateMeta('meta[property="og:description"]', 'content', description)
+      }
+      updateOrCreateMeta('meta[property="og:image"]', 'content', defaultImage)
+      updateOrCreateMeta('meta[property="og:site_name"]', 'content', siteName)
+
+      // 5. Update Twitter Card Tags
+      updateOrCreateMeta('meta[name="twitter:card"]', 'content', 'summary_large_image')
+      updateOrCreateMeta('meta[name="twitter:site"]', 'content', twitterHandle)
+      updateOrCreateMeta('meta[name="twitter:url"]', 'content', finalUrl)
+      updateOrCreateMeta('meta[name="twitter:title"]', 'content', fullTitle)
+      if (description) {
+        updateOrCreateMeta('meta[name="twitter:description"]', 'content', description)
+      }
+      updateOrCreateMeta('meta[name="twitter:image"]', 'content', defaultImage)
     })
   }
 )

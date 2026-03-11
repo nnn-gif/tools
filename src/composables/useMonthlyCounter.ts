@@ -18,7 +18,7 @@ const API_URL = `https://api.countapi.xyz/hit/${COUNTER_NAMESPACE}/${COUNTER_KEY
 const GET_URL = `https://api.countapi.xyz/get/${COUNTER_NAMESPACE}/${COUNTER_KEY}`
 
 // Fallback initial value if API fails
-const INITIAL_VALUE = 13000
+const INITIAL_VALUE = 13847
 
 // Refresh interval (60 seconds as per requirements)
 const REFRESH_INTERVAL = 60000

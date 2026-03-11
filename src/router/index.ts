@@ -368,13 +368,63 @@ export const routes = [
       {
         path: 'agent-orchestrator',
         name: 'agent-orchestrator',
-        component: () => import('../views/AgentOrchestratorView.vue'),
+        component: () => import('../views/AgentOrchestratorView.vue'), // Landing page
         meta: {
           title: 'Agent Orchestrator - Local-First AI Agent Management',
           description:
             'Spin up AI workers with text, let them run autonomously, check results later. A desktop app for managing AI agents locally. Open source, privacy-first.',
           keywords:
             'ai agent orchestrator, autonomous agents, local ai, agent management, llm orchestration, open source, privacy-first'
+        }
+      },
+      {
+        path: 'agent-orchestrator/dashboard',
+        name: 'agent-orchestrator-dashboard',
+        component: () => import('../views/AgentOrchestratorDashboardView.vue'),
+        meta: {
+          title: 'Dashboard - Agent Orchestrator | Formatho',
+          description: 'Monitor and manage AI agents in real-time. View agent status, activity feed, and resource usage.',
+          keywords: 'agent dashboard, ai monitoring, agent status, resource usage'
+        }
+      },
+      {
+        path: 'agent-orchestrator/:agentId',
+        name: 'agent-detail',
+        component: () => import('../views/AgentDetailView.vue'),
+        meta: {
+          title: 'Agent Detail - Agent Orchestrator | Formatho',
+          description: 'View agent status, controls, live logs, and task history.',
+          keywords: 'agent detail, agent log, task history'
+        }
+      },
+      {
+        path: 'agent-orchestrator/todo',
+        name: 'todo-queue',
+        component: () => import('../views/TODOQueueView.vue'),
+        meta: {
+          title: 'TODO Queue - Agent Orchestrator | Formatho',
+          description: 'Manage priority queue, track progress, and filter tasks.',
+          keywords: 'task queue, todo list, task management, priorities'
+        }
+      },
+      {
+        path: 'agent-orchestrator/cron',
+        name: 'cron-scheduler',
+        component: () => import('../views/CronSchedulerView.vue'),
+        meta: {
+          title: 'Cron Scheduler - Agent Orchestrator | Formatho',
+          description: 'Manage scheduled jobs and view run history.',
+          keywords: 'cron scheduler, job scheduling, automated tasks'
+        }
+      },
+      {
+        path: 'agent-orchestrator/config',
+        name: 'configuration',
+        component: () => import('../views/ConfigurationView.vue'),
+        meta: {
+          title: 'Configuration - Agent Orchestrator | Formatho',
+          description: 'Configure global settings, LLM providers, and skill permissions.',
+          keywords: 'settings, configuration, LLM config, API keys'
         }
       },
       // Crypto Tools

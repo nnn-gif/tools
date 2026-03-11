@@ -115,8 +115,19 @@ export const createApp = ViteSSG(
     routes,
     base: '/tools/'
   },
-  ({ router }) => {
-    // Handle meta tags during SSG build and client navigation
+  ({ router, isClient }) => {
+    // SSR: Set meta tags before rendering during build
+    if (!isClient) {
+      router.beforeEach((to, _from, next) => {
+        const meta = to.meta as RouteMeta
+        if (meta && (meta.title || meta.description)) {
+          updateMetaForRoute(to.path, meta)
+        }
+        next()
+      })
+    }
+
+    // Client-side: Update meta tags on navigation
     router.afterEach((to) => {
       const meta = to.meta as RouteMeta
       if (meta && (meta.title || meta.description)) {

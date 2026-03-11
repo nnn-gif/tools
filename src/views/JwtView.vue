@@ -5,6 +5,7 @@ import { ShieldAlert } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import Breadcrumb from '@/components/Breadcrumb.vue'
 
 const token = ref('')
 const header = ref('')
@@ -43,6 +44,8 @@ const fillSample = () => {
 
 <template>
   <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
+    <!-- Breadcrumb Navigation -->
+    <Breadcrumb />
     <div class="flex items-center justify-between">
       <h1 class="text-3xl font-bold tracking-tight">JWT Debugger</h1>
       <Button variant="ghost" @click="fillSample">Load Sample</Button>
@@ -90,6 +93,41 @@ const fillSample = () => {
           </CardContent>
         </Card>
       </div>
+
+    <!-- Related Tools -->
+    <div class="mt-8 p-6 bg-muted/20 rounded-lg border border-border">
+      <h2 class="text-xl font-bold mb-4">Related Tools</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <a
+          href="/base64"
+          class="block p-4 rounded-lg border border-border hover:border-primary hover:bg-muted/30 transition-all"
+        >
+          <h3 class="font-semibold mb-2">Base64 Encoder/Decoder</h3>
+          <p class="text-sm text-muted-foreground">Encode and decode Base64 strings and files</p>
+        </a>
+        <a
+          href="/hash-text"
+          class="block p-4 rounded-lg border border-border hover:border-primary hover:bg-muted/30 transition-all"
+        >
+          <h3 class="font-semibold mb-2">Hash Generator</h3>
+          <p class="text-sm text-muted-foreground">Generate MD5, SHA-1, SHA-256, SHA-512 hashes</p>
+        </a>
+        <a
+          href="/token-generator"
+          class="block p-4 rounded-lg border border-border hover:border-primary hover:bg-muted/30 transition-all"
+        >
+          <h3 class="font-semibold mb-2">Token Generator</h3>
+          <p class="text-sm text-muted-foreground">Generate secure random tokens</p>
+        </a>
+        <a
+          href="/encryption"
+          class="block p-4 rounded-lg border border-border hover:border-primary hover:bg-muted/30 transition-all"
+        >
+          <h3 class="font-semibold mb-2">Text Encryption</h3>
+          <p class="text-sm text-muted-foreground">Encrypt and decrypt text with various algorithms</p>
+        </a>
+      </div>
+    </div>
     </div>
   </div>
 </template>

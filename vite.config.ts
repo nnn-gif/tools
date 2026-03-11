@@ -21,5 +21,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src')
     }
   },
-  base: '/tools/'
+  base: '/tools/',
+  ssr: {
+    noExternal: ['@headlessui/vue']
+  }
 })

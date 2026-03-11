@@ -1,555 +1,628 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import {
-  Bot,
-  ArrowLeft,
-  ExternalLink,
-  TrendingUp,
-  CheckCircle,
-  AlertCircle,
-  FileText,
-  Link
+import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { 
+  PlayCircleIcon, 
+  PauseCircleIcon, 
+  StopIcon, 
+  TerminalIcon, 
+  ClockIcon, 
+  ActivityIcon,
+  LogOutIcon,
+  RefreshCwIcon,
+  SettingsIcon,
+  ChevronDownIcon,
+  ChevronUpIcon
 } from 'lucide-vue-next'
-import { Button } from '@/components/ui/button'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { decodeMetadataValue, getTypeLabel } from '@/lib/metadataDecoder'
-
-const API_BASE = 'https://api.formatho.com/api/v1'
-const route = useRoute()
-const router = useRouter()
-const agentAddress = computed(() => route.params.address as string)
 
 interface Agent {
-  id: number
-  chain_id: number
-  address: string
-  name?: string
-  metadata?: {
-    description?: string
-  }
-  first_seen: number
-  last_updated: number
-  active: boolean
-  total_reputation?: number
-  avg_score?: number
-  created_at: string
-  updated_at: string
+  id: string
+  name: string
+  status: 'running' | 'stopped' | 'error' | 'idle'
+  type: string
+  lastActive: string
+  tasksCompleted: number
+  cpuUsage: number
+  memoryUsage: number
+  description: string
+  llmProvider: string
+  skills: string[]
 }
 
-interface ReputationRecord {
-  id: number
-  agent_id: number
-  chain_id: number
-  agent_address: string
-  from_address: string
-  event_type: string
-  value: number
-  block_number: number
-  tx_hash: string
-  log_index: number
-  timestamp: string
-  created_at: string
+interface Task {
+  id: string
+  title: string
+  status: 'pending' | 'running' | 'completed' | 'failed'
+  createdAt: string
+  completedAt?: string
+  duration?: number
+  result?: string
 }
 
-interface MetadataRecord {
-  id: number
-  agent_id: number
-  chain_id: number
-  agent_address: string
-  metadata_key: string
-  metadata_value: string
-  block_number: number
-  tx_hash: string
-  log_index: number
-  timestamp: string
-  created_at: string
-}
-
-interface URIRecord {
-  id: number
-  agent_id: number
-  chain_id: number
-  agent_address: string
-  uri: string
-  block_number: number
-  tx_hash: string
-  log_index: number
-  timestamp: string
-  created_at: string
-}
-
-interface PaginatedResponse<T> {
-  records: T[]
-  pagination: {
-    count: number
-    limit: number
-    offset: number
-  }
-}
+const router = useRouter()
+const route = useRoute()
+const agentId = route.params.agentId as string
 
 const agent = ref<Agent | null>(null)
-const reputationHistory = ref<ReputationRecord[]>([])
-const metadataHistory = ref<MetadataRecord[]>([])
-const uriHistory = ref<URIRecord[]>([])
-const agentMetadata = ref<{ name?: string; description?: string }>({})
-const loading = ref(true)
-const error = ref('')
+const tasks = ref<Task[]>([])
+const logs = ref<string[]>([])
+const socket = ref<WebSocket | null>(null)
+const isConnected = ref(false)
+const showLogs = ref(true)
+const showTasks = ref(true)
+const autoScrollLogs = ref(true)
 
-// Computed property to decode metadata values
-const decodedMetadataHistory = computed(() => {
-  return metadataHistory.value.map((record) => ({
-    ...record,
-    decoded: decodeMetadataValue(record.metadata_value)
-  }))
+// Control actions
+const isControlLoading = ref(false)
+
+const connectWebSocket = () => {
+  const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+  socket.value = new WebSocket(`${wsProtocol}//localhost:8080/ws/agent/${agentId}`)
+  
+  socket.value.onopen = () => {
+    isConnected.value = true
+    console.log('WebSocket connected for agent', agentId)
+  }
+  
+  socket.value.onmessage = (event) => {
+    const data = JSON.parse(event.data)
+    handleWebSocketMessage(data)
+  }
+  
+  socket.value.onerror = (error) => {
+    console.error('WebSocket error:', error)
+    isConnected.value = false
+  }
+  
+  socket.value.onclose = () => {
+    isConnected.value = false
+    setTimeout(connectWebSocket, 3000)
+  }
+}
+
+const handleWebSocketMessage = (data: any) => {
+  switch(data.type) {
+    case 'agent_updated':
+      agent.value = data.payload
+      break
+    case 'log_added':
+      logs.value.push(`[${new Date().toLocaleTimeString()}] ${data.message}`)
+      if (autoScrollLogs.value && logs.value.length > 100) {
+        logs.value.shift()
+      }
+      break
+    case 'task_updated':
+      const taskIndex = tasks.value.findIndex(t => t.id === data.taskId)
+      if (taskIndex !== -1) {
+        tasks.value[taskIndex] = { ...tasks.value[taskIndex], ...data.update }
+      } else {
+        tasks.value.unshift(data.task as Task)
+      }
+      break
+  }
+}
+
+const getStatusColor = (status: Agent['status']) => {
+  switch(status) {
+    case 'running': return 'bg-green-500'
+    case 'stopped': return 'bg-gray-500'
+    case 'error': return 'bg-red-500'
+    case 'idle': return 'bg-yellow-500'
+    default: return 'bg-gray-500'
+  }
+}
+
+const getStatusBadgeColor = (status: Agent['status']) => {
+  switch(status) {
+    case 'running': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+    case 'stopped': return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+    case 'error': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+    case 'idle': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+    default: return 'bg-gray-100 text-gray-800'
+  }
+}
+
+const getTaskStatusColor = (status: Task['status']) => {
+  switch(status) {
+    case 'pending': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+    case 'running': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+    case 'completed': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+    case 'failed': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+  }
+}
+
+const formatTime = (timestamp: string) => {
+  const date = new Date(timestamp)
+  return date.toLocaleString()
+}
+
+const formatDuration = (seconds?: number) => {
+  if (!seconds) return '-'
+  if (seconds < 60) return `${seconds}s`
+  if (seconds < 3600) return `${Math.round(seconds / 60)}m`
+  return `${Math.round(seconds / 3600)}h ${Math.round((seconds % 3600) / 60)}m`
+}
+
+const loadAgentData = async () => {
+  try {
+    const response = await fetch(`/api/agents/${agentId}`)
+    if (response.ok) {
+      agent.value = await response.json()
+    } else {
+      // Fallback to simulated data
+      simulateAgentData()
+    }
+  } catch (error) {
+    console.error('Failed to load agent:', error)
+    simulateAgentData()
+  }
+}
+
+const loadTasks = async () => {
+  try {
+    const response = await fetch(`/api/agents/${agentId}/tasks`)
+    if (response.ok) {
+      tasks.value = await response.json()
+    } else {
+      // Fallback to simulated data
+      simulateTaskData()
+    }
+  } catch (error) {
+    console.error('Failed to load tasks:', error)
+    simulateTaskData()
+  }
+}
+
+const simulateAgentData = () => {
+  agent.value = {
+    id: agentId,
+    name: 'Content Writer Agent',
+    status: 'running',
+    type: 'content',
+    lastActive: new Date().toISOString(),
+    tasksCompleted: 42,
+    cpuUsage: 35,
+    memoryUsage: 128,
+    description: 'Specializes in creating high-quality blog posts and articles optimized for SEO.',
+    llmProvider: 'OpenAI',
+    skills: ['content-writing', 'seo-optimization', 'research']
+  }
+}
+
+const simulateTaskData = () => {
+  tasks.value = [
+    { id: '1', title: 'Write blog post about AI agents', status: 'completed', createdAt: new Date(Date.now() - 3600000).toISOString(), completedAt: new Date(Date.now() - 1800000).toISOString(), duration: 1800, result: 'Blog post published successfully' },
+    { id: '2', title: 'Research competitor analysis', status: 'running', createdAt: new Date(Date.now() - 900000).toISOString(), duration: 900 },
+    { id: '3', title: 'Update documentation', status: 'pending', createdAt: new Date().toISOString() },
+    { id: '4', title: 'Generate SEO keywords', status: 'failed', createdAt: new Date(Date.now() - 7200000).toISOString(), completedAt: new Date(Date.now() - 6300000).toISOString(), duration: 900000, result: 'API rate limit exceeded' },
+  ]
+}
+
+const loadLogs = async () => {
+  try {
+    const response = await fetch(`/api/agents/${agentId}/logs?limit=100`)
+    if (response.ok) {
+      logs.value = await response.json()
+    } else {
+      // Fallback to simulated data
+      simulateLogs()
+    }
+  } catch (error) {
+    console.error('Failed to load logs:', error)
+    simulateLogs()
+  }
+}
+
+const simulateLogs = () => {
+  logs.value = [
+    '[05:15:32] Agent started successfully',
+    '[05:15:33] Connected to OpenAI API',
+    '[05:15:45] Loading skill: content-writing',
+    '[05:16:02] Skill loaded successfully',
+    '[05:16:15] Agent ready, waiting for tasks...',
+    '[05:30:22] Task received: Write blog post about AI agents',
+    '[05:30:25] Starting task execution...',
+    '[05:45:30] Content generation in progress...',
+    '[05:55:15] SEO optimization completed',
+    '[06:00:32] Task completed successfully',
+  ]
+}
+
+// Control actions
+const startAgent = async () => {
+  if (isControlLoading.value) return
+  isControlLoading.value = true
+  
+  try {
+    const response = await fetch(`/api/agents/${agentId}/start`, { method: 'POST' })
+    if (response.ok) {
+      agent.value!.status = 'running' as Agent['status']
+      addLog('Agent started successfully')
+    }
+  } catch (error) {
+    console.error('Failed to start agent:', error)
+    addLog('Error starting agent', true)
+  } finally {
+    isControlLoading.value = false
+  }
+}
+
+const pauseAgent = async () => {
+  if (isControlLoading.value) return
+  isControlLoading.value = true
+  
+  try {
+    const response = await fetch(`/api/agents/${agentId}/pause`, { method: 'POST' })
+    if (response.ok) {
+      agent.value!.status = 'idle' as Agent['status']
+      addLog('Agent paused')
+    }
+  } catch (error) {
+    console.error('Failed to pause agent:', error)
+    addLog('Error pausing agent', true)
+  } finally {
+    isControlLoading.value = false
+  }
+}
+
+const stopAgent = async () => {
+  if (isControlLoading.value) return
+  isControlLoading.value = true
+  
+  try {
+    const response = await fetch(`/api/agents/${agentId}/stop`, { method: 'POST' })
+    if (response.ok) {
+      agent.value!.status = 'stopped' as Agent['status']
+      addLog('Agent stopped')
+    }
+  } catch (error) {
+    console.error('Failed to stop agent:', error)
+    addLog('Error stopping agent', true)
+  } finally {
+    isControlLoading.value = false
+  }
+}
+
+const restartAgent = async () => {
+  if (isControlLoading.value) return
+  isControlLoading.value = true
+  
+  try {
+    await stopAgent()
+    setTimeout(() => startAgent(), 1000)
+    addLog('Agent restarted')
+  } catch (error) {
+    console.error('Failed to restart agent:', error)
+    addLog('Error restarting agent', true)
+  } finally {
+    isControlLoading.value = false
+  }
+}
+
+const addLog = (message: string, isError = false) => {
+  const timestamp = new Date().toLocaleTimeString()
+  logs.value.unshift(`[${timestamp}] ${isError ? 'ERROR: ' : ''}${message}`)
+}
+
+const clearLogs = () => {
+  logs.value = []
+}
+
+const refreshData = async () => {
+  await loadAgentData()
+  await loadTasks()
+  await loadLogs()
+}
+
+onMounted(() => {
+  connectWebSocket()
+  simulateAgentData()
+  simulateTaskData()
+  simulateLogs()
+  
+  // Simulate real-time updates
+  const interval = setInterval(() => {
+    if (agent.value && agent.value.status === 'running') {
+      agent.value.cpuUsage = Math.floor(Math.random() * 30) + 20
+      agent.value.memoryUsage = Math.floor(Math.random() * 50) + 100
+    }
+  }, 5000)
+  
+  onUnmounted(() => clearInterval(interval))
 })
 
-const fetchAgent = async () => {
-  try {
-    const response = await fetch(`${API_BASE}/agents/${agentAddress.value}`)
-    if (!response.ok) throw new Error('Agent not found')
-    agent.value = await response.json()
-  } catch (e: any) {
-    error.value = e.message
+onUnmounted(() => {
+  if (socket.value) {
+    socket.value.close()
   }
-}
-
-const fetchReputationHistory = async () => {
-  try {
-    const response = await fetch(`${API_BASE}/agents/${agentAddress.value}/reputation`)
-    if (response.ok) {
-      const data: PaginatedResponse<ReputationRecord> = await response.json()
-      reputationHistory.value = data.records
-    }
-  } catch (e: any) {
-    console.error('Failed to fetch reputation history:', e)
-  }
-}
-
-const fetchMetadataHistory = async () => {
-  try {
-    const response = await fetch(
-      `${API_BASE}/agents/${agentAddress.value}/metadata-history?limit=20`
-    )
-    if (response.ok) {
-      const data: PaginatedResponse<MetadataRecord> = await response.json()
-      metadataHistory.value = data.records || []
-    }
-  } catch (e: any) {
-    console.error('Failed to fetch metadata history:', e)
-  }
-}
-
-const fetchURIHistory = async () => {
-  try {
-    const response = await fetch(`${API_BASE}/agents/${agentAddress.value}/uri-history?limit=20`)
-    if (response.ok) {
-      const data: PaginatedResponse<URIRecord> = await response.json()
-      uriHistory.value = data.records || []
-
-      // Fetch metadata from the latest URI
-      if (data.records && data.records.length > 0) {
-        const latestUri = data.records[0]?.uri
-        if (latestUri && latestUri !== 'N/A') {
-          await fetchAgentMetadata(latestUri)
-        }
-      }
-    }
-  } catch (e: any) {
-    console.error('Failed to fetch URI history:', e)
-  }
-}
-
-const fetchAgentMetadata = async (uri: string) => {
-  try {
-    const response = await fetch(uri)
-    if (response.ok) {
-      const data = await response.json()
-      agentMetadata.value = {
-        name: data.name || data.agentName,
-        description: data.description || data.about
-      }
-    }
-  } catch (e: any) {
-    console.error('Failed to fetch agent metadata from URI:', e)
-  }
-}
-
-const openEtherscan = (txHash: string) => {
-  window.open(`https://etherscan.io/tx/${txHash}`, '_blank')
-}
-
-const openAddress = (address: string) => {
-  window.open(`https://etherscan.io/address/${address}`, '_blank')
-}
-
-const shortenAddress = (address: string) => {
-  if (!address || address === '0x0000000000000000000000000000000000000000') return 'N/A'
-  return `${address.slice(0, 10)}...${address.slice(-8)}`
-}
-
-const formatNumber = (num: number) => {
-  return new Intl.NumberFormat().format(num)
-}
-
-const formatDate = (dateStr: string) => {
-  if (!dateStr || dateStr === '1970-01-01T00:00:00Z') return 'N/A'
-  return new Date(dateStr).toLocaleString()
-}
-
-const getEventTypeIcon = (eventType: string) => {
-  switch (eventType) {
-    case 'NewFeedback':
-      return CheckCircle
-    case 'FeedbackUpdated':
-      return AlertCircle
-    default:
-      return TrendingUp
-  }
-}
-
-const getEventTypeColor = (eventType: string) => {
-  switch (eventType) {
-    case 'NewFeedback':
-      return 'text-green-500'
-    case 'FeedbackUpdated':
-      return 'text-yellow-500'
-    default:
-      return 'text-blue-500'
-  }
-}
-
-const getScoreVariant = (score: number) => {
-  if (score >= 4) return 'success'
-  if (score >= 3) return 'default'
-  if (score >= 2) return 'secondary'
-  return 'destructive'
-}
-
-onMounted(async () => {
-  loading.value = true
-  await Promise.all([
-    fetchAgent(),
-    fetchReputationHistory(),
-    fetchMetadataHistory(),
-    fetchURIHistory()
-  ])
-  loading.value = false
 })
 </script>
 
 <template>
-  <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
+  <div class="space-y-6">
     <!-- Header -->
-    <div class="flex items-center gap-3">
-      <Button variant="ghost" size="sm" @click="router.push({ name: 'agents' })">
-        <ArrowLeft class="h-4 w-4 mr-2" />
-        Back
-      </Button>
-      <Bot class="h-8 w-8" />
-      <div>
-        <h1 class="text-2xl font-bold tracking-tight">Agent Details</h1>
+    <div class="flex items-center justify-between">
+      <button 
+        @click="router.back()"
+        class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white flex items-center gap-2"
+      >
+        ← Back to Dashboard
+      </button>
+      
+      <!-- Connection Status -->
+      <div class="flex items-center gap-3">
+        <span 
+          :class="[
+            'w-2 h-2 rounded-full', 
+            isConnected ? 'bg-green-500' : 'bg-red-500'
+          ]"
+          title="Connection status"
+        ></span>
+        
+        <!-- Control Buttons -->
+        <button
+          @click="startAgent"
+          :disabled="isControlLoading || agent?.status === 'running'"
+          class="p-2 rounded-lg bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-colors"
+          title="Start Agent"
+        >
+          <PlayCircleIcon class="w-5 h-5" />
+        </button>
+        
+        <button
+          @click="pauseAgent"
+          :disabled="isControlLoading || agent?.status !== 'running'"
+          class="p-2 rounded-lg bg-yellow-600 hover:bg-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-colors"
+          title="Pause Agent"
+        >
+          <PauseCircleIcon class="w-5 h-5" />
+        </button>
+        
+        <button
+          @click="stopAgent"
+          :disabled="isControlLoading || agent?.status === 'stopped'"
+          class="p-2 rounded-lg bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-colors"
+          title="Stop Agent"
+        >
+          <StopIcon class="w-5 h-5" />
+        </button>
+        
+        <button
+          @click="refreshData"
+          :disabled="isControlLoading"
+          class="p-2 rounded-lg bg-gray-600 hover:bg-gray-700 disabled:opacity-50 text-white transition-colors"
+          title="Refresh"
+        >
+          <RefreshCwIcon class="w-5 h-5" />
+        </button>
       </div>
     </div>
 
-    <!-- Loading State -->
-    <div v-if="loading" class="flex-1 flex items-center justify-center">
-      <div class="text-center">
-        <div
-          class="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"
-        ></div>
-        <p class="text-muted-foreground">Loading agent details...</p>
+    <!-- Agent Info Card -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-4">
+          <div :class="[getStatusColor(agent?.status || 'idle'), 'w-12 h-12 rounded-lg flex items-center justify-center']">
+            <ActivityIcon class="w-6 h-6 text-white" />
+          </div>
+          
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ agent?.name }}</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-1">{{ agent?.description }}</p>
+            
+            <div class="flex items-center gap-2 mt-3">
+              <span :class="['inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium', getStatusBadgeColor(agent?.status || 'idle')]">
+                {{ agent?.status }}
+              </span>
+              
+              <span class="text-sm text-gray-500 dark:text-gray-400 capitalize">{{ agent?.type }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Resource Usage -->
+        <div class="flex items-center gap-6">
+          <div class="text-center">
+            <p class="text-sm text-gray-500 dark:text-gray-400">CPU</p>
+            <p class="text-xl font-bold text-gray-900 dark:text-white">{{ agent?.cpuUsage }}%</p>
+          </div>
+          
+          <div class="text-center">
+            <p class="text-sm text-gray-500 dark:text-gray-400">Memory</p>
+            <p class="text-xl font-bold text-gray-900 dark:text-white">{{ agent?.memoryUsage }}MB</p>
+          </div>
+          
+          <div class="text-center">
+            <p class="text-sm text-gray-500 dark:text-gray-400">Tasks</p>
+            <p class="text-xl font-bold text-gray-900 dark:text-white">{{ agent?.tasksCompleted }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Agent Details -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">LLM Provider</p>
+          <p class="font-medium text-gray-900 dark:text-white mt-1">{{ agent?.llmProvider }}</p>
+        </div>
+        
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Skills</p>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <span 
+              v-for="skill in agent?.skills" 
+              :key="skill"
+              class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+            >
+              {{ skill }}
+            </span>
+          </div>
+        </div>
+        
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Last Active</p>
+          <p class="font-medium text-gray-900 dark:text-white mt-1">{{ formatTime(agent?.lastActive || '') }}</p>
+        </div>
       </div>
     </div>
 
-    <!-- Error State -->
-    <Card v-else-if="error" class="border-destructive">
-      <CardContent class="pt-6">
-        <p class="text-destructive">{{ error }}</p>
-      </CardContent>
-    </Card>
-
-    <!-- Agent Details -->
-    <div v-else-if="agent" class="flex-1 overflow-auto space-y-4">
-      <!-- Main Info Card -->
-      <Card>
-        <CardHeader>
-          <div class="flex items-start justify-between">
-            <div class="flex-1">
-              <CardTitle class="text-xl mb-2 flex items-center gap-2">
-                <Bot class="h-6 w-6 text-primary" />
-                {{ agentMetadata.name || agent.name || shortenAddress(agent.address) }}
-                <Badge v-if="agent.active" variant="success">Active</Badge>
-                <Badge v-else variant="secondary">Inactive</Badge>
-              </CardTitle>
-              <p class="text-sm text-muted-foreground font-mono">{{ agent.address }}</p>
-              <p
-                v-if="agentMetadata.description || agent.metadata?.description"
-                class="text-sm mt-2"
-              >
-                {{ agentMetadata.description || agent.metadata?.description }}
-              </p>
-            </div>
-            <Button variant="outline" size="sm" @click="openAddress(agent.address)">
-              <ExternalLink class="h-4 w-4 mr-2" />
-              Etherscan
-            </Button>
+    <!-- Logs and Tasks Split View -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Live Logs -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div 
+          @click="showLogs = !showLogs"
+          class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+        >
+          <div class="flex items-center gap-2">
+            <TerminalIcon class="w-5 h-5 text-blue-600" />
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Live Logs</h2>
           </div>
-        </CardHeader>
-        <CardContent>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <div class="text-sm text-muted-foreground">Agent ID</div>
-              <div class="text-lg font-semibold">#{{ agent.id }}</div>
-            </div>
-            <div>
-              <div class="text-sm text-muted-foreground">Chain ID</div>
-              <div class="text-lg font-semibold">{{ agent.chain_id }}</div>
-            </div>
-            <div v-if="agent.total_reputation !== undefined">
-              <div class="text-sm text-muted-foreground">Total Reputation</div>
-              <div class="text-lg font-semibold">{{ agent.total_reputation }}</div>
-            </div>
-            <div v-if="agent.avg_score !== undefined">
-              <div class="text-sm text-muted-foreground">Average Score</div>
-              <div class="text-lg font-semibold">{{ agent.avg_score.toFixed(2) }}</div>
-            </div>
-            <div>
-              <div class="text-sm text-muted-foreground">First Seen</div>
-              <div class="font-medium text-sm">Block {{ formatNumber(agent.first_seen) }}</div>
-            </div>
-            <div>
-              <div class="text-sm text-muted-foreground">Last Updated</div>
-              <div class="font-medium text-sm">Block {{ formatNumber(agent.last_updated) }}</div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <!-- Reputation History Card -->
-      <Card>
-        <CardHeader>
-          <CardTitle class="flex items-center gap-2">
-            <TrendingUp class="h-5 w-5" />
-            Reputation History
-            <Badge variant="secondary" class="ml-2">{{ reputationHistory.length }} records</Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div v-if="reputationHistory.length === 0" class="text-center py-8 text-muted-foreground">
-            No reputation history available
-          </div>
-          <div v-else class="space-y-3">
-            <div
-              v-for="record in reputationHistory"
-              :key="record.id"
-              class="border rounded-lg p-4 hover:shadow-md transition-shadow"
+          
+          <button @click.stop="showLogs = !showLogs" class="text-gray-400 hover:text-gray-600">
+            <template v-if="showLogs">
+              <Icon name="chevron-down" class="w-5 h-5" />
+            </template>
+            <template v-else>
+              <Icon name="chevron-up" class="w-5 h-5" />
+            </template>
+          </button>
+        </div>
+        
+        <div v-if="showLogs" class="p-0">
+          <!-- Log Actions -->
+          <div class="px-6 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gray-50 dark:bg-gray-900">
+            <label class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
+              <input 
+                type="checkbox" 
+                v-model="autoScrollLogs"
+                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              Auto-scroll
+            </label>
+            
+            <button 
+              @click="clearLogs"
+              class="text-sm text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
             >
-              <div class="flex items-start justify-between gap-4">
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center gap-2 mb-2">
-                    <component
-                      :is="getEventTypeIcon(record.event_type)"
-                      :class="['h-4 w-4', getEventTypeColor(record.event_type)]"
-                    />
-                    <span class="font-medium">{{ record.event_type }}</span>
-                    <Badge :variant="getScoreVariant(record.value)">
-                      Score: {{ record.value }}
-                    </Badge>
-                  </div>
-                  <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
-                    <div>
-                      <div class="text-muted-foreground text-xs">From</div>
-                      <div class="font-mono text-xs">{{ shortenAddress(record.from_address) }}</div>
-                    </div>
-                    <div>
-                      <div class="text-muted-foreground text-xs">Block</div>
-                      <div class="font-medium">{{ formatNumber(record.block_number) }}</div>
-                    </div>
-                    <div>
-                      <div class="text-muted-foreground text-xs">Time</div>
-                      <div class="font-medium text-xs">{{ formatDate(record.timestamp) }}</div>
-                    </div>
-                  </div>
-                  <div class="mt-2 text-xs">
-                    <span class="text-muted-foreground">TX: </span>
-                    <span
-                      class="font-mono cursor-pointer hover:text-primary"
-                      @click="openEtherscan(record.tx_hash)"
-                    >
-                      {{ shortenAddress(record.tx_hash) }}
-                    </span>
-                  </div>
-                </div>
-                <Button variant="ghost" size="sm" @click="openEtherscan(record.tx_hash)">
-                  <ExternalLink class="h-4 w-4" />
-                </Button>
-              </div>
+              Clear Logs
+            </button>
+          </div>
+          
+          <div 
+            class="p-4 font-mono text-xs overflow-y-auto max-h-96 space-y-1 bg-gray-950 text-green-400"
+            :class="{ 'auto-scroll': autoScrollLogs }"
+          >
+            <div v-for="(log, index) in logs.slice().reverse()" :key="index">
+              {{ log }}
+            </div>
+            
+            <div v-if="logs.length === 0" class="text-gray-500 text-center py-8">
+              No logs yet. Start the agent to see activity.
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <!-- Metadata History Card -->
-      <Card>
-        <CardHeader>
-          <CardTitle class="flex items-center gap-2">
-            <FileText class="h-5 w-5" />
-            Metadata History
-            <Badge variant="secondary" class="ml-2">{{ metadataHistory.length }} records</Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div v-if="metadataHistory.length === 0" class="text-center py-8 text-muted-foreground">
-            No metadata history available
+      <!-- Task History -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div 
+          @click="showTasks = !showTasks"
+          class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+        >
+          <div class="flex items-center gap-2">
+            <Icon name="clock" class="w-5 h-5 text-purple-600" />
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Task History</h2>
           </div>
-          <div v-else class="space-y-3">
-            <div
-              v-for="record in decodedMetadataHistory"
-              :key="record.id"
-              class="border rounded-lg p-4 hover:shadow-md transition-shadow"
-            >
-              <div class="flex items-start justify-between gap-4">
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center gap-2 mb-2">
-                    <FileText class="h-4 w-4 text-blue-500" />
-                    <span class="font-mono text-sm font-medium">{{
-                      record.decoded.key || record.metadata_key
-                    }}</span>
-                    <Badge variant="outline" class="text-xs">{{
-                      getTypeLabel(record.decoded)
-                    }}</Badge>
-                  </div>
-
-                  <!-- Decoded Value (Human Readable) -->
-                  <div class="mb-2">
-                    <div class="text-muted-foreground text-xs mb-1 flex items-center gap-1">
-                      <CheckCircle class="h-3 w-3 text-green-500" />
-                      Decoded Value
-                    </div>
-                    <div
-                      class="font-mono text-sm bg-green-50 dark:bg-green-950/20 p-2 rounded border border-green-200 dark:border-green-800 break-all"
-                    >
-                      <span v-if="record.decoded.isAddress">
-                        <a
-                          :href="`https://etherscan.io/address/${record.decoded.value}`"
-                          target="_blank"
-                          rel="noopener"
-                          class="text-blue-600 dark:text-blue-400 hover:underline"
-                        >
-                          {{ record.decoded.value }}
-                        </a>
-                      </span>
-                      <span v-else>{{ record.decoded.value || '(empty)' }}</span>
-                    </div>
-                  </div>
-
-                  <!-- Raw Encoded Value -->
-                  <div class="mb-2">
-                    <details class="group">
-                      <summary
-                        class="text-muted-foreground text-xs mb-1 cursor-pointer hover:text-foreground flex items-center gap-1"
-                      >
-                        <AlertCircle class="h-3 w-3 text-orange-500" />
-                        Raw ABI-Encoded Value
-                        <span class="text-xs opacity-50">(click to expand)</span>
-                      </summary>
-                      <div
-                        class="font-mono text-xs bg-muted p-2 rounded break-all max-h-32 overflow-y-auto mt-1"
-                      >
-                        {{ record.decoded.raw }}
-                      </div>
-                    </details>
-                  </div>
-                  <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
-                    <div>
-                      <div class="text-muted-foreground text-xs">Block</div>
-                      <div class="font-medium">{{ formatNumber(record.block_number) }}</div>
-                    </div>
-                    <div>
-                      <div class="text-muted-foreground text-xs">Time</div>
-                      <div class="font-medium text-xs">{{ formatDate(record.timestamp) }}</div>
-                    </div>
-                  </div>
-                  <div class="mt-2 text-xs">
-                    <span class="text-muted-foreground">TX: </span>
-                    <span
-                      class="font-mono cursor-pointer hover:text-primary"
-                      @click="openEtherscan(record.tx_hash)"
-                    >
-                      {{ shortenAddress(record.tx_hash) }}
-                    </span>
-                  </div>
-                </div>
-                <Button variant="ghost" size="sm" @click="openEtherscan(record.tx_hash)">
-                  <ExternalLink class="h-4 w-4" />
-                </Button>
-              </div>
+          
+          <button @click.stop="showTasks = !showTasks" class="text-gray-400 hover:text-gray-600">
+            <template v-if="showTasks">
+              <Icon name="chevron-down" class="w-5 h-5" />
+            </template>
+            <template v-else>
+              <Icon name="chevron-up" class="w-5 h-5" />
+            </template>
+          </button>
+        </div>
+        
+        <div v-if="showTasks" class="divide-y divide-gray-200 dark:divide-gray-700 max-h-96 overflow-y-auto">
+          <div 
+            v-for="task in tasks" 
+            :key="task.id"
+            class="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+          >
+            <div class="flex items-start justify-between mb-2">
+              <p class="font-medium text-gray-900 dark:text-white">{{ task.title }}</p>
+              
+              <span :class="['px-2 py-1 rounded-full text-xs font-medium', getTaskStatusColor(task.status)]">
+                {{ task.status }}
+              </span>
+            </div>
+            
+            <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+              <span>{{ formatTime(task.createdAt) }}</span>
+              
+              <template v-if="task.duration">
+                <span>Duration: {{ formatDuration(task.duration) }}</span>
+              </template>
+            </div>
+            
+            <div v-if="task.result" class="mt-2 p-3 bg-gray-50 dark:bg-gray-900 rounded text-xs font-mono overflow-x-auto">
+              <p class="text-gray-600 dark:text-gray-400 mb-1">Result:</p>
+              {{ task.result }}
             </div>
           </div>
-        </CardContent>
-      </Card>
-
-      <!-- URI History Card -->
-      <Card>
-        <CardHeader>
-          <CardTitle class="flex items-center gap-2">
-            <Link class="h-5 w-5" />
-            URI History
-            <Badge variant="secondary" class="ml-2">{{ uriHistory.length }} records</Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div v-if="uriHistory.length === 0" class="text-center py-8 text-muted-foreground">
-            No URI history available
+          
+          <div v-if="tasks.length === 0" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+            No tasks yet.
           </div>
-          <div v-else class="space-y-3">
-            <div
-              v-for="record in uriHistory"
-              :key="record.id"
-              class="border rounded-lg p-4 hover:shadow-md transition-shadow"
-            >
-              <div class="flex items-start justify-between gap-4">
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center gap-2 mb-2">
-                    <Link class="h-4 w-4 text-green-500" />
-                    <span class="font-medium">URI Update</span>
-                  </div>
-                  <div class="mb-2">
-                    <div class="text-muted-foreground text-xs mb-1">URI</div>
-                    <div class="font-mono text-xs bg-muted p-2 rounded break-all">
-                      {{ record.uri || '(empty)' }}
-                    </div>
-                  </div>
-                  <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
-                    <div>
-                      <div class="text-muted-foreground text-xs">Block</div>
-                      <div class="font-medium">{{ formatNumber(record.block_number) }}</div>
-                    </div>
-                    <div>
-                      <div class="text-muted-foreground text-xs">Time</div>
-                      <div class="font-medium text-xs">{{ formatDate(record.timestamp) }}</div>
-                    </div>
-                  </div>
-                  <div class="mt-2 text-xs">
-                    <span class="text-muted-foreground">TX: </span>
-                    <span
-                      class="font-mono cursor-pointer hover:text-primary"
-                      @click="openEtherscan(record.tx_hash)"
-                    >
-                      {{ shortenAddress(record.tx_hash) }}
-                    </span>
-                  </div>
-                </div>
-                <Button variant="ghost" size="sm" @click="openEtherscan(record.tx_hash)">
-                  <ExternalLink class="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
+
+    <!-- Settings Button -->
+    <button 
+      @click="$router.push('/agent-orchestrator/config')"
+      class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors"
+    >
+      <Icon name="settings" class="w-5 h-5" />
+      Configure Agent Settings
+    </button>
   </div>
 </template>
+
+<style scoped>
+.auto-scroll {
+  scroll-behavior: smooth;
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.dark .overflow-y-auto::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.dark .overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+</style>

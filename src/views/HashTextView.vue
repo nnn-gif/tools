@@ -3,6 +3,7 @@ import { ref, watch } from 'vue'
 import { Hash, Copy, Check } from 'lucide-vue-next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import Breadcrumb from '@/components/Breadcrumb.vue'
 
 const input = ref('')
 const hashResults = ref<Record<string, string>>({})
@@ -218,6 +219,9 @@ const copyHash = (type: string) => {
 <template>
   <div class="container mx-auto px-6 py-8">
     <div class="max-w-4xl mx-auto">
+      <!-- Breadcrumb Navigation -->
+      <Breadcrumb />
+      
       <!-- Header -->
       <div class="mb-8">
         <h1 class="text-3xl font-bold flex items-center gap-3">

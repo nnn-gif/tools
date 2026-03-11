@@ -5,6 +5,7 @@ import { FileJson, FileType } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import Breadcrumb from '@/components/Breadcrumb.vue'
 
 const jsonInput = ref('')
 const yamlInput = ref('')
@@ -47,6 +48,9 @@ const fillSample = () => {
 
 <template>
   <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
+    <!-- Breadcrumb Navigation -->
+    <Breadcrumb />
+    
     <div class="flex items-center justify-between">
       <h1 class="text-3xl font-bold tracking-tight">JSON &lt;-&gt; YAML Converter</h1>
       <Button variant="ghost" @click="fillSample">Load Sample</Button>
@@ -90,6 +94,48 @@ const fillSample = () => {
 
     <div v-if="error" class="p-4 text-sm text-destructive bg-destructive/10 rounded-md">
       {{ error }}
+    </div>
+
+    <!-- Related Tools -->
+    <div class="mt-8 p-6 bg-muted/20 rounded-lg border border-border">
+      <h2 class="text-xl font-bold mb-4">Related Tools</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <a
+          href="/json-viewer"
+          class="block p-4 rounded-lg border border-border hover:border-primary hover:bg-muted/30 transition-all"
+        >
+          <h3 class="font-semibold mb-2">JSON Viewer</h3>
+          <p class="text-sm text-muted-foreground">Format and validate JSON data</p>
+        </a>
+        <a
+          href="/yaml-viewer"
+          class="block p-4 rounded-lg border border-border hover:border-primary hover:bg-muted/30 transition-all"
+        >
+          <h3 class="font-semibold mb-2">YAML Viewer</h3>
+          <p class="text-sm text-muted-foreground">Format and validate YAML data</p>
+        </a>
+        <a
+          href="/json-minify"
+          class="block p-4 rounded-lg border border-border hover:border-primary hover:bg-muted/30 transition-all"
+        >
+          <h3 class="font-semibold mb-2">JSON Minify</h3>
+          <p class="text-sm text-muted-foreground">Reduce JSON file size</p>
+        </a>
+        <a
+          href="/json-csv"
+          class="block p-4 rounded-lg border border-border hover:border-primary hover:bg-muted/30 transition-all"
+        >
+          <h3 class="font-semibold mb-2">JSON to CSV</h3>
+          <p class="text-sm text-muted-foreground">Convert JSON to CSV format</p>
+        </a>
+        <a
+          href="/json-xml"
+          class="block p-4 rounded-lg border border-border hover:border-primary hover:bg-muted/30 transition-all"
+        >
+          <h3 class="font-semibold mb-2">JSON to XML</h3>
+          <p class="text-sm text-muted-foreground">Convert JSON to XML format</p>
+        </a>
+      </div>
     </div>
   </div>
 </template>

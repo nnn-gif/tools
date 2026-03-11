@@ -137,8 +137,7 @@ const categories = [
           >
             Blogs
           </RouterLink>
-
-
+        </div>
 
         <!-- Search & Mobile Menu Button -->
         <div class="flex items-center gap-3">

@@ -2,7 +2,7 @@
   <div class="agent-config-view">
     <!-- Header -->
     <header class="config-header">
-      <h1><Icon name="settings" /> Agent Configuration</h1>
+      <h1><Settings /> Agent Configuration</h1>
       <p>Configure LLM endpoints, API keys, and agent behavior settings</p>
     </header>
 
@@ -16,7 +16,7 @@
 
       <!-- Error State -->
       <div v-else-if="error" class="error-container">
-        <Icon name="alert-circle" />
+        <AlertCircle />
         <p>{{ error }}</p>
         <button @click="loadConfig" class="retry-btn">Retry</button>
       </div>
@@ -25,7 +25,7 @@
       <div v-else class="config-form-wrapper">
         <!-- LLM Configuration Section -->
         <section class="config-section">
-          <h2><Icon name="bot" /> LLM Settings</h2>
+          <h2><Bot /> LLM Settings</h2>
           
           <form @submit.prevent="saveConfig" class="config-form">
             <div class="form-group">
@@ -109,7 +109,7 @@
 
             <!-- Test Connection -->
             <button type="button" @click="testLLMConnection" class="btn btn-secondary">
-              <Icon name="wifi" /> Test LLM Connection
+              <Wifi /> Test LLM Connection
             </button>
             
             <p v-if="connectionStatus" :class="'status ' + connectionStatus.type">
@@ -120,7 +120,7 @@
 
         <!-- Agent Behavior Settings -->
         <section class="config-section">
-          <h2><Icon name="settings-2" /> Agent Behavior</h2>
+          <h2><Settings /> Agent Behavior</h2>
           
           <form @submit.prevent="saveConfig" class="config-form">
             <div class="form-group">
@@ -178,7 +178,7 @@
 
         <!-- Storage Settings -->
         <section class="config-section">
-          <h2><Icon name="database" /> Storage Configuration</h2>
+          <h2><DatabaseIcon /> Storage Configuration</h2>
           
           <form @submit.prevent="saveConfig" class="config-form">
             <div class="form-group">
@@ -249,16 +249,16 @@
         <!-- Action Buttons -->
         <div class="action-buttons">
           <button type="submit" form="configForm" @click="saveConfig" class="btn btn-primary">
-            <Icon name="save" /> Save Configuration
+            <SaveIcon /> Save Configuration
           </button>
           <button type="button" @click="loadConfig" class="btn btn-secondary">
-            <Icon name="refresh" /> Reset to Defaults
+            <RefreshIcon /> Reset to Defaults
           </button>
         </div>
 
         <!-- Success Message -->
         <p v-if="successMessage" class="success-message">
-          <Icon name="check-circle" /> {{ successMessage }}
+          <CheckCircle /> {{ successMessage }}
         </p>
       </div>
     </div>
@@ -268,8 +268,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import LoadingSpinner from '../components/LoadingSpinner.vue'
-import Icon from '../components/Icon.vue'
+import { Settings, AlertCircle, Bot, Wifi, Database as DatabaseIcon, RotateCcw as RefreshIcon, Save, CheckCircle } from 'lucide-vue-next'
 
 const router = useRouter()
 

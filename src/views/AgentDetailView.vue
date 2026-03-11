@@ -2,17 +2,17 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { 
-  PlayCircleIcon, 
-  PauseCircleIcon, 
-  StopIcon, 
-  TerminalIcon, 
-  ClockIcon, 
-  ActivityIcon,
-  LogOutIcon,
-  RefreshCwIcon,
-  SettingsIcon,
-  ChevronDownIcon,
-  ChevronUpIcon
+  Play, 
+  Pause, 
+  Square as Stop, 
+  Terminal, 
+  Clock, 
+  Activity,
+  LogOut,
+  RefreshCw,
+  Settings,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-vue-next'
 
 interface Agent {
@@ -366,7 +366,7 @@ onUnmounted(() => {
           class="p-2 rounded-lg bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-colors"
           title="Start Agent"
         >
-          <PlayCircleIcon class="w-5 h-5" />
+          <Play class="w-5 h-5" />
         </button>
         
         <button
@@ -375,7 +375,7 @@ onUnmounted(() => {
           class="p-2 rounded-lg bg-yellow-600 hover:bg-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-colors"
           title="Pause Agent"
         >
-          <PauseCircleIcon class="w-5 h-5" />
+          <Pause class="w-5 h-5" />
         </button>
         
         <button
@@ -384,7 +384,7 @@ onUnmounted(() => {
           class="p-2 rounded-lg bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-colors"
           title="Stop Agent"
         >
-          <StopIcon class="w-5 h-5" />
+          <Stop class="w-5 h-5" />
         </button>
         
         <button
@@ -393,7 +393,7 @@ onUnmounted(() => {
           class="p-2 rounded-lg bg-gray-600 hover:bg-gray-700 disabled:opacity-50 text-white transition-colors"
           title="Refresh"
         >
-          <RefreshCwIcon class="w-5 h-5" />
+          <RefreshCw class="w-5 h-5" />
         </button>
       </div>
     </div>
@@ -403,7 +403,7 @@ onUnmounted(() => {
       <div class="flex items-start justify-between">
         <div class="flex items-center gap-4">
           <div :class="[getStatusColor(agent?.status || 'idle'), 'w-12 h-12 rounded-lg flex items-center justify-center']">
-            <ActivityIcon class="w-6 h-6 text-white" />
+            <Activity class="w-6 h-6 text-white" />
           </div>
           
           <div>
@@ -475,16 +475,16 @@ onUnmounted(() => {
           class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
         >
           <div class="flex items-center gap-2">
-            <TerminalIcon class="w-5 h-5 text-blue-600" />
+            <Terminal class="w-5 h-5 text-blue-600" />
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Live Logs</h2>
           </div>
           
           <button @click.stop="showLogs = !showLogs" class="text-gray-400 hover:text-gray-600">
             <template v-if="showLogs">
-              <Icon name="chevron-down" class="w-5 h-5" />
+              <ChevronDown class="w-5 h-5" />
             </template>
             <template v-else>
-              <Icon name="chevron-up" class="w-5 h-5" />
+              <ChevronUp class="w-5 h-5" />
             </template>
           </button>
         </div>
@@ -531,16 +531,16 @@ onUnmounted(() => {
           class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
         >
           <div class="flex items-center gap-2">
-            <Icon name="clock" class="w-5 h-5 text-purple-600" />
+            <Clock class="w-5 h-5 text-purple-600" />
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Task History</h2>
           </div>
           
           <button @click.stop="showTasks = !showTasks" class="text-gray-400 hover:text-gray-600">
             <template v-if="showTasks">
-              <Icon name="chevron-down" class="w-5 h-5" />
+              <ChevronDown class="w-5 h-5" />
             </template>
             <template v-else>
-              <Icon name="chevron-up" class="w-5 h-5" />
+              <ChevronUp class="w-5 h-5" />
             </template>
           </button>
         </div>
@@ -585,7 +585,7 @@ onUnmounted(() => {
       @click="$router.push('/agent-orchestrator/config')"
       class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors"
     >
-      <Icon name="settings" class="w-5 h-5" />
+      <Settings class="w-5 h-5" />
       Configure Agent Settings
     </button>
   </div>

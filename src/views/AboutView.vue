@@ -1,66 +1,20 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import {
-  Bot,
-  Shield,
-  Zap,
-  Heart,
-  Github,
-  ExternalLink,
-  Users,
-  Target,
-  Lightbulb
-} from 'lucide-vue-next'
+import { onMounted } from 'vue'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+import formathoIcons from '@/assets/formatho-icons.json'
 
-const values = [
-  {
-    title: 'Privacy First',
-    description:
-      'All our tools run 100% client-side. Your data never leaves your browser. We believe privacy is a fundamental right.',
-    icon: Shield
-  },
-  {
-    title: 'Developer Focused',
-    description:
-      'Built by developers, for developers. Every tool is designed to solve real problems we face daily.',
-    icon: Zap
-  },
-  {
-    title: 'Open Source',
-    description:
-      'Transparency builds trust. Our code is open for inspection, contribution, and improvement.',
-    icon: Github
-  },
-  {
-    title: 'Innovation Driven',
-    description:
-      "We're exploring the frontier of AI agent orchestration, making complex technology accessible.",
-    icon: Lightbulb
-  }
-]
-
-const milestones = [
-  {
-    year: '2024',
-    title: 'Project Launch',
-    description: 'Started building privacy-first developer tools'
-  },
-  {
-    year: '2024',
-    title: '100+ Tools',
-    description: 'Expanded our toolkit to over 100 utilities'
-  },
-  {
-    year: '2025',
-    title: 'Agent Orchestrator',
-    description: 'Began development of our flagship desktop app'
-  },
-  {
-    year: 'Future',
-    title: 'AI Agent Revolution',
-    description: 'Empowering developers to harness autonomous AI workers'
-  }
-]
+// Initialize AOS
+onMounted(() => {
+  AOS.init({
+    duration: 400,
+    easing: 'ease-out-cubic',
+    once: true,
+    mirror: true,
+    offset: 50,
+  })
+})
 </script>
 
 <template>
@@ -80,205 +34,446 @@ const milestones = [
               class="h-16 w-16 rounded-xl shadow-2xl ring-2 ring-primary/20"
             />
             <h1 class="text-4xl md:text-5xl font-bold tracking-tight gradient-text">
-              About Formatho
+              Code That Respects Your Privacy
             </h1>
           </div>
 
-          <p class="text-xl md:text-2xl text-muted-foreground max-w-2xl leading-relaxed">
-            Building the future of developer tools and AI agent orchestration — one privacy-first
-            solution at a time.
+          <p class="text-xl md:text-2xl text-muted-foreground max-w-3xl leading-relaxed">
+            At Formatho, we believe developers deserve tools that work as hard as they do—without compromising what matters most: your data, your privacy, and your peace of mind. We've built a complete toolkit of 100+ developer utilities designed from the ground up to keep your information safe.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- Mission Section -->
-    <section class="container mx-auto px-4 py-16 md:py-24">
-      <div class="max-w-4xl mx-auto">
-        <div class="text-center mb-12">
-          <div class="inline-flex items-center justify-center p-3 rounded-xl bg-primary/10 mb-4">
-            <Target class="h-8 w-8 text-primary" />
-          </div>
-          <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Mission</h2>
-        </div>
-
-        <div class="glass-card p-8 md:p-12">
-          <p class="text-lg md:text-xl text-muted-foreground leading-relaxed mb-6">
-            At Formatho, we believe that powerful developer tools should be
-            <span class="text-foreground font-medium">accessible, private, and free</span>. In a
-            world where data is constantly harvested and monetized, we chose a different path.
-          </p>
-          <p class="text-lg md:text-xl text-muted-foreground leading-relaxed mb-6">
-            Our suite of 100+ developer utilities runs entirely in your browser — no servers, no
-            tracking, no data collection. Your code, your data, your privacy.
-          </p>
-          <p class="text-lg md:text-xl text-muted-foreground leading-relaxed">
-            We're also building <span class="text-primary font-medium">Agent Orchestrator</span>, a
-            desktop application that lets you spin up AI workers with simple text commands. Describe
-            what you need, and let autonomous agents handle the rest. It's the future of
-            productivity, and it runs locally on your machine.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Values Section -->
-    <section class="container mx-auto px-4 py-16 md:py-24 bg-muted/30">
+    <!-- Section 1: Your Data Never Leaves Your Browser (Text Left, Badge Right) -->
+    <section class="container mx-auto px-4 py-20 md:py-24">
       <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold mb-4">What We Stand For</h2>
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <!-- Left: Text Content -->
+          <div
+            class="space-y-6"
+            data-aos="fade-right"
+            data-aos-duration="400"
+          >
+            <h2 class="text-3xl md:text-4xl font-bold tracking-tight">
+              Your Data Never Leaves Your Browser
+            </h2>
+            <div class="prose prose-lg text-muted-foreground space-y-4">
+              <p>
+                This is our core promise, and we mean it literally. Every tool on Formatho runs 100% client-side using modern web technologies. When you format JSON, convert YAML to JSON, or minify JavaScript, that data stays on your device—from the moment you paste it until the instant you close the tab.
+              </p>
+              <p class="font-medium text-foreground">
+                We don't collect it. We don't store it. We can't see it.
+              </p>
+              <p>
+                This isn't marketing fluff. It's architectural reality. Our tools execute entirely in your browser environment, meaning:
+              </p>
+              <ul class="space-y-2">
+                <li class="flex items-start gap-2">
+                  <span class="text-primary font-semibold">•</span>
+                  <span><strong>Zero server uploads:</strong> Your code never leaves your machine</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary font-semibold">•</span>
+                  <span><strong>No database storage:</strong> Nothing gets saved anywhere</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary font-semibold">•</span>
+                  <span><strong>No third-party analytics:</strong> We don't track what you build</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary font-semibold">•</span>
+                  <span><strong>Offline-capable:</strong> Once loaded, many tools work without an internet connection</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Right: Privacy Shield Trust Badge -->
+          <div
+            class="flex justify-center md:justify-end"
+            data-aos="fade-left"
+            data-aos-duration="400"
+            data-aos-delay="100"
+          >
+            <div class="glass-card p-12 max-w-sm text-center">
+              <div class="mb-6 flex justify-center">
+                <span
+                  class="w-24 h-24 text-primary"
+                  v-html="formathoIcons.icons['privacy-shield'].svg"
+                />
+              </div>
+              <h3 class="text-2xl font-bold mb-3 text-primary">Privacy Shield</h3>
+              <p class="text-lg text-muted-foreground">
+                Your data never leaves your browser
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Why Privacy Matters (Text Right, Badge Left - Reversed) -->
+    <section class="container mx-auto px-4 py-20 md:py-24 bg-muted/30">
+      <div class="max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <!-- Left: No-Log Globe Trust Badge -->
+          <div
+            class="flex justify-center md:justify-start order-2 md:order-1"
+            data-aos="fade-right"
+            data-aos-duration="400"
+            data-aos-delay="100"
+          >
+            <div class="glass-card p-12 max-w-sm text-center">
+              <div class="mb-6 flex justify-center">
+                <span
+                  class="w-24 h-24 text-primary"
+                  v-html="formathoIcons.icons['no-log-globe'].svg"
+                />
+              </div>
+              <h3 class="text-2xl font-bold mb-3 text-primary">No-Log Globe</h3>
+              <p class="text-lg text-muted-foreground">
+                Zero tracking, zero storage, zero logs
+              </p>
+            </div>
+          </div>
+
+          <!-- Right: Text Content -->
+          <div
+            class="space-y-6 order-1 md:order-2"
+            data-aos="fade-left"
+            data-aos-duration="400"
+          >
+            <h2 class="text-3xl md:text-4xl font-bold tracking-tight">
+              Why Privacy Matters for Developers
+            </h2>
+            <div class="prose prose-lg text-muted-foreground space-y-4">
+              <p>
+                Developers handle sensitive information daily. API keys, authentication tokens, proprietary algorithms, and user data flow through their workflows constantly. When you rely on online tools to format or convert this code, you're essentially handing it to a stranger's server.
+              </p>
+              <p>
+                We've all been there:
+              </p>
+              <ul class="space-y-2">
+                <li class="flex items-start gap-2">
+                  <span class="text-primary font-semibold">•</span>
+                  <span>Pasting config files into JSON formatters only to wonder if they're being logged</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary font-semibold">•</span>
+                  <span>Using conversion tools that might be storing your proprietary data</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary font-semibold">•</span>
+                  <span>Not knowing what happens to your content after you hit "convert"</span>
+                </li>
+              </ul>
+              <p class="font-medium text-foreground">
+                At Formatho, we built the toolkit we wish existed. One where you can paste production configs, debug sensitive payloads, or format user-facing data without second-guessing whether it's safe. Because when you're a developer, privacy isn't optional—it's fundamental to doing your job securely.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Built for Security-Conscious Teams (Text Left, Badge Right) -->
+    <section class="container mx-auto px-4 py-20 md:py-24">
+      <div class="max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <!-- Left: Text Content -->
+          <div
+            class="space-y-6"
+            data-aos="fade-right"
+            data-aos-duration="400"
+          >
+            <h2 class="text-3xl md:text-4xl font-bold tracking-tight">
+              Built for Security-Conscious Teams
+            </h2>
+            <div class="prose prose-lg text-muted-foreground space-y-4">
+              <p>
+                Whether you're working on open-source projects, enterprise applications, or regulated industries (healthcare, finance, legal), you need tools that comply with strict data handling requirements. Formatho is designed for scenarios where:
+              </p>
+              <ul class="space-y-2">
+                <li class="flex items-start gap-2">
+                  <span class="text-primary font-semibold">•</span>
+                  <span><strong>GDPR compliance matters:</strong> No personal data leaves the user's device</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary font-semibold">•</span>
+                  <span><strong>Code security audits are required:</strong> Zero external dependencies on your codebase</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary font-semibold">•</span>
+                  <span><strong>Team workflows demand trust:</strong> Developers can use tools without fear of exposure</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary font-semibold">•</span>
+                  <span><strong>Air-gapped environments:</strong> Many tools function in offline or restricted networks</span>
+                </li>
+              </ul>
+              <p class="font-medium text-foreground">
+                We're not just a convenience tool. We're a security requirement for teams that take their data seriously.
+              </p>
+            </div>
+          </div>
+
+          <!-- Right: Client-Side Chip Trust Badge -->
+          <div
+            class="flex justify-center md:justify-end"
+            data-aos="fade-left"
+            data-aos-duration="400"
+            data-aos-delay="100"
+          >
+            <div class="glass-card p-12 max-w-sm text-center">
+              <div class="mb-6 flex justify-center">
+                <span
+                  class="w-24 h-24 text-primary"
+                  v-html="formathoIcons.icons['client-side-chip'].svg"
+                />
+              </div>
+              <h3 class="text-2xl font-bold mb-3 text-primary">Client-Side Chip</h3>
+              <p class="text-lg text-muted-foreground">
+                100% client-side processing
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Pillars Section (3-Column Layout, Fade-Up from Bottom with Stagger) -->
+    <section class="container mx-auto px-4 py-20 md:py-24 bg-muted/30">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">Privacy Pillars</h2>
           <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
-            The principles that guide everything we build
+            The three fundamental principles that define our approach to developer tools
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div v-for="value in values" :key="value.title" class="glass-card p-6 group">
-            <div class="flex items-start gap-4">
-              <div
-                class="p-3 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0"
-              >
-                <component :is="value.icon" class="h-6 w-6 text-primary" />
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Pillar 1: Privacy First -->
+          <div
+            class="glass-card p-8 text-center"
+            data-aos="fade-up"
+            data-aos-duration="400"
+            data-aos-delay="0"
+          >
+            <div class="mb-6 flex justify-center">
+              <span
+                class="w-20 h-20 text-primary"
+                v-html="formathoIcons.icons['privacy-shield'].svg"
+              />
+            </div>
+            <h3 class="text-2xl font-bold mb-4 text-primary">Privacy First</h3>
+            <p class="text-muted-foreground leading-relaxed">
+              Your data never leaves your browser. We don't collect, store, or track anything you input. All processing happens locally on your device.
+            </p>
+          </div>
+
+          <!-- Pillar 2: Zero Tracking -->
+          <div
+            class="glass-card p-8 text-center"
+            data-aos="fade-up"
+            data-aos-duration="400"
+            data-aos-delay="100"
+          >
+            <div class="mb-6 flex justify-center">
+              <span
+                class="w-20 h-20 text-primary"
+                v-html="formathoIcons.icons['no-log-globe'].svg"
+              />
+            </div>
+            <h3 class="text-2xl font-bold mb-4 text-primary">Zero Tracking</h3>
+            <p class="text-muted-foreground leading-relaxed">
+              No analytics, no cookies, no telemetry. We don't monetize your data. We believe privacy shouldn't be a premium feature—it should be the default.
+            </p>
+          </div>
+
+          <!-- Pillar 3: Client-Side Only -->
+          <div
+            class="glass-card p-8 text-center"
+            data-aos="fade-up"
+            data-aos-duration="400"
+            data-aos-delay="200"
+          >
+            <div class="mb-6 flex justify-center">
+              <span
+                class="w-20 h-20 text-primary"
+                v-html="formathoIcons.icons['client-side-chip'].svg"
+              />
+            </div>
+            <h3 class="text-2xl font-bold mb-4 text-primary">Client-Side Only</h3>
+            <p class="text-muted-foreground leading-relaxed">
+              Every tool runs 100% in your browser. No server calls, no cloud processing. Fast, secure, and reliable tools that respect your data.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: The Future of Privacy-First Development Tools -->
+    <section class="container mx-auto px-4 py-20 md:py-24">
+      <div class="max-w-4xl mx-auto text-center">
+        <div
+          class="space-y-6"
+          data-aos="fade-up"
+          data-aos-duration="400"
+        >
+          <h2 class="text-3xl md:text-4xl font-bold tracking-tight">
+            The Future of Privacy-First Development Tools
+          </h2>
+          <div class="prose prose-lg text-muted-foreground space-y-4 max-w-3xl mx-auto">
+            <p>
+              The web has become cluttered with "free" tools that monetize your data. Every formatter, converter, and validator you use is either selling ads or building profiles on what you build. This creates a fundamental conflict of interest: the tool owner benefits from knowing your content, while you need them to not know it at all.
+            </p>
+            <p class="font-medium text-foreground">
+              Formatho breaks this model entirely.
+            </p>
+            <p>
+              By running everything client-side, we eliminate that conflict. Our incentives align with yours:
+            </p>
+            <ul class="text-left inline-block">
+              <li class="mb-2"><strong>Better performance</strong> = faster client-side execution (we win)</li>
+              <li class="mb-2"><strong>More features</strong> = more powerful browser capabilities (we both win)</li>
+              <li><strong>User trust</strong> = continued adoption and word-of-mouth referrals (we both win)</li>
+            </ul>
+            <p class="font-medium text-foreground">
+              We're building the future where privacy isn't a premium feature or an afterthought—it's the default. Every tool, every time.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Our Commitment -->
+    <section class="container mx-auto px-4 py-20 md:py-24 bg-muted/30">
+      <div class="max-w-4xl mx-auto">
+        <div class="glass-card p-8 md:p-12">
+          <div
+            class="text-center mb-12"
+            data-aos="fade-up"
+            data-aos-duration="400"
+          >
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Commitment to You</h2>
+            <p class="text-lg text-muted-foreground">
+              Five promises that define how we build and operate
+            </p>
+          </div>
+
+          <div class="space-y-6">
+            <div
+              class="flex gap-4 p-4 rounded-lg bg-background/50"
+              data-aos="fade-up"
+              data-aos-duration="400"
+              data-aos-delay="0"
+            >
+              <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <span class="text-xl font-bold text-primary">1</span>
               </div>
               <div>
-                <h3 class="text-xl font-semibold mb-2">{{ value.title }}</h3>
-                <p class="text-muted-foreground leading-relaxed">{{ value.description }}</p>
+                <h3 class="text-lg font-semibold mb-1">No Sign-Up Required</h3>
+                <p class="text-muted-foreground">Use any tool instantly without creating accounts</p>
+              </div>
+            </div>
+
+            <div
+              class="flex gap-4 p-4 rounded-lg bg-background/50"
+              data-aos="fade-up"
+              data-aos-duration="400"
+              data-aos-delay="50"
+            >
+              <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <span class="text-xl font-bold text-primary">2</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">No Code Uploads</h3>
+                <p class="text-muted-foreground">Your data processes locally in your browser</p>
+              </div>
+            </div>
+
+            <div
+              class="flex gap-4 p-4 rounded-lg bg-background/50"
+              data-aos="fade-up"
+              data-aos-duration="400"
+              data-aos-delay="100"
+            >
+              <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <span class="text-xl font-bold text-primary">3</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">No Analytics or Tracking</h3>
+                <p class="text-muted-foreground">We don't monitor what you build</p>
+              </div>
+            </div>
+
+            <div
+              class="flex gap-4 p-4 rounded-lg bg-background/50"
+              data-aos="fade-up"
+              data-aos-duration="400"
+              data-aos-delay="150"
+            >
+              <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <span class="text-xl font-bold text-primary">4</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">Open Transparency</h3>
+                <p class="text-muted-foreground">If we ever add server-side features, they'll be opt-in with clear disclosure</p>
+              </div>
+            </div>
+
+            <div
+              class="flex gap-4 p-4 rounded-lg bg-background/50"
+              data-aos="fade-up"
+              data-aos-duration="400"
+              data-aos-delay="200"
+            >
+              <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <span class="text-xl font-bold text-primary">5</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">Community-Driven</h3>
+                <p class="text-muted-foreground">Tools are prioritized based on developer feedback</p>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Agent Orchestrator Highlight -->
-    <section class="container mx-auto px-4 py-16 md:py-24">
-      <div class="max-w-5xl mx-auto">
-        <div
-          class="glass-card p-8 md:p-12 border-primary/20 bg-gradient-to-br from-primary/5 to-background"
-        >
-          <div class="flex flex-col md:flex-row items-center gap-8">
-            <div class="flex-shrink-0">
-              <div class="p-6 rounded-2xl bg-primary/10">
-                <Bot class="h-16 w-16 text-primary" />
-              </div>
-            </div>
-            <div class="flex-1 text-center md:text-left">
-              <h2 class="text-3xl md:text-4xl font-bold mb-4">Agent Orchestrator</h2>
-              <p class="text-lg text-muted-foreground mb-6 leading-relaxed">
-                Our flagship desktop application that's redefining how developers work with AI. Spin
-                up autonomous AI workers with natural language, let them run tasks in the
-                background, and check results when you're ready. Local-first, privacy-respecting,
-                infinitely powerful.
-              </p>
-              <div class="flex flex-wrap gap-4 justify-center md:justify-start">
-                <RouterLink
-                  to="/agent-orchestrator"
-                  class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
-                >
-                  Learn More
-                  <ExternalLink class="h-4 w-4" />
-                </RouterLink>
-                <a
-                  href="https://github.com/nnn-gif/tools"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2 px-6 py-3 border border-border rounded-lg font-medium hover:bg-muted transition-colors"
-                >
-                  <Github class="h-4 w-4" />
-                  View on GitHub
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Journey/Timeline Section -->
-    <section class="container mx-auto px-4 py-16 md:py-24 bg-muted/30">
-      <div class="max-w-4xl mx-auto">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Journey</h2>
-          <p class="text-lg text-muted-foreground">From a simple idea to a growing ecosystem</p>
-        </div>
-
-        <div class="space-y-6">
-          <div v-for="(milestone, index) in milestones" :key="index" class="flex gap-6">
-            <div class="flex flex-col items-center">
-              <div
-                class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0"
-              >
-                <span class="text-sm font-bold text-primary">{{ milestone.year.slice(0, 2) }}</span>
-              </div>
-              <div v-if="index < milestones.length - 1" class="w-px h-full bg-border mt-2"></div>
-            </div>
-            <div class="pb-8">
-              <div class="text-sm font-medium text-primary mb-1">{{ milestone.year }}</div>
-              <h3 class="text-xl font-semibold mb-2">{{ milestone.title }}</h3>
-              <p class="text-muted-foreground">{{ milestone.description }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Team Section -->
-    <section class="container mx-auto px-4 py-16 md:py-24">
-      <div class="max-w-4xl mx-auto">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold mb-4">The Team</h2>
-          <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
-            A small, dedicated team with big ambitions
-          </p>
-        </div>
-
-        <div class="glass-card p-8 md:p-12 text-center">
-          <div class="inline-flex items-center justify-center p-4 rounded-2xl bg-primary/10 mb-6">
-            <Users class="h-12 w-12 text-primary" />
-          </div>
-          <h3 class="text-2xl font-bold mb-4">Formatho</h3>
-          <p class="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-            We're a passionate team of developers and AI enthusiasts building tools we wished
-            existed. Our focus is on creating practical solutions that respect user privacy while
-            pushing the boundaries of what's possible with AI and automation.
-          </p>
         </div>
       </div>
     </section>
 
     <!-- Contact CTA Section -->
-    <section class="container mx-auto px-4 py-16 md:py-24 bg-muted/30">
+    <section class="container mx-auto px-4 py-20 md:py-24">
       <div class="max-w-3xl mx-auto text-center">
-        <div class="inline-flex items-center justify-center p-3 rounded-xl bg-primary/10 mb-6">
-          <Heart class="h-8 w-8 text-primary" />
-        </div>
-        <h2 class="text-3xl md:text-4xl font-bold mb-4">Get in Touch</h2>
-        <p class="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
-          Have questions, suggestions, or just want to say hi? We'd love to hear from you.
-        </p>
+        <div
+          class="space-y-6"
+          data-aos="fade-up"
+          data-aos-duration="400"
+        >
+          <h2 class="text-3xl md:text-4xl font-bold">Have questions about our privacy approach?</h2>
+          <p class="text-lg text-muted-foreground max-w-xl mx-auto">
+            We're here to answer any questions you have about how we handle your data or suggest new tools you'd like to see.
+          </p>
 
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <RouterLink
-            to="/"
-            class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-lg font-medium text-lg hover:bg-primary/90 transition-colors"
-          >
-            Explore Our Tools
-            <ExternalLink class="h-5 w-5" />
-          </RouterLink>
-          <a
-            href="https://github.com/nnn-gif/tools"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center justify-center gap-2 px-8 py-4 border border-border rounded-lg font-medium text-lg hover:bg-muted transition-colors"
-          >
-            <Github class="h-5 w-5" />
-            Star on GitHub
-          </a>
-        </div>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <RouterLink
+              to="/"
+              class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-lg font-medium text-lg transition-all duration-300 hover:bg-primary/90 hover:scale-105"
+            >
+              Explore Our Tools
+            </RouterLink>
+            <a
+              href="mailto:support@formatho.com"
+              class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-lg font-medium text-lg transition-all duration-300 hover:bg-primary/90 hover:scale-105"
+            >
+              Contact Us
+            </a>
+          </div>
 
-        <p class="mt-8 text-sm text-muted-foreground">
-          Formatho is open source and free to use. Contributions welcome!
-        </p>
+          <p class="mt-8 text-sm text-muted-foreground">
+            Formatho is open source and free to use. Contributions welcome!
+          </p>
+        </div>
       </div>
     </section>
   </div>
@@ -290,5 +485,19 @@ const milestones = [
     linear-gradient(to right, currentColor 1px, transparent 1px),
     linear-gradient(to bottom, currentColor 1px, transparent 1px);
   background-size: 40px 40px;
+}
+
+/* Mobile: Stack vertically, maintain fade-in effect */
+@media (max-width: 768px) {
+  .grid > div {
+    order: auto !important;
+  }
+}
+
+/* Consistent button styling with signature blue */
+a.bg-primary,
+button.bg-primary {
+  background-color: rgb(6, 182, 212) !important;
+  color: white !important;
 }
 </style>

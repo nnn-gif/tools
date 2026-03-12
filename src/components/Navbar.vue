@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import { Menu, X, Github, Search } from 'lucide-vue-next'
+import { Menu, X, Github, Search, ChevronDown } from 'lucide-vue-next'
 
 const isMobileMenuOpen = ref(false)
+const isToolsDropdownOpen = ref(false)
 
 const categories = [
   {
@@ -83,23 +84,20 @@ const categories = [
           <div class="relative group">
             <button
               class="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2"
+              @mouseenter="isToolsDropdownOpen = true"
+              @mouseleave="isToolsDropdownOpen = false"
             >
               Tools
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
+              <ChevronDown class="w-4 h-4 transition-transform group-hover:rotate-180" />
             </button>
 
             <!-- Dropdown Menu -->
             <div
-              class="absolute left-0 top-full pt-2 z-[51] opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200"
+              class="absolute left-0 top-full pt-2 z-[51] opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 transform -translate-y-2 group-hover:translate-y-0"
             >
-              <div class="glass-card min-w-[600px] p-6 grid grid-cols-2 gap-6">
+              <div
+                class="bg-white border border-[#E5E7EB] shadow-lg rounded-lg min-w-[600px] p-6 grid grid-cols-2 gap-6"
+              >
                 <div v-for="category in categories" :key="category.name" class="space-y-2">
                   <h3 class="text-xs font-semibold uppercase text-primary mb-3">
                     {{ category.name }}
@@ -109,7 +107,7 @@ const categories = [
                       v-for="item in category.items"
                       :key="item.name"
                       :to="item.route"
-                      class="block px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-primary/10 rounded-md transition-all"
+                      class="block px-3 py-2 text-sm text-gray-700 hover:text-[#06b6d4] hover:bg-[#06b6d4]/5 rounded-md transition-all"
                     >
                       {{ item.name }}
                     </RouterLink>
@@ -184,19 +182,32 @@ const categories = [
             About Us
           </RouterLink>
 
-          <!-- Tools Categories -->
-          <div v-for="category in categories" :key="category.name" class="space-y-2">
-            <h3 class="text-xs font-semibold uppercase text-primary px-3">{{ category.name }}</h3>
-            <div class="space-y-1">
-              <RouterLink
-                v-for="item in category.items"
-                :key="item.name"
-                :to="item.route"
-                @click="isMobileMenuOpen = false"
-                class="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all"
-              >
-                {{ item.name }}
-              </RouterLink>
+          <!-- Mobile Tools Dropdown (Click-triggered) -->
+          <div class="space-y-2">
+            <button
+              @click="isToolsDropdownOpen = !isToolsDropdownOpen"
+              class="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all"
+            >
+              <span>Tools</span>
+              <ChevronDown :class="['w-4 h-4 transition-transform', isToolsDropdownOpen ? 'rotate-180' : '']" />
+            </button>
+
+            <!-- Collapsible Tools Categories -->
+            <div v-show="isToolsDropdownOpen" class="space-y-3 mt-2">
+              <div v-for="category in categories" :key="category.name" class="space-y-2">
+                <h3 class="text-xs font-semibold uppercase text-primary px-3">{{ category.name }}</h3>
+                <div class="space-y-1">
+                  <RouterLink
+                    v-for="item in category.items"
+                    :key="item.name"
+                    :to="item.route"
+                    @click="isMobileMenuOpen = false; isToolsDropdownOpen = false"
+                    class="block px-3 py-2 text-sm text-gray-700 hover:text-[#06b6d4] hover:bg-[#06b6d4]/5 rounded-md transition-all"
+                  >
+                    {{ item.name }}
+                  </RouterLink>
+                </div>
+              </div>
             </div>
           </div>
 

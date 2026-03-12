@@ -97,7 +97,7 @@ const categories = [
 
             <!-- Dropdown Menu -->
             <div
-              class="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
+              class="absolute left-0 top-full pt-2 z-[51] opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200"
             >
               <div class="glass-card min-w-[600px] p-6 grid grid-cols-2 gap-6">
                 <div v-for="category in categories" :key="category.name" class="space-y-2">

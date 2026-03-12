@@ -93,7 +93,7 @@ const categories = [
 
             <!-- Dropdown Menu -->
             <div
-              class="absolute left-0 top-full pt-2 z-[51] opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 transform -translate-y-2 group-hover:translate-y-0"
+              class="absolute left-0 top-full pt-2 z-[50] opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 transform -translate-y-2 group-hover:translate-y-0"
             >
               <div
                 class="bg-white border border-[#E5E7EB] shadow-lg rounded-lg min-w-[600px] p-6 grid grid-cols-2 gap-6"

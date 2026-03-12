@@ -144,8 +144,8 @@ export const createApp = ViteSSG(
           AOS.init({
             mirror: true,    // Enable reverse/bidirectional scroll animations
             once: false,     // Allow elements to animate multiple times
-            duration: 600,   // Animation duration in milliseconds
-            offset: 120,     // Offset (in px) from the original trigger point
+            duration: 500,   // Animation duration in milliseconds
+            offset: 100,     // Offset (in px) from the original trigger point
             easing: 'ease-out-cubic', // Smooth easing function
             delay: 0,        // Delay between animations (in ms)
           })

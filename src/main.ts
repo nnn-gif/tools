@@ -136,22 +136,41 @@ export const createApp = ViteSSG(
     })
 
     // Initialize AOS (Animate On Scroll) on client side
-    if (isClient && typeof AOS !== 'undefined') {
-      // Configure AOS with bidirectional scrolling settings
-      AOS.init({
-        mirror: true,    // Enable reverse/bidirectional scroll animations
-        once: false,     // Allow elements to animate multiple times
-        duration: 600,   // Animation duration in milliseconds
-        offset: 120,     // Offset (in px) from the original trigger point
-        easing: 'ease-out-cubic', // Smooth easing function
-        delay: 0,        // Delay between animations (in ms)
-      })
+    if (isClient) {
+      // Wait for AOS to load from CDN before initializing
+      const initializeAOS = () => {
+        if (typeof AOS !== 'undefined') {
+          // Configure AOS with bidirectional scrolling settings
+          AOS.init({
+            mirror: true,    // Enable reverse/bidirectional scroll animations
+            once: false,     // Allow elements to animate multiple times
+            duration: 600,   // Animation duration in milliseconds
+            offset: 120,     // Offset (in px) from the original trigger point
+            easing: 'ease-out-cubic', // Smooth easing function
+            delay: 0,        // Delay between animations (in ms)
+          })
+
+          console.log('✅ AOS initialized with bidirectional scrolling')
+        }
+      }
+
+      // Try to initialize immediately (if script already loaded)
+      initializeAOS()
+
+      // If not loaded yet, wait for the script
+      if (typeof AOS === 'undefined') {
+        window.addEventListener('load', initializeAOS)
+        // Also try after a short delay as a fallback
+        setTimeout(initializeAOS, 100)
+      }
 
       // Refresh AOS on route changes to ensure animations trigger correctly
       router.afterEach(() => {
         // Small timeout to ensure DOM is updated
         setTimeout(() => {
-          AOS.refresh()
+          if (typeof AOS !== 'undefined') {
+            AOS.refresh()
+          }
         }, 100)
       })
     }

@@ -10,9 +10,12 @@ onMounted(() => {
   AOS.init({
     duration: 400,
     easing: 'ease-out-cubic',
-    once: true,
+    once: false, // Fixed: Removed once: true to prevent DOM re-calculations
     mirror: true,
     offset: 50,
+    disableMutationObserver: true, // Prevent DOM mutation observations during scroll
+    throttleDelay: 99, // Optimize scroll event throttling
+    debounceDelay: 50, // Optimize resize event debouncing
   })
 })
 </script>

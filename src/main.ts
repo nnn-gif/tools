@@ -150,6 +150,8 @@ export const createApp = ViteSSG(
             delay: 0,        // Delay between animations (in ms)
             disableMutationObserver: true, // Prevent AOS from interfering with dynamic elements
             startEvent: 'DOMContentLoaded', // Initialize on DOMContentLoaded
+            throttleDelay: 99, // Optimize scroll event throttling for better performance
+            debounceDelay: 50, // Optimize resize event debouncing
           })
 
           console.log('✅ AOS initialized with bidirectional scrolling')

@@ -168,14 +168,22 @@ export const createApp = ViteSSG(
         setTimeout(initializeAOS, 100)
       }
 
-      // Refresh AOS on route changes to ensure animations trigger correctly
-      router.afterEach(() => {
-        // Small timeout to ensure DOM is updated
-        setTimeout(() => {
-          if (typeof AOS !== 'undefined') {
-            AOS.refresh()
+      // Refresh AOS on route changes - but debounce to prevent scroll freezing
+      let refreshTimeout: number | null = null
+      router.afterEach((to, from) => {
+        // Only refresh if it's a different route (not just hash changes)
+        if (to.path !== from.path) {
+          // Clear previous timeout to prevent multiple refreshes
+          if (refreshTimeout) {
+            clearTimeout(refreshTimeout)
           }
-        }, 100)
+          // Debounce AOS refresh to prevent scroll freezing
+          refreshTimeout = setTimeout(() => {
+            if (typeof AOS !== 'undefined') {
+              AOS.refresh()
+            }
+          }, 150) // Increased from 100ms to 150ms for better debouncing
+        }
       })
     }
   }

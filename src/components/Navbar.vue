@@ -1,10 +1,43 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { Menu, X, Github, Search, ChevronDown } from 'lucide-vue-next'
 
 const isMobileMenuOpen = ref(false)
 const isToolsDropdownOpen = ref(false)
+const toolsDropdownRef = ref<HTMLElement | null>(null)
+
+// Close the Tools dropdown
+const closeToolsDropdown = () => {
+  isToolsDropdownOpen.value = false
+}
+
+// Toggle the Tools dropdown (for mobile)
+const toggleToolsDropdown = () => {
+  isToolsDropdownOpen.value = !isToolsDropdownOpen.value
+}
+
+// Close dropdown when clicking outside
+const handleClickOutside = (event: MouseEvent) => {
+  if (toolsDropdownRef.value && !toolsDropdownRef.value.contains(event.target as Node)) {
+    closeToolsDropdown()
+  }
+}
+
+// Handle link click in dropdown
+const handleToolLinkClick = () => {
+  closeToolsDropdown()
+}
+
+onMounted(() => {
+  // Add click outside listener
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  // Remove click outside listener
+  document.removeEventListener('click', handleClickOutside)
+})
 
 const categories = [
   {
@@ -80,20 +113,21 @@ const categories = [
             About Us
           </RouterLink>
 
-          <!-- Tools Dropdown -->
-          <div class="relative group pointer-events-auto">
+          <!-- Tools Dropdown (Desktop) -->
+          <div class="relative pointer-events-auto" ref="toolsDropdownRef">
             <button
               class="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 pointer-events-auto"
-              @mouseenter="isToolsDropdownOpen = true"
-              @mouseleave="isToolsDropdownOpen = false"
+              @click="isToolsDropdownOpen = !isToolsDropdownOpen"
             >
               Tools
-              <ChevronDown class="w-4 h-4 transition-transform group-hover:rotate-180" />
+              <ChevronDown class="w-4 h-4 transition-transform" :class="{ 'rotate-180': isToolsDropdownOpen }" />
             </button>
 
             <!-- Dropdown Menu -->
             <div
-              class="absolute left-0 top-full pt-2 z-[9999] opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 transform -translate-y-2 group-hover:translate-y-0"
+              v-show="isToolsDropdownOpen"
+              class="absolute left-0 top-full pt-2 z-[9999] opacity-0 pointer-events-none transition-all duration-200 transform -translate-y-2"
+              :class="{ 'opacity-100 pointer-events-auto translate-y-0': isToolsDropdownOpen }"
               data-aos="no-animation"
             >
               <div
@@ -108,6 +142,7 @@ const categories = [
                       v-for="item in category.items"
                       :key="item.name"
                       :to="item.route"
+                      @click="handleToolLinkClick"
                       class="block px-3 py-2 text-sm text-gray-700 hover:text-[#06b6d4] hover:bg-[#06b6d4]/5 rounded-md transition-all"
                     >
                       {{ item.name }}
@@ -186,7 +221,7 @@ const categories = [
           <!-- Mobile Tools Dropdown (Click-triggered) -->
           <div class="space-y-2 pointer-events-auto">
             <button
-              @click="isToolsDropdownOpen = !isToolsDropdownOpen"
+              @click="toggleToolsDropdown"
               class="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-all pointer-events-auto"
             >
               <span>Tools</span>
@@ -202,6 +237,7 @@ const categories = [
                     v-for="item in category.items"
                     :key="item.name"
                     :to="item.route"
+                    @click="handleToolLinkClick"
                     class="block px-3 py-2 text-sm text-gray-700 hover:text-[#06b6d4] hover:bg-[#06b6d4]/5 rounded-md transition-all"
                   >
                     {{ item.name }}

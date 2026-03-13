@@ -1,23 +1,8 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { onMounted } from 'vue'
-import AOS from 'aos'
-import 'aos/dist/aos.css'
 import formathoIcons from '@/assets/formatho-icons.json'
 
-// Initialize AOS
-onMounted(() => {
-  AOS.init({
-    duration: 400,
-    easing: 'ease-out-cubic',
-    once: false, // Fixed: Removed once: true to prevent DOM re-calculations
-    mirror: true,
-    offset: 50,
-    disableMutationObserver: true, // Prevent DOM mutation observations during scroll
-    throttleDelay: 99, // Optimize scroll event throttling
-    debounceDelay: 50, // Optimize resize event debouncing
-  })
-})
+// Note: AOS is initialized globally in main.ts to prevent scroll freezing conflicts
 </script>
 
 <template>

@@ -2,23 +2,8 @@
 import { RouterLink } from 'vue-router'
 import { Calendar, Clock, ArrowRight, Tag } from 'lucide-vue-next'
 import { blogPosts } from '../data/blogPosts'
-import { onMounted } from 'vue'
-import AOS from 'aos'
-import 'aos/dist/aos.css'
 
-// Initialize AOS
-onMounted(() => {
-  AOS.init({
-    duration: 400,
-    easing: 'ease-out-cubic',
-    once: false, // Fixed: Removed once: true to prevent DOM re-calculations
-    mirror: true, // Critical: Enables reverse scroll animation
-    offset: 50,
-    disableMutationObserver: true, // Prevent DOM mutation observations during scroll
-    throttleDelay: 99, // Optimize scroll event throttling
-    debounceDelay: 50, // Optimize resize event debouncing
-  })
-})
+// Note: AOS is initialized globally in main.ts to prevent scroll freezing conflicts
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString)

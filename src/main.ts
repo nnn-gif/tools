@@ -141,6 +141,7 @@ export const createApp = ViteSSG(
       const initializeAOS = () => {
         if (typeof AOS !== 'undefined') {
           // Configure AOS with bidirectional scrolling settings
+          // CODE RED FIX: Ensure elements animate in and don't stay hidden
           AOS.init({
             mirror: true,    // Enable reverse/bidirectional scroll animations
             once: false,     // Allow elements to animate multiple times
@@ -152,6 +153,9 @@ export const createApp = ViteSSG(
             startEvent: 'DOMContentLoaded', // Initialize on DOMContentLoaded
             throttleDelay: 99, // Optimize scroll event throttling for better performance
             debounceDelay: 50, // Optimize resize event debouncing
+            // CRITICAL FIX: Ensure elements are visible after animation
+            animatedClassName: 'aos-animate', // Use custom class
+            initClassName: 'aos-init', // Initial state before animation
           })
 
           console.log('✅ AOS initialized with bidirectional scrolling')

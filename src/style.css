@@ -102,25 +102,15 @@
      ============================================ */
 
   /* Fix 1: Eliminate Horizontal Scrollbars on Mobile & Prevent Scroll Freezing */
-  html,
-  body,
-  main,
-  .container,
-  .wrapper {
+  html, body {
     /* Prevent horizontal scrollbar */
     overflow-x: hidden;
-    max-width: 100vw;
-    width: 100%;
     /* Ensure vertical scrolling is NOT blocked */
     overflow-y: auto;
     /* Prevent scroll freezing by not using fixed heights */
     height: auto;
     min-height: 100vh;
-  }
-
-  /* Fix 1.1: Prevent scroll freezing from fixed positioning */
-  html, body {
-    /* Do NOT use height: 100vh or overflow-y: hidden */
+    /* Prevent scroll freezing from fixed positioning */
     position: relative;
     /* Ensure smooth scrolling across all browsers */
     scroll-behavior: smooth;
@@ -245,6 +235,29 @@
     transition-property: opacity, transform;
     transition-duration: 0.4s;
     transition-timing-function: ease-out-cubic;
+    /* CODE RED FIX: Ensure elements are visible, not permanently hidden */
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Fix 7.1: Ensure AOS-initialized elements are visible */
+  [data-aos][data-aos="fade-up"],
+  [data-aos][data-aos="fade-down"],
+  [data-aos][data-aos="fade-left"],
+  [data-aos][data-aos="fade-right"],
+  [data-aos][data-aos="fade-up"],
+  [data-aos][data-aos="zoom-in"] {
+    /* Reset opacity to ensure elements don't stay hidden */
+    opacity: 1 !important;
+  }
+
+  /* Fix 7.2: Handle AOS initialization state */
+  .aos-init {
+    opacity: 1 !important;
+  }
+
+  .aos-animate {
+    opacity: 1 !important;
   }
 
   [data-aos="fade-up"] {
@@ -279,15 +292,18 @@
     pointer-events: auto !important;
   }
 
-  /* Fix 11: Prevent scroll freezing by ensuring proper stacking context */
-  nav,
-  main,
-  footer,
-  [role="main"] {
+  /* Fix 11: Ensure proper stacking context without breaking layout */
+  nav, footer {
     /* Allow these elements to participate in normal flow */
     position: relative;
-    /* Ensure they don't block scrolling */
-    overflow: visible;
+    /* Do NOT set overflow to avoid conflicts with global settings */
+  }
+
+  /* Fix 11.1: Ensure main element uses proper overflow */
+  main, [role="main"] {
+    position: relative;
+    /* Let global overflow rules handle this */
+    /* Do NOT override overflow to prevent layout collapse */
   }
 
   /* Fix 12: Prevent fixed positioning from blocking scroll */

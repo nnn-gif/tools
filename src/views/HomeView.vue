@@ -585,7 +585,11 @@ const filteredTools = computed(() => {
       <div class="container mx-auto px-4 py-20 md:py-28 relative">
         <div class="flex flex-col items-center text-center space-y-8 max-w-4xl mx-auto">
           <!-- Logo & Title -->
-          <div class="flex items-center gap-4">
+          <div
+            class="flex items-center gap-4"
+            data-aos="fade-down"
+            data-aos-delay="0"
+          >
             <img
                 src="/logo.png"
                 alt="Formatho"
@@ -595,10 +599,18 @@ const filteredTools = computed(() => {
           </div>
 
           <!-- Description -->
-          <p class="text-2xl md:text-3xl font-semibold text-foreground max-w-3xl leading-tight">
+          <p
+            class="text-2xl md:text-3xl font-semibold text-foreground max-w-3xl leading-tight"
+            data-aos="fade-down"
+            data-aos-delay="100"
+          >
             The Privacy-First Developer Toolkit
           </p>
-          <p class="text-base md:text-lg text-muted-foreground max-w-2xl leading-relaxed">
+          <p
+            class="text-base md:text-lg text-muted-foreground max-w-2xl leading-relaxed"
+            data-aos="fade-down"
+            data-aos-delay="200"
+          >
             Fast, secure, privacy-first collection of 100+ developer utilities and content
             productivity tools — built to solve everyday formatting, conversion, and debugging
             problems directly in your browser.

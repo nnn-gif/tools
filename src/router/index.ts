@@ -342,6 +342,18 @@ export const routes = [
         }
       },
       {
+        path: 'local-token-counter',
+        name: 'local-token-counter',
+        component: () => import('../views/LocalTokenCounterView.vue'),
+        meta: {
+          title: 'Local Token Counter',
+          description:
+            'Client-side LLM token counter. 100% private, no API calls. Count tokens for text input using local JavaScript.',
+          keywords:
+            'token counter, llm token counter, gpt token count, claude token count, local token counter, privacy-first'
+        }
+      },
+      {
         path: 'agents',
         name: 'agents',
         component: () => import('../views/AgentsView.vue'),

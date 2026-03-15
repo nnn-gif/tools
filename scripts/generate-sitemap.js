@@ -173,7 +173,7 @@ const routes = [
   
   // AI
   { path: '/agent-orchestrator', priority: '0.9', changefreq: 'monthly' },
-  { path: '/agent-identity', priority: '0.8', changefreq: 'monthly' },
+  { path: '/agent-identity-generator', priority: '0.8', changefreq: 'monthly' },
   { path: '/agents', priority: '0.8', changefreq: 'monthly' }
 ]
 

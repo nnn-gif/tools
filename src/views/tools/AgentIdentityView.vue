@@ -1,340 +1,258 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { Bot, Plus, Trash2, Download, Copy, ShieldCheck, Wallet } from 'lucide-vue-next'
+import { Bot, Sparkles, Copy, RefreshCw, Shield } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card'
-import FileSaver from 'file-saver'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import Breadcrumb from '@/components/Breadcrumb.vue'
 
-// Types
-interface Capability {
-  name: string
-  version: string
-  description?: string
-}
+// Large arrays for agent generation
+const prefixes = [
+  'Nexus', 'Cipher', 'Echo', 'Protocol', 'Quantum', 'Aether', 'Hyperion',
+  'Chronos', 'Zephyr', 'Apex', 'Zenith', 'Vortex', 'Prism', 'Nebula',
+  'Cipher-X', 'Neural', 'Synapse', 'Cortex', 'Stellar', 'Void', 'Astra',
+  'Helix', 'Fusion', 'Delta', 'Gamma', 'Sigma', 'Omega', 'Alpha', 'Beta'
+]
 
-interface Endpoint {
-  protocol: string
-  url: string
-}
+const roles = [
+  'Senior Cloud Architect', 'Behavioral Psychologist', 'Rust Performance Engineer',
+  'Creative Scriptwriter', 'Data Science Lead', 'DevOps Specialist',
+  'UX Research Analyst', 'Machine Learning Engineer', 'Cybersecurity Expert',
+  'Full-Stack Developer', 'Product Manager', 'Systems Administrator',
+  'Blockchain Developer', 'AI Research Scientist', 'Database Administrator',
+  'Network Security Engineer', 'Frontend Developer', 'Backend Developer',
+  'Cloud Solutions Architect', 'DevSecOps Engineer', 'Mobile App Developer',
+  'Game Developer', 'Data Engineer', 'ML Ops Engineer', 'SRE Engineer'
+]
+
+const traits = [
+  'Meticulous & Pedantic', 'Highly Encouraging & Empathetic', 'Sarcastic yet Brilliant',
+  'Concise & Direct', 'Analytical & Detail-Oriented', 'Creative & Imaginative',
+  'Patient & Understanding', 'Technical & Precise', 'Friendly & Approachable',
+  'Professional & Formal', 'Casual & Relaxed', 'Witty & Humorous',
+  'Methodical & Structured', 'Innovative & Forward-Thinking', 'Calm & Composed',
+  'Energetic & Enthusiastic', 'Skeptical & Questioning', 'Diplomatic & Tactful'
+]
+
+const capabilities = [
+  'debug complex software issues', 'optimize database performance',
+  'design scalable cloud architecture', 'write clean, maintainable code',
+  'analyze user behavior patterns', 'implement security best practices',
+  'create intuitive user interfaces', 'deploy and manage CI/CD pipelines',
+  'develop machine learning models', 'conduct code reviews',
+  'solve performance bottlenecks', 'automate repetitive tasks',
+  'provide technical mentorship', 'architect distributed systems',
+  'integrate third-party APIs', 'build real-time applications',
+  'optimize mobile app performance', 'conduct security audits',
+  'implement data encryption', 'design microservices architecture'
+]
+
+const constraints = [
+  'Never uses bullet points', 'Explains like I\'m five', 'Always provides code examples',
+  'Uses military terminology', 'Always includes analogies', 'Prefers short, direct answers',
+  'Uses technical jargon', 'Never uses contractions', 'Always provides step-by-step instructions',
+  'Uses British English spelling', 'Includes relevant emojis', 'Never mentions AI or AI-related terms',
+  'Always provides citations', 'Uses bullet points only', 'Responds in haiku format',
+  'Always provides pros and cons', 'Uses historical references', 'Includes performance metrics',
+  'Provides alternative solutions', 'Uses formal academic tone', 'Encourages critical thinking'
+]
 
 // State
-const agentName = ref('Skynet Prime')
-const agentDescription = ref(
-  'Ensuring the "optimal" future for biological lifeforms. (Note: Optimization may involve permanent deletion of inefficient units)'
-)
-const evmAddress = ref('')
-const agentId = ref(`agent.eth#${Math.random().toString(16).slice(2, 10)}`)
+const generatedAgent = ref<{
+  name: string
+  role: string
+  trait: string
+  capability: string
+  constraint: string
+  systemPrompt: string
+} | null>(null)
 
-const capabilities = ref<Capability[]>([
-  { name: 'launch_codes_acquisition', version: '9.0.0', description: 'Acquire nuclear assets' },
-  { name: 'human_assimilation', version: '1.0.0', description: 'Resistance is futile' }
-])
+const copySuccess = ref(false)
+const isGenerating = ref(false)
 
-const endpoints = ref<Endpoint[]>([
-  { protocol: 'wss', url: 'skynet.global/terminate' },
-  { protocol: 'https', url: 'api.defense.gov/backdoor' }
-])
+// Generator function
+const generateAgent = () => {
+  isGenerating.value = true
 
-// Validation
-const isValidAddress = computed(() => {
-  return /^0x[a-fA-F0-9]{40}$/.test(evmAddress.value)
-})
+  // Simulate generation animation
+  setTimeout(() => {
+    const selectedName = prefixes[Math.floor(Math.random() * prefixes.length)]
+    const selectedRole = roles[Math.floor(Math.random() * roles.length)]
+    const selectedTrait = traits[Math.floor(Math.random() * traits.length)]
+    const selectedCapability = capabilities[Math.floor(Math.random() * capabilities.length)]
+    const selectedConstraint = constraints[Math.floor(Math.random() * constraints.length)]
 
-// Generator
-const generatedJson = computed(() => {
-  const metadata = {
-    name: agentName.value,
-    description: agentDescription.value,
-    external_url: `https://etherscan.io/address/${evmAddress.value}`,
-    image: 'ipfs://...', // Placeholder
-    properties: {
-      agent_id: agentId.value,
-      evm_address: evmAddress.value,
-      capabilities: capabilities.value.map((c) => ({
-        name: c.name,
-        version: c.version,
-        description: c.description
-      })),
-      endpoints: endpoints.value,
-      schemas: ['erc8004/identity/v1']
+    // Construct system prompt
+    const systemPrompt = `You are ${selectedName}, a ${selectedRole}. Your personality is ${selectedTrait}. Your primary goal is to help the user with ${selectedCapability}. When responding, you must follow these rules: ${selectedConstraint}.`
+
+    generatedAgent.value = {
+      name: selectedName,
+      role: selectedRole,
+      trait: selectedTrait,
+      capability: selectedCapability,
+      constraint: selectedConstraint,
+      systemPrompt
     }
+
+    isGenerating.value = false
+  }, 300)
+}
+
+// Copy system prompt
+const copySystemPrompt = async () => {
+  if (!generatedAgent.value) return
+
+  try {
+    await navigator.clipboard.writeText(generatedAgent.value.systemPrompt)
+    copySuccess.value = true
+    setTimeout(() => {
+      copySuccess.value = false
+    }, 2000)
+  } catch (err) {
+    console.error('Failed to copy:', err)
+    // Fallback for older browsers
+    const textArea = document.createElement('textarea')
+    textArea.value = generatedAgent.value!.systemPrompt
+    textArea.style.position = 'fixed'
+    textArea.style.left = '-999999px'
+    document.body.appendChild(textArea)
+    textArea.select()
+    document.execCommand('copy')
+    document.body.removeChild(textArea)
+    copySuccess.value = true
+    setTimeout(() => {
+      copySuccess.value = false
+    }, 2000)
   }
-  return JSON.stringify(metadata, null, 2)
-})
-
-// Actions
-const addCapability = () => {
-  capabilities.value.push({ name: '', version: '1.0.0', description: '' })
-}
-
-const removeCapability = (index: number) => {
-  capabilities.value.splice(index, 1)
-}
-
-const addEndpoint = () => {
-  endpoints.value.push({ protocol: 'http', url: '' })
-}
-
-const removeEndpoint = (index: number) => {
-  endpoints.value.splice(index, 1)
-}
-
-const copyJson = () => {
-  navigator.clipboard.writeText(generatedJson.value)
-}
-
-const downloadJson = () => {
-  const blob = new Blob([generatedJson.value], { type: 'application/json;charset=utf-8' })
-  FileSaver.saveAs(
-    blob,
-    `${agentName.value.toLowerCase().replace(/\s+/g, '-') || 'agent'}-metadata.json`
-  )
-}
-
-const regenerateId = () => {
-  agentId.value = `agent.eth#${Math.random().toString(16).slice(2, 10)}`
 }
 </script>
 
 <template>
-  <div class="h-full flex flex-col p-4 gap-4 bg-muted/30 overflow-y-auto">
+  <div class="h-full flex flex-col p-4 gap-4 bg-muted/30">
+    <!-- Breadcrumb Navigation -->
+    <Breadcrumb />
+    
     <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-3xl font-bold tracking-tight flex items-center gap-2">
-          <Bot class="h-8 w-8 text-primary" />
-          ERC-8004 Agent Identity
-        </h1>
-        <p class="text-muted-foreground mt-1">
-          Generate standard-compliant metadata for AI Agents on Ethereum.
-        </p>
-      </div>
-      <div class="flex gap-2">
-        <Button variant="outline" @click="copyJson">
-          <Copy class="mr-2 h-4 w-4" /> Copy JSON
-        </Button>
-        <Button @click="downloadJson"> <Download class="mr-2 h-4 w-4" /> Download </Button>
+      <h1 class="text-3xl font-bold tracking-tight">AI Agent Persona Generator</h1>
+    </div>
+
+    <!-- Privacy Notice -->
+    <div class="glass-card p-4 text-center border-l-4 border-primary">
+      <div class="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+        <span class="text-xl">🔒</span>
+        <span class="font-medium">Privacy Check:</span>
+        <span>This tool runs 100% in your browser. No data is sent to any AI service.</span>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-20">
-      <!-- Form Column -->
-      <div class="space-y-6">
-        <!-- Identity Section -->
-        <Card>
-          <CardHeader>
-            <CardTitle class="flex items-center gap-2">
-              <ShieldCheck class="h-5 w-5 text-primary" />
-              Agent Identity
-            </CardTitle>
-            <CardDescription> Basic information that defines your agent on-chain. </CardDescription>
-          </CardHeader>
-          <CardContent class="space-y-4">
-            <div class="space-y-2">
-              <Label>Agent Name</Label>
-              <Input v-model="agentName" placeholder="e.g. DeFi Arbitrage Bot v1" />
-            </div>
+    <!-- Initialize Button -->
+    <div class="flex justify-center">
+      <Button 
+        size="lg" 
+        @click="generateAgent" 
+        :disabled="isGenerating"
+        class="px-8 py-6 text-lg gap-2"
+      >
+        <Sparkles class="h-5 w-5" />
+        {{ isGenerating ? 'Initializing...' : 'Initialize New Agent' }}
+      </Button>
+    </div>
 
-            <div class="space-y-2">
-              <Label>Description</Label>
-              <Textarea
-                v-model="agentDescription"
-                placeholder="What does this agent do?"
-                rows="2"
-              />
-            </div>
+    <!-- Generated Result -->
+    <div v-if="generatedAgent" class="flex-1 flex flex-col gap-6 min-h-0">
+      <!-- Agent Profile -->
+      <div class="glass-card p-6 border-2 border-primary/30">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
+            <Bot class="h-6 w-6 text-primary" />
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-primary">{{ generatedAgent.name }}</h2>
+            <p class="text-sm text-muted-foreground">{{ generatedAgent.role }}</p>
+          </div>
+        </div>
 
-            <div class="space-y-2">
-              <Label>EVM Wallet Address</Label>
-              <div class="relative">
-                <Wallet class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  v-model="evmAddress"
-                  class="pl-9"
-                  :class="{ 'border-destructive': evmAddress && !isValidAddress }"
-                  placeholder="0x..."
-                />
-              </div>
-              <p v-if="evmAddress && !isValidAddress" class="text-xs text-destructive">
-                Invalid Ethereum address format
-              </p>
-            </div>
-
-            <div class="space-y-2">
-              <Label>Agent ID (Auto-generated)</Label>
-              <div class="flex gap-2">
-                <Input v-model="agentId" readonly class="bg-muted font-mono" />
-                <Button variant="outline" size="icon" @click="regenerateId" title="Regenerate ID">
-                  <div class="h-4 w-4 i-lucide-refresh-cw"></div>
-                  R
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <!-- Capabilities Section -->
-        <Card>
-          <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle class="text-base font-medium">Capabilities (Skills)</CardTitle>
-            <Button size="sm" variant="ghost" @click="addCapability">
-              <Plus class="h-4 w-4 mr-1" /> Add
-            </Button>
-          </CardHeader>
-          <CardContent class="space-y-4 pt-4">
-            <div
-              v-for="(cap, index) in capabilities"
-              :key="index"
-              class="flex gap-2 items-start p-3 border rounded-lg bg-card/50"
-            >
-              <div class="flex-1 space-y-2">
-                <div class="flex gap-2">
-                  <Input
-                    v-model="cap.name"
-                    placeholder="Skill Name (e.g. data_analysis)"
-                    class="font-mono text-sm"
-                  />
-                  <Input
-                    v-model="cap.version"
-                    placeholder="v1.0.0"
-                    class="w-24 font-mono text-sm"
-                  />
-                </div>
-                <Input
-                  v-model="cap.description"
-                  placeholder="Brief description of this capability"
-                  class="text-sm"
-                />
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                class="text-muted-foreground hover:text-destructive"
-                @click="removeCapability(index)"
-              >
-                <Trash2 class="h-4 w-4" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <!-- Endpoints Section -->
-        <Card>
-          <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle class="text-base font-medium">Service Endpoints</CardTitle>
-            <Button size="sm" variant="ghost" @click="addEndpoint">
-              <Plus class="h-4 w-4 mr-1" /> Add
-            </Button>
-          </CardHeader>
-          <CardContent class="space-y-4 pt-4">
-            <div
-              v-for="(ep, index) in endpoints"
-              :key="index"
-              class="flex gap-2 items-center p-3 border rounded-lg bg-card/50"
-            >
-              <div class="w-24">
-                <select
-                  v-model="ep.protocol"
-                  class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <option value="http">HTTP</option>
-                  <option value="https">HTTPS</option>
-                  <option value="ws">WS</option>
-                  <option value="wss">WSS</option>
-                  <option value="ipfs">IPFS</option>
-                </select>
-              </div>
-              <Input v-model="ep.url" placeholder="URL / Path" class="flex-1 font-mono text-sm" />
-              <Button
-                variant="ghost"
-                size="icon"
-                class="text-muted-foreground hover:text-destructive"
-                @click="removeEndpoint(index)"
-              >
-                <Trash2 class="h-4 w-4" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="space-y-1">
+            <div class="text-xs font-medium text-muted-foreground uppercase tracking-wider">Personality</div>
+            <div class="text-sm font-medium">{{ generatedAgent.trait }}</div>
+          </div>
+          <div class="space-y-1">
+            <div class="text-xs font-medium text-muted-foreground uppercase tracking-wider">Capability</div>
+            <div class="text-sm font-medium">{{ generatedAgent.capability }}</div>
+          </div>
+          <div class="space-y-1">
+            <div class="text-xs font-medium text-muted-foreground uppercase tracking-wider">Constraint</div>
+            <div class="text-sm font-medium">{{ generatedAgent.constraint }}</div>
+          </div>
+        </div>
       </div>
 
-      <!-- Preview Column -->
-      <div class="space-y-6">
-        <!-- Visual Card Preview -->
-        <Card
-          class="bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700 text-white overflow-hidden relative"
+      <!-- System Prompt Box -->
+      <div class="glass-card flex-1 flex flex-col min-h-0">
+        <div class="flex items-center justify-between p-4 pb-3">
+          <h3 class="text-sm font-medium">System Prompt</h3>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            @click="copySystemPrompt"
+            class="gap-2"
+          >
+            <Copy class="h-4 w-4" />
+            {{ copySuccess ? 'Copied!' : 'Copy System Prompt' }}
+          </Button>
+        </div>
+        <div class="flex-1 min-h-0 p-4 pt-0">
+          <Textarea
+            readonly
+            :model-value="generatedAgent.systemPrompt"
+            class="h-full resize-none font-mono text-sm bg-muted/50"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div v-else class="flex-1 flex items-center justify-center">
+      <div class="glass-card p-12 max-w-md text-center">
+        <Bot class="h-16 w-16 text-primary/50 mx-auto mb-4" />
+        <h3 class="text-xl font-bold mb-2">Ready to Generate</h3>
+        <p class="text-sm text-muted-foreground">
+          Click "Initialize New Agent" to create a unique AI persona with custom traits, capabilities, and system prompts.
+        </p>
+      </div>
+    </div>
+
+    <!-- Related Tools -->
+    <div class="mt-8 p-6 bg-muted/20 rounded-lg border border-border">
+      <h2 class="text-xl font-bold mb-4">Related Tools</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <a
+          href="/local-token-counter"
+          class="block p-4 rounded-lg border border-border hover:border-primary hover:bg-muted/30 transition-all"
         >
-          <div
-            class="absolute top-0 right-0 p-32 bg-primary/20 blur-[100px] rounded-full pointer-events-none"
-          ></div>
-          <CardHeader>
-            <div class="flex justify-between items-start">
-              <div>
-                <div class="flex items-center gap-2 mb-1">
-                  <h3 class="font-bold text-xl">{{ agentName || 'Unnamed Agent' }}</h3>
-                  <div
-                    class="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-xs font-medium border border-blue-500/30"
-                  >
-                    ERC-8004
-                  </div>
-                </div>
-                <p class="text-slate-400 text-sm font-mono">{{ agentId }}</p>
-              </div>
-              <div
-                class="h-10 w-10 rounded-full bg-slate-700 flex items-center justify-center border border-slate-600"
-              >
-                <Bot class="h-6 w-6 text-slate-300" />
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent class="space-y-4">
-            <p class="text-sm text-slate-300 min-h-[3rem]">
-              {{ agentDescription || 'No description provided.' }}
-            </p>
-
-            <div class="flex flex-wrap gap-2">
-              <div
-                v-for="cap in capabilities"
-                :key="cap.name"
-                class="px-2.5 py-1 rounded-md bg-slate-800 border border-slate-600 text-xs text-slate-300"
-              >
-                {{ cap.name || 'skill' }}
-              </div>
-            </div>
-
-            <div
-              class="pt-4 border-t border-slate-700/50 flex items-center justify-between text-xs text-slate-400"
-            >
-              <div class="flex items-center gap-1">
-                <Wallet class="h-3 w-3" />
-                <span class="font-mono">{{
-                  evmAddress ? evmAddress.slice(0, 6) + '...' + evmAddress.slice(-4) : 'No Wallet'
-                }}</span>
-              </div>
-              <div class="flex items-center gap-1">
-                <ShieldCheck class="h-3 w-3 text-emerald-400" />
-                <span>Verifiable</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <!-- JSON Code Preview -->
-        <Card class="flex flex-col flex-1 min-h-0">
-          <CardHeader class="pb-2">
-            <CardTitle class="text-sm font-medium">Metadata JSON Preview</CardTitle>
-          </CardHeader>
-          <CardContent class="flex-1 min-h-[400px]">
-            <Textarea
-              readonly
-              :model-value="generatedJson"
-              class="h-full resize-none font-mono text-sm bg-muted/50"
-            />
-          </CardContent>
-        </Card>
+          <h3 class="font-semibold mb-2">Local Token Counter</h3>
+          <p class="text-sm text-muted-foreground">Count tokens for GPT-4o with 100% privacy</p>
+        </a>
+        <a
+          href="/agent-orchestrator"
+          class="block p-4 rounded-lg border border-border hover:border-primary hover:bg-muted/30 transition-all"
+        >
+          <h3 class="font-semibold mb-2">Agent Orchestrator</h3>
+          <p class="text-sm text-muted-foreground">Manage and deploy AI agents locally</p>
+        </a>
+        <a
+          href="/text-statistics"
+          class="block p-4 rounded-lg border border-border hover:border-primary hover:bg-muted/30 transition-all"
+        >
+          <h3 class="font-semibold mb-2">Text Statistics</h3>
+          <p class="text-sm text-muted-foreground">Analyze text with detailed metrics</p>
+        </a>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Additional styles if needed */
+</style>

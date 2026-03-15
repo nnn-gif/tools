@@ -588,7 +588,7 @@ const filteredTools = computed(() => {
       <!-- Background Pattern -->
       <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
 
-      <div class="container mx-auto px-4 py-20 md:py-28 relative">
+      <div class="container mx-auto px-4 py-12 md:py-16 relative">
         <div class="flex flex-col items-center text-center space-y-8 max-w-4xl mx-auto">
           <!-- Logo & Title -->
           <div
@@ -665,7 +665,7 @@ const filteredTools = computed(() => {
           </div>
 
           <!-- Search Bar -->
-          <div class="w-full max-w-2xl mt-8">
+          <div class="w-full max-w-2xl mt-6">
             <div class="relative">
               <Search
                 class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground"
@@ -687,7 +687,7 @@ const filteredTools = computed(() => {
     </section>
 
     <!-- Tools Section -->
-    <section class="container mx-auto px-4 py-12 md:py-16">
+    <section class="container mx-auto px-4 py-10 md:py-14">
       <div v-if="filteredTools.length === 0" class="text-center py-20">
         <p class="text-xl text-muted-foreground">No tools found matching "{{ searchQuery }}"</p>
         <button
@@ -698,7 +698,7 @@ const filteredTools = computed(() => {
         </button>
       </div>
 
-      <div v-else class="space-y-16">
+      <div v-else class="space-y-12">
         <div v-for="(category, categoryIndex) in filteredTools" :key="category.category" class="space-y-6">
           <div class="flex items-center gap-4">
             <h2 class="text-2xl md:text-3xl font-bold tracking-tight">{{ category.category }}</h2>

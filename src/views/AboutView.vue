@@ -13,7 +13,7 @@ import formathoIcons from '@/assets/formatho-icons.json'
     >
       <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
 
-      <div class="container mx-auto px-4 py-20 md:py-28 relative">
+      <div class="container mx-auto px-4 py-12 md:py-16 relative">
         <div class="flex flex-col items-center text-center space-y-6 max-w-4xl mx-auto">
           <div class="flex items-center gap-4">
             <img
@@ -34,9 +34,9 @@ import formathoIcons from '@/assets/formatho-icons.json'
     </section>
 
     <!-- Section 1: Your Data Never Leaves Your Browser (Text Left, Badge Right) -->
-    <section class="container mx-auto px-4 py-20 md:py-24">
+    <section class="container mx-auto px-4 py-12 md:py-16">
       <div class="max-w-6xl mx-auto">
-        <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
           <!-- Left: Text Content -->
           <div
             class="space-y-6"
@@ -85,7 +85,7 @@ import formathoIcons from '@/assets/formatho-icons.json'
             data-aos-delay="100"
           >
             <div class="glass-card p-12 max-w-sm text-center">
-              <div class="mb-6 flex justify-center">
+              <div class="mb-3 flex justify-center">
                 <span
                   class="w-24 h-24 text-primary"
                   v-html="formathoIcons.icons['privacy-shield'].svg"
@@ -102,9 +102,9 @@ import formathoIcons from '@/assets/formatho-icons.json'
     </section>
 
     <!-- Section 2: Why Privacy Matters (Text Right, Badge Left - Reversed) -->
-    <section class="container mx-auto px-4 py-20 md:py-24 bg-muted/30">
+    <section class="container mx-auto px-4 py-12 md:py-16 bg-muted/30">
       <div class="max-w-6xl mx-auto">
-        <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
           <!-- Left: No-Log Globe Trust Badge -->
           <div
             class="flex justify-center md:justify-start order-2 md:order-1"
@@ -113,7 +113,7 @@ import formathoIcons from '@/assets/formatho-icons.json'
             data-aos-delay="100"
           >
             <div class="glass-card p-12 max-w-sm text-center">
-              <div class="mb-6 flex justify-center">
+              <div class="mb-3 flex justify-center">
                 <span
                   class="w-24 h-24 text-primary"
                   v-html="formathoIcons.icons['no-log-globe'].svg"
@@ -166,9 +166,9 @@ import formathoIcons from '@/assets/formatho-icons.json'
     </section>
 
     <!-- Section 3: Built for Security-Conscious Teams (Text Left, Badge Right) -->
-    <section class="container mx-auto px-4 py-20 md:py-24">
+    <section class="container mx-auto px-4 py-12 md:py-16">
       <div class="max-w-6xl mx-auto">
-        <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
           <!-- Left: Text Content -->
           <div
             class="space-y-6"
@@ -214,7 +214,7 @@ import formathoIcons from '@/assets/formatho-icons.json'
             data-aos-delay="100"
           >
             <div class="glass-card p-12 max-w-sm text-center">
-              <div class="mb-6 flex justify-center">
+              <div class="mb-3 flex justify-center">
                 <span
                   class="w-24 h-24 text-primary"
                   v-html="formathoIcons.icons['client-side-chip'].svg"

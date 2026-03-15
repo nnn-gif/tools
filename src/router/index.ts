@@ -330,15 +330,15 @@ export const routes = [
         }
       },
       {
-        path: 'agent-identity',
-        name: 'agent-identity',
-        component: () => import('../views/AgentIdentityView.vue'),
+        path: 'agent-identity-generator',
+        name: 'agent-identity-generator',
+        component: () => import('../views/tools/AgentIdentityView.vue'),
         meta: {
-          title: 'ERC-8004 Agent Identity Generator',
+          title: 'AI Agent Identity Generator',
           description:
-            'Generate standard-compliant JSON metadata for AI Agents (ERC-8004). Define identity, capabilities, and endpoints.',
+            'Instantly generate unique personas, traits, and system prompts for AI agents.',
           keywords:
-            'erc-8004, ai agent identity, agent metadata, crypto ai, autonomous agents, json generator'
+            'ai agent identity, agent persona, agent traits, system prompts, agent generator, artificial intelligence'
         }
       },
       {

@@ -107,7 +107,7 @@ const toolIconMap: Record<string, string> = {
   
   // Artificial Intelligence
   'Agent Orchestrator': 'generators',
-  'Agent Identity Generator': 'generators',
+  'Agent Identity Generator': 'bot',
   'Local Token Counter': 'hashing',
 }
 
@@ -547,8 +547,8 @@ const tools = [
       },
       {
         name: 'Agent Identity Generator',
-        description: 'Generate ERC-8004 compliant metadata for AI Agents.',
-        route: '/agent-identity'
+        description: 'Instantly generate unique personas, traits, and system prompts for AI agents.',
+        route: '/tools/agent-identity-generator'
       },
       {
         name: 'Local Token Counter',

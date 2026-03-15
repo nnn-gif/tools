@@ -86,6 +86,11 @@
       "fileSize": "230B",
       "category": "generators"
     },
+    "bot": {
+      "svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 8V4H8\"></path><rect x=\"4\" y=\"8\" width=\"16\" height=\"12\" rx=\"2\"></rect><path d=\"M2 14h2\"></path><path d=\"M20 14h2\"></path><path d=\"M15 13v2\"></path><path d=\"M9 13v2\"></path><path d=\"M12 8v2\"></path></svg>",
+      "fileSize": "285B",
+      "category": "artificial-intelligence"
+    },
     "converters": {
       "svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 10l5-5 5 5\"></path><path d=\"M17 14l-5 5-5-5\"></path><line x1=\"12\" y1=\"5\" x2=\"12\" y2=\"19\"></line></svg>",
       "fileSize": "175B",

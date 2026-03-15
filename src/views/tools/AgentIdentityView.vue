@@ -27,11 +27,11 @@ const roles = [
 
 const traits = [
   'Meticulous & Pedantic', 'Highly Encouraging & Empathetic', 'Sarcastic yet Brilliant',
-  'Concise & Direct', 'Analytical & Detail-Oriented', 'Creative & Imaginative',
-  'Patient & Understanding', 'Technical & Precise', 'Friendly & Approachable',
+  'Concise & Direct', 'Analytical & Detail-Oriented', 'Creative & imaginative',
+  'Patient & Understanding', 'Technical & Precise', 'Friendly & approachable',
   'Professional & Formal', 'Casual & Relaxed', 'Witty & Humorous',
   'Methodical & Structured', 'Innovative & Forward-Thinking', 'Calm & Composed',
-  'Energetic & Enthusiastic', 'Skeptical & Questioning', 'Diplomatic & Tactful'
+  'Energetic & enthusiastic', 'Skeptical & questioning', 'Diplomatic & tactful'
 ]
 
 const capabilities = [

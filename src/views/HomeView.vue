@@ -713,7 +713,7 @@ const filteredTools = computed(() => {
               v-for="(tool, toolIndex) in category.items"
               :key="tool.name"
               :to="tool.route"
-              class="group"
+              class="premium-card-hover"
             >
               <div
                 class="glass-card h-full p-6 cursor-pointer"
@@ -751,7 +751,7 @@ const filteredTools = computed(() => {
                   >
                     Open tool
                     <svg
-                      class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"
+                      class="w-4 h-4 ml-1 hover:translate-x-1 transition-transform"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"

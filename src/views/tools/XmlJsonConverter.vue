@@ -130,7 +130,78 @@ const jsonToXml = (json: any): string => {
   return `<?xml version="1.0" encoding="UTF-8"?>\n${buildXml(json)}`
 }
 
-// Convert XML input to JSON
+// Detect content type and auto-convert bidirectionally
+const detectAndAutoConvert = (content: string, targetFormat: 'xml' | 'json'): boolean => {
+  if (!content.trim()) return false
+
+  // Try to detect XML
+  if (targetFormat === 'json') {
+    try {
+      const parser = new DOMParser()
+      parser.parseFromString(content, 'text/xml')
+      return true // It's valid XML, should convert
+    } catch {
+      return false
+    }
+  }
+
+  // Try to detect JSON
+  if (targetFormat === 'xml') {
+    try {
+      JSON.parse(content)
+      return true // It's valid JSON, should convert
+    } catch {
+      return false
+    }
+  }
+
+  return false
+}
+
+// @input handler for XML textarea - auto-convert to JSON
+const handleXmlInput = (event: Event) => {
+  const textarea = event.target as HTMLTextAreaElement
+  const content = textarea.value
+
+  // Detect if user pasted JSON and auto-convert to XML
+  if (detectAndAutoConvert(content, 'xml')) {
+    try {
+      const jsonObj = JSON.parse(content)
+      const xml = jsonToXml(jsonObj)
+      xmlInput.value = xml
+      jsonInput.value = JSON.stringify(jsonObj, null, 2)
+      error.value = 'Auto-converted JSON to XML'
+      
+      // Clear error after 2 seconds
+      setTimeout(() => { error.value = '' }, 2000)
+    } catch (e: any) {
+      error.value = 'Invalid JSON format for auto-conversion'
+    }
+  }
+}
+
+// @input handler for JSON textarea - auto-convert to XML
+const handleJsonInput = (event: Event) => {
+  const textarea = event.target as HTMLTextAreaElement
+  const content = textarea.value
+
+  // Detect if user pasted XML and auto-convert to JSON
+  if (detectAndAutoConvert(content, 'json')) {
+    try {
+      const parsed = xmlToJson(content)
+      jsonInput.value = JSON.stringify(parsed, null, 2)
+      xmlInput.value = content
+      error.value = 'Auto-converted XML to JSON'
+      
+      // Clear error after 2 seconds
+      setTimeout(() => { error.value = '' }, 2000)
+    } catch (e: any) {
+      error.value = 'Invalid XML format for auto-conversion'
+    }
+  }
+}
+
+// Manual conversion functions
 const convertXmlToJson = () => {
   error.value = ''
   try {
@@ -147,7 +218,6 @@ const convertXmlToJson = () => {
   }
 }
 
-// Convert JSON input to XML
 const convertJsonToXml = () => {
   error.value = ''
   try {
@@ -219,6 +289,7 @@ const copyJsonToClipboard = async () => {
         <CardContent class="flex-1 min-h-0">
           <Textarea
             v-model="xmlInput"
+            @input="handleXmlInput"
             class="h-full resize-none font-mono"
             placeholder="Enter XML...&#10;&lt;root>&#10;&lt;name>Formatho</name>&#10;&lt;/root>"
           />
@@ -254,6 +325,7 @@ const copyJsonToClipboard = async () => {
         <CardContent class="flex-1 min-h-0">
           <Textarea
             v-model="jsonInput"
+            @input="handleJsonInput"
             class="h-full resize-none font-mono"
             placeholder="JSON output will appear here..."
           />

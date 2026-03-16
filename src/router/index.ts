@@ -605,6 +605,15 @@ export const routes = [
         }
       },
       {
+        path: 'xml-json-converter',
+        name: 'xml-json-converter',
+        component: () => import('../views/XmlJsonConverterView.vue'),
+        meta: {
+          title: 'XML ↔ JSON Converter',
+          description: 'Convert XML to JSON and vice versa entirely client-side.'
+        }
+      },
+      {
         path: 'xml-to-json',
         name: 'xml-to-json',
         component: () => import('../views/XmlToJsonView.vue'),

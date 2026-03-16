@@ -118,9 +118,9 @@ export const tools = [
         route: '/temperature-converter'
       },
       {
-        name: 'XML <> JSON',
-        description: 'Convert between XML and JSON formats.',
-        route: '/xml-to-json'
+        name: 'XML to JSON',
+        description: 'Convert XML to JSON and vice versa entirely client-side.',
+        route: '/xml-json-converter'
       }
     ]
   },

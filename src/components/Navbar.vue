@@ -111,7 +111,7 @@ const categories = [
 </script>
 
 <template>
-  <nav class="sticky top-0 z-50 glass border-b border-border/50">
+  <nav class="sticky top-0 z-[60] bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
     <div class="container mx-auto px-4">
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
@@ -145,7 +145,7 @@ const categories = [
           <!-- Tools Dropdown (Desktop) -->
           <div class="relative pointer-events-auto" ref="toolsDropdownRef">
             <button
-              class="flex items-center gap-1 text-sm font-medium text-muted-foreground nav-hover-sweep transition-colors py-2 pointer-events-auto"
+              class="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_2px_8px_rgba(0,0,0,0.05)] hover:bg-white rounded-lg py-2 px-3 pointer-events-auto"
               @click="isToolsDropdownOpen = !isToolsDropdownOpen"
             >
               Tools
@@ -206,7 +206,7 @@ const categories = [
         <div class="flex items-center gap-3">
           <button
             @click="openSearchModal"
-            class="hidden sm:flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground nav-hover-sweep border border-border rounded-lg transition-all"
+            class="hidden sm:flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground border border-border rounded-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_2px_8px_rgba(0,0,0,0.05)] hover:bg-white hover:border-gray-300"
           >
             <Search class="w-4 h-4" />
             <span>Search...</span>
@@ -218,7 +218,7 @@ const categories = [
           <!-- Mobile Menu Button -->
           <button
             @click="isMobileMenuOpen = !isMobileMenuOpen"
-            class="md:hidden p-2 text-muted-foreground nav-hover-sweep transition-colors"
+            class="md:hidden p-2 text-muted-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_2px_8px_rgba(0,0,0,0.05)] hover:bg-white rounded-lg"
           >
             <Menu v-if="!isMobileMenuOpen" class="w-5 h-5" />
             <X v-else class="w-5 h-5" />

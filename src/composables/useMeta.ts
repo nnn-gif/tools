@@ -1,7 +1,7 @@
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-const domain = 'https://formatho.com/tools'
+const domain = 'https://formatho.com'
 const siteName = 'Formatho'
 const defaultImage = `${domain}/logo.png`
 const twitterHandle = '@heyformatho'

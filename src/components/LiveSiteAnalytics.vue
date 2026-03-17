@@ -43,117 +43,39 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="analytics-widget">
-    <div class="analytics-card">
+  <div class="fixed bottom-5 right-5 z-[9999]">
+    <!-- Glassmorphism card with reduced sizing -->
+    <div
+      class="bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_4px_12px_rgba(0,0,0,0.05)] rounded-xl px-4 py-2.5 min-w-[160px] transition-all duration-200 hover:shadow-[0_6px_16px_rgba(0,0,0,0.08)]"
+    >
       <!-- Live Users -->
-      <div class="metric">
-        <div class="metric-header">
-          <span class="pulse-dot"></span>
-          <span class="metric-label">Live User Count</span>
+      <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-2">
+          <!-- Pulsing green dot - w-2 h-2 -->
+          <span class="w-2 h-2 bg-green-500 rounded-full flex-shrink-0 animate-pulse"></span>
+          <span class="text-xs uppercase tracking-wider text-gray-500 font-medium">Live</span>
         </div>
-        <div class="metric-value">
-          <span class="number">{{ liveUsers }}</span>
-        </div>
+        <span class="text-lg font-semibold text-slate-800 tabular-nums pl-4">{{ liveUsers }}</span>
       </div>
 
       <!-- Divider -->
-      <div class="divider"></div>
+      <div class="h-px bg-gray-300/50 my-2"></div>
 
-      <!-- Monthly Traffic Counter -->
-      <div class="metric">
-        <div class="metric-header">
-          <span class="metric-label">Total Users this month</span>
-        </div>
-        <div class="metric-value">
-          <span class="number">{{ formatNumber(monthlyVisitors) }}</span>
-        </div>
+      <!-- Monthly Users -->
+      <div class="flex flex-col gap-1">
+        <span class="text-xs uppercase tracking-wider text-gray-500 font-medium"
+          >Monthly Users</span
+        >
+        <span class="text-lg font-semibold text-slate-800 tabular-nums">{{
+          formatNumber(monthlyVisitors)
+        }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.analytics-widget {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 9999;
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-}
-
-.analytics-card {
-  /* Liquid Glass Effect */
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 2px solid rgba(156, 163, 175, 0.4); /* Grey border */
-  border-radius: 16px;
-  padding: 16px 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  min-width: 200px;
-  transition: all 0.3s ease;
-}
-
-.analytics-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-  border-color: rgba(156, 163, 175, 0.6); /* Brighter grey on hover */
-}
-
-.metric {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.metric-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.metric-label {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.7);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 700; /* Bold */
-}
-
-.metric-value {
-  font-size: 28px;
-  font-weight: 700;
-  color: #ffffff; /* Sharp white color */
-  line-height: 1;
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-}
-
-.number {
-  font-variant-numeric: tabular-nums;
-  transition: all 0.3s ease;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow for better readability */
-}
-
-.divider {
-  height: 1px;
-  background: rgba(156, 163, 175, 0.3); /* Grey divider */
-  margin: 12px 0;
-}
-
-/* Pulsing indicator dot */
-.pulse-dot {
-  width: 8px;
-  height: 8px;
-  background: hsl(142 76% 36%);
-  border-radius: 50%;
-  position: relative;
-  flex-shrink: 0;
-  animation: pulse 2s ease-in-out infinite;
-}
-
+/* Minimal scoped styles - main styling via Tailwind */
 @keyframes pulse {
   0%,
   100% {
@@ -166,40 +88,22 @@ onUnmounted(() => {
   }
 }
 
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 640px) {
-  .analytics-widget {
+  div.fixed {
     bottom: 10px;
     right: 10px;
-  }
-
-  .analytics-card {
-    padding: 12px 16px;
-    min-width: 180px;
-  }
-
-  .metric-value {
-    font-size: 22px;
-  }
-
-  .metric-label {
-    font-size: 10px;
   }
 }
 
 /* Ensure it doesn't block important elements */
 @media (max-width: 480px) {
-  .analytics-widget {
-    /* Move above bottom navigation if present */
+  div.fixed {
     bottom: 70px;
-  }
-}
-
-/* Dark mode adjustment */
-@media (prefers-color-scheme: dark) {
-  .analytics-card {
-    background: rgba(0, 0, 0, 0.5);
-    border-color: rgba(156, 163, 175, 0.5); /* Grey border for dark mode */
   }
 }
 </style>

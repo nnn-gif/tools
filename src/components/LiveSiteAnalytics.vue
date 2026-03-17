@@ -46,7 +46,7 @@ onUnmounted(() => {
   <div class="fixed bottom-5 right-5 z-[9999]">
     <!-- Glassmorphism card with reduced sizing -->
     <div
-      class="bg-white/40 backdrop-blur-md border border-white/60 shadow-[0_4px_12px_rgba(0,0,0,0.05)] rounded-xl px-4 py-2.5 min-w-[160px] transition-all duration-200 hover:shadow-[0_6px_16px_rgba(0,0,0,0.08)]"
+      class="bg-white/20 backdrop-blur-md border border-white/30 shadow-[0_4px_12px_rgba(0,0,0,0.05)] rounded-xl px-3 py-1.5 min-w-[160px] transition-all duration-200 hover:shadow-[0_6px_16px_rgba(0,0,0,0.08)]"
     >
       <!-- Live Users -->
       <div class="flex flex-col gap-1">

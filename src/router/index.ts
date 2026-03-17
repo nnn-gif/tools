@@ -707,15 +707,7 @@ export const routes = [
         component: () => import('../views/SlugifyStringView.vue'),
         meta: { title: 'Slugify String', description: 'Convert text to URL-friendly slugs.' }
       },
-      {
-        path: 'url-parser',
-        name: 'url-parser',
-        component: () => import('../views/UrlParserView.vue'),
-        meta: {
-          title: 'URL Parser',
-          description: 'Parse URLs into components and safely encode/decode query strings.'
-        }
-      },
+
       {
         path: 'html-wysiwyg-editor',
         name: 'html-wysiwyg-editor',

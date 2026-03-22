@@ -1,8 +1,49 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { RouterLink } from 'vue-router'
+import { useStripe } from '@/composables/useStripe'
+import { useAnalytics, type PlanType, type BillingCycle } from '@/composables/useAnalytics'
 
-const billingCycle = ref<'monthly' | 'yearly'>('monthly')
+const billingCycle = ref<BillingCycle>('monthly')
+const { createCheckoutSession, isLoading, error } = useStripe()
+const {
+  trackPricingView,
+  trackPlanSelected,
+  trackBillingCycleChanged,
+  trackCheckoutInitiated,
+  trackCheckoutError,
+} = useAnalytics()
+
+// Track pricing page view on mount
+onMounted(() => {
+  trackPricingView()
+})
+
+// Track billing cycle changes
+watch(billingCycle, (newCycle) => {
+  trackBillingCycleChanged(newCycle)
+})
+
+const handleSubscribe = async (plan: 'pro' | 'enterprise') => {
+  const planPrice = plan === 'pro'
+    ? (billingCycle.value === 'monthly' ? 19 : 190)
+    : (billingCycle.value === 'monthly' ? 99 : 990)
+
+  // Track checkout initiation
+  trackCheckoutInitiated(plan as PlanType, billingCycle.value, planPrice)
+
+  try {
+    await createCheckoutSession(plan, billingCycle.value)
+  } catch (e) {
+    // Track checkout error
+    trackCheckoutError(plan as PlanType, billingCycle.value, e instanceof Error ? e.message : 'Unknown error')
+  }
+}
+
+// Track when user clicks on a plan CTA (including contact sales)
+const handlePlanCta = (plan: PlanType, isContact: boolean = false) => {
+  trackPlanSelected(plan)
+}
 
 const plans = [
   {
@@ -221,7 +262,22 @@ const faqs = [
           </ul>
 
           <!-- CTA Button -->
+          <button
+            v-if="plan.name === 'Pro' || plan.name === 'Enterprise'"
+            @click="handleSubscribe(plan.name.toLowerCase() as 'pro' | 'enterprise')"
+            :disabled="isLoading"
+            :class="[
+              'block w-full text-center py-3 px-6 rounded-lg font-medium transition-all cursor-pointer',
+              plan.highlighted
+                ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20'
+                : 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+              isLoading ? 'opacity-50 cursor-not-allowed' : ''
+            ]"
+          >
+            {{ isLoading ? 'Loading...' : plan.cta }}
+          </button>
           <RouterLink
+            v-else
             :to="plan.ctaLink"
             :class="[
               'block w-full text-center py-3 px-6 rounded-lg font-medium transition-all',
@@ -232,6 +288,11 @@ const faqs = [
           >
             {{ plan.cta }}
           </RouterLink>
+
+          <!-- Error Message -->
+          <p v-if="error" class="text-red-500 text-sm mt-2 text-center">
+            {{ error }}
+          </p>
         </div>
       </div>
     </section>

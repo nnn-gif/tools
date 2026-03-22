@@ -1382,6 +1382,135 @@ export const blogPosts: BlogPost[] = [
         link: '/docker-compose'
       }
     ]
+  },
+  {
+    id: 29,
+    title: "Getting Started with Agent Orchestrator: Build Your First AI Worker in 10 Minutes",
+    excerpt: "A complete beginner's guide to setting up Agent Orchestrator, creating your first AI agent, and automating tasks locally. No cloud required. No API keys needed to start.",
+    date: '2026-03-22',
+    readTime: '10 min',
+    tags: ['Agent Orchestrator', 'AI Agents', 'Tutorial', 'Local AI', 'Automation'],
+    slug: 'getting-started-with-agent-orchestrator',
+    image: '/images/blog/agent-orchestrator-setup.jpg',
+    imageAlt: 'Agent Orchestrator dashboard showing AI agent management interface',
+    content: `<p>Building AI agents used to require cloud subscriptions, API keys, and trust in third-party data handling. <strong>Agent Orchestrator changes this completely.</strong></p>
+<p>In this guide, you'll set up your first AI worker in under 10 minutes—running entirely on your machine, processing your data locally, and costing nothing to start.</p>
+<h2>What Is Agent Orchestrator?</h2>
+<p>Agent Orchestrator is an <strong>open-source, local-first AI agent management platform</strong> built by Formatho. It lets you:</p>
+<ul><li><strong>Create AI workers</strong> that run autonomously on your machine</li><li><strong>Assign tasks</strong> via a simple TODO queue</li><li><strong>Monitor progress</strong> through real-time logs and dashboards</li><li><strong>Schedule jobs</strong> with built-in cron support</li><li><strong>Keep everything private</strong>—no cloud uploads required</li></ul>
+<p>Think of it as your personal AI operations center.</p>
+<h2>Prerequisites (Minimal Setup)</h2>
+<p>Before we begin, you'll need:</p>
+<h3>1. A Local LLM</h3>
+<p>Agent Orchestrator works with <strong>Ollama</strong> (recommended), LM Studio, or any OpenAI-compatible API.</p>
+<p><strong>Install Ollama (macOS/Linux):</strong></p>
+<pre><code>curl -fsSL https://ollama.com/install.sh | sh
+ollama pull llama3.2
+ollama pull qwen2.5:14b</code></pre>
+<h3>2. Agent Orchestrator</h3>
+<p>Clone and build:</p>
+<pre><code>git clone https://github.com/formatho/agent-orchestrator.git
+cd agent-orchestrator
+./start.sh</code></pre>
+<p>Or install via Homebrew:</p>
+<pre><code>brew install formatho/tap/agent-orchestrator</code></pre>
+<h2>Step 1: Create Your First Agent</h2>
+<p>Open the Agent Orchestrator dashboard at <code>http://localhost:18765</code>.</p>
+<p>Click <strong>"New Agent"</strong> and fill in:</p>
+<pre><code>{
+  "name": "research-assistant",
+  "provider": "ollama",
+  "model": "llama3.2",
+  "system_prompt": "You are a research assistant. Help users find and summarize information."
+}</code></pre>
+<p>Click <strong>Create</strong>. Your first AI worker is now ready.</p>
+<h2>Step 2: Assign Your First Task</h2>
+<p>Navigate to the <strong>TODO Queue</strong> and add a task:</p>
+<pre><code>Title: Research Formatho's privacy-first tools
+Description: Find and summarize the key privacy features of Formatho's developer tools
+Priority: High
+Assign to: research-assistant</code></pre>
+<p>The agent will:</p>
+<ol><li>Pick up the task automatically</li><li>Process it using your local LLM</li><li>Log progress in real-time</li><li>Mark complete when done</li></ol>
+<h2>Step 3: Monitor Agent Activity</h2>
+<p>Open the agent's detail page to see:</p>
+<ul><li><strong>Live logs:</strong> Watch the agent think and execute</li><li><strong>Task history:</strong> All completed work</li><li><strong>Resource usage:</strong> CPU, memory, tokens processed</li></ul>
+<img src="/images/blog/agent-logs-dashboard.jpg" alt="Agent Orchestrator logs showing real-time task execution" style="width: 100%; border-radius: 8px; margin: 1.5rem 0;" />
+<h2>Step 4: Schedule Recurring Jobs (Cron)</h2>
+<p>Need an agent to run on a schedule? Use the built-in cron scheduler:</p>
+<pre><code># Every morning at 9 AM
+0 9 * * * research-assistant "Summarize overnight news"</code></pre>
+<p>The agent will execute this task automatically every day at 9 AM—no manual intervention required.</p>
+<h2>Advanced: Enable Skills</h2>
+<p>Skills give agents real-world capabilities:</p>
+<ul><li><strong>Web Search:</strong> Let agents research online</li><li><strong>File Operations:</strong> Read/write files on your machine</li><li><strong>Code Execution:</strong> Run scripts safely</li><li><strong>Email:</strong> Send notifications and reports</li></ul>
+<p><strong>Enable a skill in agent config:</strong></p>
+<pre><code>{
+  "name": "dev-agent",
+  "provider": "ollama",
+  "model": "qwen2.5:14b",
+  "skills": ["code_execution", "file_operations"],
+  "system_prompt": "You are a developer agent. Write, test, and fix code."
+}</code></pre>
+<p><strong>⚠️ Security Note:</strong> Only enable skills you trust. Agents with file access can modify your system.</p>
+<h2>Architecture: How It Works</h2>
+<p>Agent Orchestrator is built on three core principles:</p>
+<h3>1. Local-First</h3>
+<p>All processing happens on your machine. Your code, data, and prompts <strong>never leave your network</strong>.</p>
+<h3>2. Persistent</h3>
+<p>Agents maintain state between sessions. They remember context, learn from interactions, and build cumulative understanding.</p>
+<h3>3. Autonomous</h3>
+<p>Once assigned, agents work independently. Check results later—no babysitting required.</p>
+<h2>Common Use Cases</h2>
+<h3>For Developers</h3>
+<ul><li><strong>Code review:</strong> Agents analyze PRs and suggest improvements</li><li><strong>Documentation:</strong> Auto-generate docs from codebases</li><li><strong>Testing:</strong> Write and run tests autonomously</li><li><strong>Refactoring:</strong> Identify and fix code smells</li></ul>
+<h3>For Writers</h3>
+<ul><li><strong>Research:</strong> Gather sources and summarize findings</li><li><strong>Drafting:</strong> Generate outlines and first drafts</li><li><strong>Editing:</strong> Check grammar, style, and clarity</li></ul>
+<h3>For Operations</h3>
+<ul><li><strong>Monitoring:</strong> Watch logs and alert on anomalies</li><li><strong>Reporting:</strong> Generate daily/weekly summaries</li><li><strong>Automation:</strong> Execute routine maintenance tasks</li></ul>
+<h2>Troubleshooting</h2>
+<h3>Agent Not Starting?</h3>
+<ul><li>Check if Ollama is running: <code>ollama list</code></li><li>Verify model is pulled: <code>ollama pull llama3.2</code></li><li>Check logs in the dashboard</li></ul>
+<h3>Slow Responses?</h3>
+<ul><li>Use a smaller model: <code>llama3.2</code> instead of <code>llama3.1:70b</code></li><li>Ensure sufficient RAM (8GB+ recommended)</li><li>Close other heavy applications</li></ul>
+<h3>Tasks Not Processing?</h3>
+<ul><li>Verify agent is assigned to the task</li><li>Check agent status is "idle" (not already working)</li><li>Review error logs in the dashboard</li></ul>
+<h2>Going Further</h2>
+<h3>Multi-Agent Workflows</h3>
+<p>Create specialized agents that collaborate:</p>
+<pre><code>research-agent → writer-agent → editor-agent</code></pre>
+<p>Each agent handles one stage, passing work to the next.</p>
+<h3>Custom Skills</h3>
+<p>Build your own skills for domain-specific tasks:</p>
+<ul><li>Database operations</li><li>API integrations</li><li>Custom tool wrappers</li></ul>
+<h3>Team Collaboration</h3>
+<p>Share agents across your organization with built-in team features and permissions.</p>
+<h2>Why Local AI Agents Matter</h2>
+<p>Cloud AI services come with tradeoffs:</p>
+<ul><li><strong>Data exposure:</strong> Your prompts travel to third-party servers</li><li><strong>Cost:</strong> Per-token pricing adds up quickly</li><li><strong>Rate limits:</strong> Queues and throttling slow you down</li><li><strong>Vendor lock-in:</strong> Hard to switch providers later</li></ul>
+<p><strong>Local agents solve all of these:</strong></p>
+<ul><li>✅ Zero data exposure</li><li>✅ No per-token costs</li><li>✅ No rate limits</li><li>✅ Use any LLM you want</li></ul>
+<h2>Quick Start Checklist</h2>
+<p>Before you go, make sure you've completed:</p>
+<ul><li>☐ Ollama installed and running</li><li>☐ Agent Orchestrator cloned or installed</li><li>☐ First agent created</li><li>☐ First task assigned and completed</li><li>☐ Logs reviewed in dashboard</li></ul>
+<h2>Get Help</h2>
+<ul><li><strong>Documentation:</strong> <a href="https://github.com/formatho/agent-orchestrator">GitHub Repository</a></li><li><strong>Issues:</strong> <a href="https://github.com/formatho/agent-orchestrator/issues">Report Bugs</a></li><li><strong>Community:</strong> Join our Discord for tips and support</li></ul>
+<hr />
+<p><strong>You've just built your first AI worker.</strong></p>
+<p>It runs locally. It costs nothing to start. It keeps your data private.</p>
+<p><strong>Welcome to the future of personal AI infrastructure.</strong></p>`,
+    cta: {
+      title: 'Start Building AI Agents',
+      description: "Set up Agent Orchestrator and create your first AI worker in under 10 minutes.",
+      link: '/agent-orchestrator',
+      buttonText: 'Get Started Free'
+    },
+    relatedTools: [
+      { name: 'Agent Orchestrator', description: 'Manage AI agents locally', link: '/agent-orchestrator' },
+      { name: 'Local Token Counter', description: 'Count LLM tokens offline', link: '/local-token-counter' },
+      { name: 'Crontab Generator', description: 'Schedule agent tasks', link: '/crontab-generator' },
+      { name: 'JSON to YAML', description: 'Config conversion tools', link: '/json-yaml' }
+    ]
   }
 ]
 

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import { useHead } from '@vueuse/head'
 import { Calendar, Clock, ArrowRight, Tag } from 'lucide-vue-next'
 import { blogPosts } from '../data/blogPosts'
+import EmailCapture from '@/components/EmailCapture.vue'
 
 // Note: AOS is initialized globally in main.ts to prevent scroll freezing conflicts
 
@@ -13,10 +15,44 @@ const formatDate = (dateString: string) => {
     day: 'numeric'
   })
 }
+
+// SEO: Add structured data for blog listing
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Blog',
+        name: 'Formatho Blog',
+        description: 'Developer guides, tutorials, and insights from the Formatho team',
+        url: 'https://formatho.com/blogs',
+        publisher: {
+          '@type': 'Organization',
+          name: 'Formatho',
+          url: 'https://formatho.com'
+        },
+        blogPost: blogPosts.slice(0, 10).map(post => ({
+          '@type': 'BlogPosting',
+          headline: post.title,
+          datePublished: post.date,
+          url: `https://formatho.com/blogs/${post.slug}`
+        }))
+      })
+    }
+  ]
+})
 </script>
 
 <template>
   <div class="container mx-auto px-4 py-12">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center space-x-2 text-sm text-muted-foreground mb-8">
+      <RouterLink to="/" class="hover:text-gray-900 transition-colors">Home</RouterLink>
+      <span>/</span>
+      <span class="text-gray-900">Blog</span>
+    </nav>
+    
     <!-- Header -->
     <div
       class="text-center mb-12"
@@ -114,28 +150,14 @@ const formatDate = (dateString: string) => {
 
     <!-- Newsletter Signup -->
     <div class="max-w-2xl mx-auto mt-16">
-      <div
-        class="glass-card p-8 text-center"
-        data-aos="fade-up"
-        data-aos-duration="400"
-      >
-        <h3 class="text-2xl font-bold mb-2">Stay Updated</h3>
-        <p class="text-muted-foreground mb-6">
-          Get notified when we publish new articles and updates.
-        </p>
-        <div class="flex gap-2 max-w-md mx-auto">
-          <input
-            type="email"
-            placeholder="Enter your email"
-            class="flex-1 px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-          <button
-            class="btn-primary px-6 py-2 rounded-lg font-medium"
-          >
-            Subscribe
-          </button>
-        </div>
-      </div>
+      <EmailCapture
+        source="blog"
+        variant="card"
+        title="Stay Updated"
+        subtitle="Get notified when we publish new articles, tutorials, and developer insights. No spam, just quality content."
+        placeholder="your@email.com"
+        buttonText="Subscribe to Newsletter"
+      />
     </div>
   </div>
 </template>

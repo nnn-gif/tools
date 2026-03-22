@@ -4,6 +4,7 @@ import { useRoute, RouterLink } from 'vue-router'
 import { useHead } from '@vueuse/head'
 import { Calendar, Clock, ArrowLeft, Tag, ExternalLink } from 'lucide-vue-next'
 import { blogPosts } from '../data/blogPosts'
+import EmailCapture from '@/components/EmailCapture.vue'
 
 // Note: AOS is initialized globally in main.ts to avoid conflicts and prevent scroll freezing
 
@@ -233,6 +234,23 @@ useHead(computed(() => {
         data-aos-delay="200"
       >
         <div v-html="post.content"></div>
+      </div>
+
+      <!-- Newsletter Signup -->
+      <div
+        class="mt-12"
+        data-aos="fade-up"
+        data-aos-duration="400"
+        data-aos-delay="250"
+      >
+        <EmailCapture
+          source="blog"
+          variant="card"
+          title="Enjoyed this article?"
+          subtitle="Subscribe to get more tutorials, tips, and developer insights delivered to your inbox."
+          placeholder="your@email.com"
+          buttonText="Subscribe"
+        />
       </div>
 
       <!-- CTA Section -->

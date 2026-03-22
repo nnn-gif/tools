@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import { Github, Heart, Shield, Zap } from 'lucide-vue-next'
+import EmailCapture from '@/components/EmailCapture.vue'
 
 const currentYear = new Date().getFullYear()
 </script>
@@ -29,6 +30,16 @@ const currentYear = new Date().getFullYear()
             >
               <Github class="w-5 h-5" />
             </a>
+          </div>
+          <!-- Newsletter in Footer -->
+          <div class="pt-2">
+            <p class="text-xs text-muted-foreground mb-2">Get updates</p>
+            <EmailCapture
+              source="footer"
+              variant="compact"
+              placeholder="Email"
+              buttonText="→"
+            />
           </div>
         </div>
 

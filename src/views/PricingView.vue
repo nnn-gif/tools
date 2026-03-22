@@ -3,6 +3,7 @@ import { ref, onMounted, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useStripe } from '@/composables/useStripe'
 import { useAnalytics, type PlanType, type BillingCycle } from '@/composables/useAnalytics'
+import EmailCapture from '@/components/EmailCapture.vue'
 
 const billingCycle = ref<BillingCycle>('monthly')
 const { createCheckoutSession, isLoading, error } = useStripe()
@@ -345,6 +346,20 @@ const faqs = [
             Contact Sales
           </RouterLink>
         </div>
+      </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="container mx-auto px-4 py-16 border-t border-border/50">
+      <div class="max-w-2xl mx-auto">
+        <EmailCapture
+          source="pricing"
+          variant="inline"
+          title="Get Formatho Updates"
+          subtitle="Be the first to know about new features, pricing updates, and exclusive offers."
+          placeholder="your@email.com"
+          buttonText="Subscribe"
+        />
       </div>
     </section>
   </div>

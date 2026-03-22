@@ -47,6 +47,18 @@ export const routes = [
         }
       },
       {
+        path: 'docs/api',
+        name: 'api-docs',
+        component: () => import('../views/docs/ApiDocsView.vue'),
+        meta: {
+          title: 'API Documentation - Agent Orchestrator | Formatho',
+          description:
+            'Comprehensive REST API documentation for Agent Orchestrator. Interactive examples, authentication guides, and code snippets in JavaScript, Python, and Go.',
+          keywords:
+            'api documentation, rest api, agent orchestrator api, developer docs, interactive api, code examples'
+        }
+      },
+      {
         path: 'blogs',
         name: 'blogs',
         component: () => import('../views/BlogsView.vue'),

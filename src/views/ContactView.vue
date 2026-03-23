@@ -1,5 +1,21 @@
 <script setup lang="ts">
+import { onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { Github, ExternalLink } from 'lucide-vue-next'
+import { useAnalytics, type PlanType } from '@/composables/useAnalytics'
+
+const route = useRoute()
+const { trackContactFormSubmitted, trackPricingView } = useAnalytics()
+
+// Get plan from query parameter if coming from pricing page
+const planFromQuery = computed(() => route.query.plan as string | undefined)
+
+// Track lead when viewing contact with plan intent
+onMounted(() => {
+  if (planFromQuery.value && ['pro', 'enterprise'].includes(planFromQuery.value)) {
+    trackContactFormSubmitted(planFromQuery.value as PlanType)
+  }
+})
 </script>
 
 <template>

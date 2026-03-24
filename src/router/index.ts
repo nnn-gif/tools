@@ -413,6 +413,18 @@ export const routes = [
         }
       },
       {
+        path: 'agent-todo',
+        name: 'agent-todo',
+        component: () => import('../views/AgentTodoLandingView.vue'),
+        meta: {
+          title: 'Agent-Todo - Task Management for AI Agents',
+          description:
+            'Persistent task management built for AI agents. Stop losing context between sessions. Keep your AI workforce organized and productive.',
+          keywords:
+            'ai agent tasks, agent todo, task management for ai, persistent tasks, agent memory, ai workforce'
+        }
+      },
+      {
         path: 'agent-orchestrator',
         name: 'agent-orchestrator',
         component: () => import('../views/AgentOrchestratorView.vue'), // Landing page

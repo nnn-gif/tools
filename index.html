@@ -14,10 +14,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts - Optimized for Core Web Vitals -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  </noscript>
 
   <!-- Resource Hints -->
   <link rel="preconnect" href="https://www.googletagmanager.com" />
@@ -71,8 +74,9 @@
     content="Privacy-first developer tools that run 100% client-side. 100+ free tools: JSON/YAML converters, Base64 encoder, JWT decoder, SQL formatter, UUID generator, hash generators, QR codes, and more." />
   <meta name="twitter:image" content="https://formatho.com/tools/logo.png" />
 
-  <!-- AOS (Animate On Scroll) Library CSS -->
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <!-- AOS (Animate On Scroll) Library CSS - Deferred -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"></noscript>
 
   <!-- Additional Meta Tags -->
   <meta name="application-name" content="Formatho" />
@@ -127,8 +131,8 @@
 
 <body>
   <div id="app"></div>
-  <!-- AOS (Animate On Scroll) Library JS -->
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <!-- AOS (Animate On Scroll) Library JS - Deferred -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
   <script type="module" src="/src/main.ts"></script>
 </body>
 

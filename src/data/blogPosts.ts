@@ -2229,6 +2229,222 @@ yq eval -j input.yaml > output.json</code></pre>
       { name: 'Base64 Encoder', description: 'Encode configs for secrets', link: '/base64-encode' },
       { name: 'Diff Checker', description: 'Compare config files', link: '/diff-checker' }
     ]
+  },
+  {
+    id: 44,
+    title: 'Getting Started with Agent Orchestrator: A Beginner\'s Guide',
+    excerpt:
+      'Learn how to set up Agent Orchestrator and create your first AI agent in under 30 minutes. Free local setup with Ollama, or use OpenAI/Anthropic.',
+    date: '2026-04-01',
+    readTime: '12 min',
+    tags: ['Tutorial', 'Agent Orchestrator', 'AI Agents', 'Getting Started', 'Automation'],
+    slug: 'getting-started-with-agent-orchestrator',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=630&fit=crop',
+    imageAlt: 'Agent Orchestrator dashboard with AI agents workflow',
+    content: `<p>You've heard about AI agents automating workflows, but where do you actually start? How do you go from "I want to use agents" to "I have agents working for me"?</p>
+<p><strong>Agent Orchestrator</strong> makes it simple. In this guide, you'll go from zero to running your first AI agent in under 30 minutes—no cloud required, no API keys needed (if you use local LLMs), and no complex setup.</p>
+<p>Let's get started.</p>
+<h2>What is Agent Orchestrator?</h2>
+<p><strong>Agent Orchestrator</strong> is a local, privacy-first tool for managing AI agents. Think of it as a mission control center for your AI workforce.</p>
+<p><strong>What makes it different:</strong></p>
+<ul><li>✅ <strong>Runs 100% locally</strong> - No cloud, no data leaving your machine</li>
+<li>✅ <strong>Works with any LLM</strong> - Ollama (free), OpenAI, Anthropic, local models</li>
+<li>✅ <strong>Persistent memory</strong> - Agents remember tasks across restarts</li>
+<li>✅ <strong>Open source</strong> - Full transparency and community contributions</li>
+<li>✅ <strong>No per-agent costs</strong> - Run as many agents as you want</li></ul>
+<h2>Prerequisites</h2>
+<p>Before starting, you'll need:</p>
+<h3>Option 1: Free Setup (Local LLMs)</h3>
+<ul><li><strong>Ollama</strong> installed (free, runs Llama 2, Mistral, etc. locally)</li>
+<li><strong>4GB+ RAM</strong> (8GB+ recommended)</li>
+<li><strong>10GB disk space</strong> for model downloads</li></ul>
+<h3>Option 2: Paid Setup (Cloud LLMs)</h3>
+<ul><li><strong>OpenAI API key</strong> OR</li>
+<li><strong>Anthropic API key</strong></li>
+<li><strong>$5-20/month</strong> budget for API calls</li></ul>
+<p><strong>Recommendation:</strong> Start with Ollama (free) to learn, then upgrade to cloud LLMs if needed.</p>
+<h2>Step 1: Install Agent Orchestrator</h2>
+<h3>macOS</h3>
+<pre><code># Download the latest release
+curl -L https://github.com/formatho/agent-orchestrator/releases/latest/download/agent-orchestrator-darwin-arm64 -o agent-orchestrator
+
+# Make it executable
+chmod +x agent-orchestrator
+
+# Run it
+./agent-orchestrator</code></pre>
+<h3>Linux</h3>
+<pre><code># Download the latest release
+curl -L https://github.com/formatho/agent-orchestrator/releases/latest/download/agent-orchestrator-linux-amd64 -o agent-orchestrator
+
+# Make it executable
+chmod +x agent-orchestrator
+
+# Run it
+./agent-orchestrator</code></pre>
+<h2>Step 2: Set Up Your First LLM</h2>
+<h3>Option A: Ollama (Free, Local)</h3>
+<ol><li><strong>Install Ollama:</strong>
+<pre><code># macOS
+brew install ollama
+
+# Linux
+curl -fsSL https://ollama.com/install.sh | sh</code></pre>
+</li>
+<li><strong>Download a model:</strong>
+<pre><code># Llama 2 (7B parameters, good balance)
+ollama pull llama2
+
+# Or Mistral (faster, smaller)
+ollama pull mistral</code></pre>
+</li>
+<li><strong>Start Ollama:</strong>
+<pre><code>ollama serve</code></pre>
+</li>
+<li><strong>Configure Agent Orchestrator:</strong>
+<ul><li>Open Agent Orchestrator</li>
+<li>Go to Settings → LLM Configuration</li>
+<li>Select "Ollama" as provider</li>
+<li>Set base URL: <code>http://localhost:11434</code></li>
+<li>Select your model (llama2 or mistral)</li>
+<li>Click "Test Connection"</li></ul>
+</li></ol>
+<h3>Option B: OpenAI (Paid, Cloud)</h3>
+<ol><li><strong>Get an API key:</strong>
+<ul><li>Go to https://platform.openai.com/api-keys</li>
+<li>Create a new secret key</li>
+<li>Copy it (you won't see it again!)</li></ul>
+</li>
+<li><strong>Configure Agent Orchestrator:</strong>
+<ul><li>Open Agent Orchestrator</li>
+<li>Go to Settings → LLM Configuration</li>
+<li>Select "OpenAI" as provider</li>
+<li>Paste your API key</li>
+<li>Select model: <code>gpt-4</code> (best) or <code>gpt-3.5-turbo</code> (cheaper)</li>
+<li>Click "Test Connection"</li></ul>
+</li></ol>
+<p><strong>Cost estimate:</strong> ~$0.03 per 1K tokens with GPT-3.5, ~$0.06 with GPT-4</p>
+<h2>Step 3: Create Your First Agent</h2>
+<p>Now for the fun part—creating an agent!</p>
+<ol><li><strong>Open the Agent Dashboard</strong>
+<ul><li>Launch Agent Orchestrator</li>
+<li>Click "Create New Agent"</li></ul>
+</li>
+<li><strong>Fill in Agent Details:</strong>
+<ul><li><strong>Name:</strong> <code>Code Reviewer</code> (or whatever you want)</li>
+<li><strong>Description:</strong> <code>Reviews code for bugs, style issues, and improvements</code></li>
+<li><strong>System Prompt:</strong>
+<pre><code>You are a senior code reviewer with 10+ years of experience.
+
+Your job is to review code and provide:
+1. Bug identification
+2. Style issues
+3. Performance concerns
+4. Security vulnerabilities
+5. Suggested improvements
+
+Be constructive, specific, and helpful.</code></pre>
+</li>
+<li><strong>Configure Settings:</strong>
+<ul><li><strong>Temperature:</strong> 0.7 (creative but focused)</li>
+<li><strong>Max Tokens:</strong> 2000 (enough for detailed reviews)</li>
+<li><strong>LLM:</strong> Select your configured provider</li></ul>
+</li>
+<li><strong>Save the Agent</strong></li></ul>
+<p><strong>Congrats!</strong> You've created your first AI agent. 🎉</p>
+<h2>Step 4: Test Your Agent</h2>
+<p>Let's make sure it works:</p>
+<ol><li><strong>Click "Chat with Agent"</strong></li>
+<li><strong>Send a test message:</strong>
+<pre><code>Please review this Python function:
+
+def calculate_sum(numbers):
+  sum = 0
+  for i in range(len(numbers)):
+    sum = sum + numbers[i]
+  return sum</code></pre>
+</li>
+<li><strong>Review the response:</strong>
+<ul><li>Your agent should analyze the code</li>
+<li>It might suggest using <code>sum()</code> built-in</li>
+<li>It should be helpful and constructive</li></ul>
+</li></ol>
+<h2>Step 5: Create Your First Task</h2>
+<p>Agents work best when they have tasks. Let's create one:</p>
+<ol><li><strong>Go to Tasks Tab</strong></li>
+<li><strong>Create New Task:</strong>
+<ul><li><strong>Title:</strong> <code>Review authentication module</code></li>
+<li><strong>Description:</strong>
+<pre><code>Review the code in src/auth/login.py for:
+- Security vulnerabilities
+- Best practices
+- Error handling</code></pre>
+</li>
+<li><strong>Assigned Agent:</strong> Code Reviewer (the one you just created)</li>
+<li><strong>Priority:</strong> High</li>
+<li><strong>Due Date:</strong> Tomorrow</li></ul>
+</li>
+<li><strong>Save Task</strong></li></ol>
+<p>Your agent now has a todo item! When you chat with it, it can reference this task.</p>
+<h2>Step 6: Build a Multi-Agent Workflow</h2>
+<p>The real power comes from multiple agents working together. Create a simple pipeline:</p>
+<ul><li><strong>Code Generator</strong> → Writes initial code</li>
+<li><strong>Code Reviewer</strong> → Reviews and suggests improvements</li>
+<li><strong>Test Writer</strong> → Writes tests</li>
+<li><strong>Doc Writer</strong> → Creates documentation</li></ul>
+<p><strong>This is orchestration in action!</strong></p>
+<h2>Common Use Cases</h2>
+<h3>1. Daily Standup Automation</h3>
+<p><strong>Agent:</strong> Standup Bot<br/><strong>Task:</strong> Generate daily standup notes from git commits and task progress</p>
+<h3>2. Code Review Pipeline</h3>
+<p><strong>Agents:</strong> Code Reviewer + Security Scanner<br/><strong>Task:</strong> Review all pull requests automatically</p>
+<h3>3. Documentation Generator</h3>
+<p><strong>Agent:</strong> Doc Writer<br/><strong>Task:</strong> Generate API docs from code</p>
+<h3>4. Refactoring Assistant</h3>
+<p><strong>Agent:</strong> Refactor Bot<br/><strong>Task:</strong> Identify and implement code improvements</p>
+<h2>Best Practices</h2>
+<h3>1. Write Clear System Prompts</h3>
+<p>The system prompt defines your agent's behavior. Be specific about expertise, behavior, and constraints.</p>
+<h3>2. Use Descriptive Task Names</h3>
+<p>Instead of "Fix stuff", use "Fix authentication bug in login.py"</p>
+<h3>3. Set Realistic Expectations</h3>
+<ul><li><strong>Local LLMs (Ollama):</strong> Good for simple tasks, may struggle with complex reasoning</li>
+<li><strong>GPT-3.5:</strong> Fast and cheap, good for most tasks</li>
+<li><strong>GPT-4/Claude:</strong> Best quality, higher cost</li></ul>
+<h3>4. Iterate on Prompts</h3>
+<p>Your first prompt won't be perfect. Test, refine, and improve.</p>
+<h2>Next Steps</h2>
+<p>Now that you have Agent Orchestrator running:</p>
+<ol><li><strong>Create 3-5 agents</strong> for different tasks</li>
+<li><strong>Set up a workflow</strong> with multiple agents</li>
+<li><strong>Experiment with different LLMs</strong> to find what works best</li>
+<li><strong>Join the community:</strong>
+<ul><li>GitHub: https://github.com/formatho/agent-orchestrator</li>
+<li>Discord: [Community link]</li>
+<li>Twitter: @formatho</li></ul>
+</li></ol>
+<h2>Conclusion</h2>
+<p>You've just set up your first AI agent workforce. In under 30 minutes, you:</p>
+<ul><li>✅ Installed Agent Orchestrator</li>
+<li>✅ Configured an LLM (local or cloud)</li>
+<li>✅ Created your first agent</li>
+<li>✅ Tested it with real code</li>
+<li>✅ Created tasks for your agent</li>
+<li>✅ Learned about multi-agent workflows</li></ul>
+<p><strong>What's next?</strong> Start automating! Pick a repetitive task you do daily and build an agent for it.</p>
+<p><strong>Happy automating! 🚀</strong></p>`,
+    cta: {
+      title: 'Start Your AI Agent Journey',
+      description: 'Download Agent Orchestrator and create your first AI agent in under 30 minutes. Works with free local LLMs or your favorite cloud provider.',
+      link: '/agent-orchestrator',
+      buttonText: 'Download Agent Orchestrator'
+    },
+    relatedTools: [
+      { name: 'Agent Orchestrator', description: 'Manage AI agents locally', link: '/agent-orchestrator' },
+      { name: 'Task Manager', description: 'Agent-aware task tracking', link: '/agent-orchestrator#tasks' },
+      { name: 'Crontab Generator', description: 'Schedule agent tasks', link: '/crontab-generator' },
+      { name: 'JSON to YAML', description: 'Config conversion tools', link: '/json-yaml' }
+    ]
   }
 ]
 

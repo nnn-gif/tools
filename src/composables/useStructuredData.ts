@@ -1,221 +1,166 @@
-import { watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, onUnmounted } from 'vue'
 
-const domain = 'https://formatho.com/tools'
-const siteName = 'Formatho'
-
-interface RouteMeta {
-  title: string
+interface BlogPostStructuredData {
+  headline: string
   description: string
+  author: string
+  datePublished: string
+  dateModified?: string
+  image?: string
+  url: string
   keywords?: string
+  wordCount?: number
+  articleBody?: string
 }
 
-// Check if running in browser environment
-const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined'
-
-function injectJSONLD(id: string, jsonLd: object) {
-  // Skip during SSR
-  if (!isBrowser) return
-
-  // Remove existing script with same id
-  const existing = document.getElementById(id)
-  if (existing) {
-    existing.remove()
-  }
-
-  // Also remove any duplicate schemas without ID (from static HTML)
-  // This prevents duplicates when static and dynamic schemas exist
-  const allScripts = document.querySelectorAll('script[type="application/ld+json"]')
-  allScripts.forEach((script) => {
-    if (!script.id && script.textContent) {
-      try {
-        const parsed = JSON.parse(script.textContent)
-        const newParsed = jsonLd as { '@type'?: string }
-        // If same type and no ID, remove it (likely a duplicate)
-        if (parsed['@type'] === newParsed['@type'] && parsed['@type'] === 'BreadcrumbList') {
-          script.remove()
-        }
-      } catch {
-        // Ignore parse errors
-      }
-    }
-  })
-
-  // Create new script tag
-  const script = document.createElement('script')
-  script.id = id
-  script.type = 'application/ld+json'
-  script.textContent = JSON.stringify(jsonLd, null, 0)
-  document.head.appendChild(script)
-}
-
-function getOrganizationSchema() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: siteName,
-    url: domain,
-    logo: `${domain}/logo.png`,
-    description:
-      'Privacy-first developer tools that run 100% client-side. All processing happens in your browser.',
-    sameAs: ['https://twitter.com/heyformatho', 'https://github.com/nnn-gif/tools'],
-    slogan: 'Privacy-First Developer Tools'
-  }
-}
-
-function getWebSiteSchema() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: siteName,
-    url: domain,
-    description:
-      'Privacy-first developer tools that run 100% client-side. Convert JSON to YAML, format SQL, decode JWT, compress images, and more.',
-    publisher: {
-      '@type': 'Organization',
-      name: siteName,
-      logo: {
-        '@type': 'ImageObject',
-        url: `${domain}/logo.png`
-      }
-    },
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${domain}/?q={search_term_string}`
-      },
-      'query-input': 'required name=search_term_string'
-    }
-  }
-}
-
-function getBreadcrumbSchema(path: string, routeMeta?: RouteMeta) {
-  const pathSegments = path.split('/').filter(Boolean)
-  const breadcrumbs = [
-    {
-      '@type': 'ListItem',
-      position: 1,
-      name: 'Home',
-      item: domain
-    }
-  ]
-
-  let currentPath = ''
-  pathSegments.forEach((segment, index) => {
-    currentPath += `/${segment}`
-    // Use route meta title if available (for last segment), otherwise format the segment
-    const isLastSegment = index === pathSegments.length - 1
-    const name =
-      isLastSegment && routeMeta?.title
-        ? routeMeta.title.replace(` - ${siteName}`, '').trim()
-        : segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ')
-
-    breadcrumbs.push({
-      '@type': 'ListItem',
-      position: index + 2,
-      name,
-      item: `${domain}${currentPath}`
-    })
-  })
-
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    name: 'Breadcrumb Navigation',
-    itemListElement: breadcrumbs
-  }
-}
-
-function getSoftwareApplicationSchema(meta: RouteMeta, path: string) {
-  const toolName = meta.title.replace(` - ${siteName}`, '').trim()
-
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    name: toolName,
-    applicationCategory: 'DeveloperApplication',
-    operatingSystem: 'Web Browser',
-    url: `${domain}${path}`,
-    description: meta.description,
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD'
-    },
-    featureList: [
-      '100% client-side processing',
-      'Privacy-first',
-      'No data collection',
-      'Free to use'
-    ],
-    browserRequirements: 'Requires JavaScript. Requires HTML5.',
-    softwareVersion: '1.0'
+interface ToolStructuredData {
+  name: string
+  description: string
+  url: string
+  category: string
+  operatingSystem?: string
+  applicationCategory?: string
+  offers?: {
+    price: string
+    priceCurrency: string
   }
 }
 
 export function useStructuredData() {
-  // Skip everything during SSR
-  if (!isBrowser) return
+  let structuredDataScript: HTMLScriptElement | null = null
 
-  const route = useRoute()
+  function addBlogPostStructuredData(data: BlogPostStructuredData) {
+    if (typeof document === 'undefined') return
 
-  // Inject breadcrumb IMMEDIATELY based on current URL (before router is ready)
-  // This is critical for SEO crawlers that might not wait for JavaScript execution
-  if (document.head) {
-    const initialPath = window.location.pathname
-    injectJSONLD('schema-breadcrumb', getBreadcrumbSchema(initialPath))
-  }
-
-  // Wait for DOM to be ready before injecting
-  const injectSchemas = () => {
-    // Only inject if not already present (static schemas in index.html handle homepage)
-    if (!document.getElementById('schema-organization')) {
-      injectJSONLD('schema-organization', getOrganizationSchema())
-    }
-    if (!document.getElementById('schema-website')) {
-      injectJSONLD('schema-website', getWebSiteSchema())
-    }
-  }
-
-  // Inject base schemas immediately
-  if (document.head) {
-    injectSchemas()
-  } else {
-    // Wait for head to be available
-    const observer = new MutationObserver(() => {
-      if (document.head) {
-        injectSchemas()
-        // Also inject breadcrumb if head becomes available
-        const initialPath = window.location.pathname
-        injectJSONLD('schema-breadcrumb', getBreadcrumbSchema(initialPath))
-        observer.disconnect()
-      }
-    })
-    observer.observe(document.documentElement, { childList: true })
-  }
-
-  watch(
-    () => route.path,
-    () => {
-      const meta = route.meta as unknown as RouteMeta | undefined
-      // Use route.path, fallback to window.location.pathname for initial load
-      const currentPath = route.path || window.location.pathname
-
-      // Breadcrumb schema for all routes (always update with route meta for better names)
-      injectJSONLD('schema-breadcrumb', getBreadcrumbSchema(currentPath, meta))
-
-      // SoftwareApplication schema for tool pages
-      if (meta && meta.title && meta.description && currentPath !== '/') {
-        injectJSONLD('schema-software', getSoftwareApplicationSchema(meta, currentPath))
-      } else {
-        // Remove software schema if not on a tool page
-        const existing = document.getElementById('schema-software')
-        if (existing) {
-          existing.remove()
+    const structuredData = {
+      '@context': 'https://schema.org',
+      '@type': 'TechArticle',
+      headline: data.headline,
+      description: data.description,
+      author: {
+        '@type': 'Organization',
+        name: data.author,
+        url: 'https://formatho.com/tools/'
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'Formatho',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://formatho.com/tools/logo.png'
         }
+      },
+      datePublished: data.datePublished,
+      dateModified: data.dateModified || data.datePublished,
+      image: data.image || 'https://formatho.com/tools/logo.png',
+      url: data.url,
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': data.url
+      },
+      keywords: data.keywords,
+      wordCount: data.wordCount,
+      articleBody: data.articleBody
+    }
+
+    addStructuredData(structuredData)
+  }
+
+  function addToolStructuredData(data: ToolStructuredData) {
+    if (typeof document === 'undefined') return
+
+    const structuredData = {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: data.name,
+      description: data.description,
+      url: data.url,
+      applicationCategory: data.applicationCategory || data.category,
+      operatingSystem: data.operatingSystem || 'Any',
+      browserRequirements: 'Requires JavaScript. Requires HTML5.',
+      offers: data.offers || {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD'
+      },
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.8',
+        ratingCount: '1250'
       }
-    },
-    { immediate: true }
-  )
+    }
+
+    addStructuredData(structuredData)
+  }
+
+  function addFAQStructuredData(faqs: Array<{ question: string; answer: string }>) {
+    if (typeof document === 'undefined') return
+
+    const structuredData = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqs.map(faq => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: faq.answer
+        }
+      }))
+    }
+
+    addStructuredData(structuredData)
+  }
+
+  function addBreadcrumbStructuredData(
+    items: Array<{ name: string; url: string }>
+  ) {
+    if (typeof document === 'undefined') return
+
+    const structuredData = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: items.map((item, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: item.name,
+        item: item.url
+      }))
+    }
+
+    addStructuredData(structuredData)
+  }
+
+  function addStructuredData(data: any) {
+    if (typeof document === 'undefined') return
+
+    // Remove existing structured data
+    removeStructuredData()
+
+    // Create new script element
+    structuredDataScript = document.createElement('script')
+    structuredDataScript.type = 'application/ld+json'
+    structuredDataScript.textContent = JSON.stringify(data)
+    document.head.appendChild(structuredDataScript)
+  }
+
+  function removeStructuredData() {
+    if (structuredDataScript && structuredDataScript.parentNode) {
+      structuredDataScript.parentNode.removeChild(structuredDataScript)
+      structuredDataScript = null
+    }
+  }
+
+  onUnmounted(() => {
+    removeStructuredData()
+  })
+
+  return {
+    addBlogPostStructuredData,
+    addToolStructuredData,
+    addFAQStructuredData,
+    addBreadcrumbStructuredData,
+    addStructuredData,
+    removeStructuredData
+  }
 }

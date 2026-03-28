@@ -29,16 +29,32 @@ export default defineConfig({
     // Core Web Vitals Optimization - Code Splitting
     rollupOptions: {
       output: {
-        manualChunks: {
-          // Split large vendor dependencies
-          'vue-vendor': ['vue', 'vue-router'],
-          'crypto-vendor': ['crypto-js', 'bcryptjs', 'bip39', '@noble/hashes'],
-          'blockchain-vendor': ['@solana/web3.js', 'viem', '@polkadot/keyring'],
-          'document-vendor': ['docx', 'jspdf', 'html2pdf.js'],
-          'code-vendor': ['highlight.js', 'marked', 'sql-formatter', 'gpt-tokenizer'],
-          'ui-vendor': ['radix-vue', 'lucide-vue-next', 'aos'],
-          'chart-vendor': ['chart.js', 'vue-chartjs'],
-          'bpmn-vendor': ['bpmn-js']
+        manualChunks(id) {
+          // Don't chunk during SSR build
+          if (id.includes('node_modules')) {
+            // Split large vendor dependencies
+            if (id.includes('crypto') || id.includes('bcrypt') || id.includes('bip39') || id.includes('@noble/hashes')) {
+              return 'crypto-vendor'
+            }
+            if (id.includes('@solana') || id.includes('viem') || id.includes('@polkadot')) {
+              return 'blockchain-vendor'
+            }
+            if (id.includes('docx') || id.includes('jspdf') || id.includes('html2pdf')) {
+              return 'document-vendor'
+            }
+            if (id.includes('highlight') || id.includes('marked') || id.includes('sql-formatter') || id.includes('gpt-tokenizer')) {
+              return 'code-vendor'
+            }
+            if (id.includes('radix-vue') || id.includes('lucide') || id.includes('aos')) {
+              return 'ui-vendor'
+            }
+            if (id.includes('chart.js') || id.includes('vue-chartjs')) {
+              return 'chart-vendor'
+            }
+            if (id.includes('bpmn')) {
+              return 'bpmn-vendor'
+            }
+          }
         }
       }
     },
